@@ -175,38 +175,52 @@
       background: transparent !important;
     }
 
-    /* Hide Contents and Media tabs */
-    .nc-root .nc-tabs {
+    /* Hide Contents and Media tabs - More aggressive approach */
+    .nc-root .nc-tabs,
+    .nc-root .nc-tab,
+    .nc-root .nc-tab-button,
+    .nc-root .nc-tabList,
+    .nc-root .nc-tabPanel,
+    .nc-root [class*="tab"],
+    .nc-root [class*="media"],
+    .nc-root [class*="content"],
+    /* Target specific Decap CMS tab elements */
+    .nc-root .nc-entry-editor-tabs,
+    .nc-root .nc-entry-editor-tab,
+    .nc-root .nc-entry-editor-tab-button,
+    .nc-root .nc-entry-editor-tabList,
+    .nc-root .nc-entry-editor-tabPanel,
+    /* Target any element with tab-related text */
+    .nc-root button[aria-label*="Contents"],
+    .nc-root button[aria-label*="Media"],
+    .nc-root button[title*="Contents"],
+    .nc-root button[title*="Media"],
+    /* Target any button with tab-like behavior */
+    .nc-root button[role="tab"],
+    .nc-root [role="tablist"],
+    .nc-root [role="tabpanel"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      overflow: hidden !important;
+    }
+
+    /* Also hide any parent containers that might only contain tabs */
+    .nc-root .nc-entry-editor-header {
       display: none !important;
     }
 
-    .nc-root .nc-tab {
-      display: none !important;
+    /* Force hide any remaining tab elements */
+    .nc-root * {
+      position: relative;
     }
 
-    .nc-root .nc-tab-button {
-      display: none !important;
-    }
-
-    .nc-root .nc-tabList {
-      display: none !important;
-    }
-
-    .nc-root .nc-tabPanel {
-      display: none !important;
-    }
-
-    /* Hide any tab-related elements */
-    .nc-root [class*="tab"] {
-      display: none !important;
-    }
-
-    /* Hide media-related elements */
-    .nc-root [class*="media"] {
-      display: none !important;
-    }
-
-    .nc-root [class*="content"] {
+    .nc-root *[class*="tab"]:not(.nc-root) {
       display: none !important;
     }
 
@@ -419,8 +433,50 @@
         });
     }
 
-    // Update stats on load
-    updateStats();
+    // Force remove Contents and Media tabs
+    function removeTabs() {
+      // Remove any elements containing "Contents" or "Media" text
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(element => {
+        const text = element.textContent || element.innerText || '';
+        if (text.includes('Contents') || text.includes('Media')) {
+          if (element.tagName === 'BUTTON' || element.classList.contains('tab') || element.getAttribute('role') === 'tab') {
+            element.style.display = 'none';
+            element.remove();
+          }
+        }
+      });
+
+      // Remove any tab-related elements
+      const tabElements = document.querySelectorAll('[class*="tab"], [role="tab"], [role="tablist"], [role="tabpanel"]');
+      tabElements.forEach(element => {
+        element.style.display = 'none';
+        element.remove();
+      });
+
+      // Remove any buttons with tab-like behavior
+      const tabButtons = document.querySelectorAll('button[aria-label*="Contents"], button[aria-label*="Media"], button[title*="Contents"], button[title*="Media"]');
+      tabButtons.forEach(button => {
+        button.style.display = 'none';
+        button.remove();
+      });
+    }
+
+    // Run immediately and also after a delay
+    removeTabs();
+    setTimeout(removeTabs, 1000);
+    setTimeout(removeTabs, 3000);
+
+    // Also run when the CMS loads
+    if (window.CMS) {
+      window.CMS.registerEventListener({
+        name: 'preSave',
+        handler: () => {
+          removeTabs();
+          return true;
+        }
+      });
+    }
 
     // Simple product preview component
     function currency(cents) {
