@@ -1,0 +1,33 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "assets/images"
+public_folder: "/assets/images"
+
+collections:
+  - name: "products"
+    label: "Products"
+    label_singular: "Product"
+    description: "Edit the product catalog"
+    files:
+      - file: "assets/data/products.json"
+        label: "Products List"
+        name: "products_list"
+        editor:
+          preview: false
+        fields:
+          - label: "Products"
+            name: ""
+            widget: "list"
+            summary: "{{fields.name}} — ${{fields.priceCents}}"
+            fields:
+              - { label: "ID", name: "id", widget: "number" }
+              - { label: "Name", name: "name", widget: "string" }
+              - { label: "Price (cents)", name: "priceCents", widget: "number" }
+              - { label: "Material", name: "material", widget: "string" }
+              - { label: "Limited Edition", name: "limited", widget: "boolean", default: false }
+              - { label: "Remaining", name: "remaining", widget: "number", default: 0 }
+              - { label: "Sold Out", name: "soldOut", widget: "boolean", default: false }
+              - { label: "Image", name: "image", widget: "image", allow_multiple: false }
+

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lupo Grigio — Limited Edition Leather Goods</title>
+    <meta name="description" content="Deluxe, limited edition leather goods crafted for the discerning. Lupo Grigio wallets and accessories in small, numbered runs." />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:title" content="Lupo Grigio — Limited Edition Leather Goods" />
+    <meta property="og:description" content="Deluxe, limited edition leather goods crafted for the discerning." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://example.com" />
+    <meta property="og:image" content="assets/images/og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="manifest" href="site.webmanifest" />
+    <link rel="icon" href="assets/icons/favicon.ico" />
+    <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/styles/theme.css" />
+    <link rel="stylesheet" href="assets/styles/main.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="#" aria-label="Lupo Grigio home">
+          <img class="brand-logo" src="assets/images/logo.jpg" alt="Lupo Grigio logo" />
+          <span class="brand-name">Lupo Grigio</span>
+        </a>
+        <nav class="nav">
+          <a href="#story">Story</a>
+          <a href="#products">Products</a>
+          <a href="#instagram">Instagram</a>
+          <a href="#contact">Contact</a>
+        </nav>
+        <button id="miniCartButton" class="mini-cart" aria-label="Open cart">
+          <span>Cart</span>
+          <span id="miniCartCount" class="badge">0</span>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" data-reveal>
+        <div class="container hero-inner">
+          <div class="hero-copy">
+            <h1>Limited Edition. Uncompromising Craft.</h1>
+            <p>Small, numbered runs of premium leather goods. Designed in Italy, made to endure.</p>
+            <a class="button primary" href="#products">Shop the drop</a>
+          </div>
+          <div class="hero-media" role="img" aria-label="Lupo Grigio leather wallet on marble"></div>
+        </div>
+      </section>
+
+      <section id="story" class="story" data-reveal>
+        <div class="container story-inner">
+          <h2>The Lupo Grigio Standard</h2>
+          <p>We release only a handful of pieces each season. Each item is individually numbered and crafted from full‑grain leather, developing a rich patina unique to you.</p>
+        </div>
+      </section>
+
+      <section id="products" class="products" data-reveal>
+        <div class="container">
+          <div class="section-head">
+            <h2>Current Edition</h2>
+            <p class="muted">Limited quantities. No restocks.</p>
+          </div>
+          <div id="productGrid" class="grid"></div>
+        </div>
+      </section>
+
+      <section id="instagram" class="instagram" data-reveal>
+        <div class="container">
+          <div class="section-head">
+            <h2>From Instagram</h2>
+            <a class="button small" id="igProfileCta" href="#" target="_blank" rel="noopener">View profile</a>
+          </div>
+          <div id="instagramGrid" class="ig-grid" aria-label="Instagram gallery"></div>
+        </div>
+      </section>
+
+      <section id="contact" class="contact" data-reveal>
+        <div class="container contact-inner">
+          <h2>Questions?</h2>
+          <p>Email <a href="mailto:atelier@lupogrigio.com">atelier@lupogrigio.com</a></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span>© <span id="year"></span> Lupo Grigio</span>
+        <div class="footer-links">
+          <a href="#" id="igFooterLink" target="_blank" rel="noopener">Instagram</a>
+          <a href="/admin/" target="_blank" rel="noopener">Admin</a>
+          <a href="#" id="cookieSettings">Cookie settings</a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Cart Drawer -->
+    <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
+      <div class="cart-header">
+        <h3>Your Cart</h3>
+        <button id="closeCart" class="icon-button" aria-label="Close cart">✕</button>
+      </div>
+      <div id="cartItems" class="cart-items"></div>
+      <div class="cart-footer">
+        <div class="cart-total">
+          <span>Total</span>
+          <strong id="cartTotal">$0</strong>
+        </div>
+        <a class="button primary block" href="#" id="checkoutButton">Proceed to Checkout</a>
+        <p class="muted small">Checkout placeholder. Connect Stripe/Shopify to enable payments.</p>
+      </div>
+    </aside>
+
+    <!-- Quick View Modal -->
+    <div id="quickView" class="modal" aria-hidden="true" role="dialog" aria-label="Product quick view">
+      <div class="modal-backdrop" data-close="modal"></div>
+      <div class="modal-content">
+        <button class="icon-button modal-close" data-close="modal" aria-label="Close">✕</button>
+        <div class="modal-body">
+          <div id="qvMedia" class="qv-media"></div>
+          <div id="qvInfo" class="qv-info"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <!-- Cookie Banner -->
+    <div id="cookieBanner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+      <div class="container cookie-inner">
+        <span>We use cookies to improve your experience. By using our site, you agree to our cookie policy.</span>
+        <div class="actions">
+          <button id="acceptCookies" class="button small">Accept</button>
+          <button id="declineCookies" class="button small ghost">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="backToTop" class="button small" aria-label="Back to top">Top ↑</button>
+
+    <script type="module" src="assets/scripts/config.js"></script>
+    <script type="module" src="assets/scripts/app.js"></script>
+  </body>
+  </html>
+
