@@ -1602,6 +1602,7 @@
         const productDiv = document.createElement('div');
         productDiv.className = 'product-item';
         productDiv.setAttribute('data-product-id', product.id);
+        console.log('Created product element with data-product-id:', product.id);
         productDiv.innerHTML = `
           <div class="product-info">
             <h4>${product.name}</h4>
@@ -1636,20 +1637,31 @@
 
     // Edit existing product
     function editProduct(id) {
+      console.log('editProduct called with id:', id);
       const product = products.find(p => p.id === id);
-      if (!product) return;
+      if (!product) {
+        console.log('Product not found');
+        return;
+      }
 
+      console.log('Product found:', product);
       editingProduct = product;
       
       // Find the product element and replace it with edit form
       const productElement = document.querySelector(`[data-product-id="${id}"]`);
-      if (!productElement) return;
+      console.log('Product element found:', productElement);
+      if (!productElement) {
+        console.log('Product element not found');
+        return;
+      }
       
       // Create inline edit form
       const editForm = createInlineEditForm(product);
+      console.log('Edit form created');
       
       // Replace product display with edit form
       productElement.innerHTML = editForm;
+      console.log('Product element replaced with edit form');
       
       // Fill form with product data
       const form = productElement.querySelector('.inline-edit-form');
