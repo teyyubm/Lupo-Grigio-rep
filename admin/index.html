@@ -509,7 +509,7 @@
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <script>
-    // Identity handling
+    // Identity handling for Vercel deployment
     if (window.netlifyIdentity) {
       window.netlifyIdentity.on('init', user => {
         const hash = window.location.hash || '';
@@ -517,6 +517,9 @@
           window.netlifyIdentity.acceptInvite().catch(() => {});
         }
       });
+      
+      // Initialize Netlify Identity
+      window.netlifyIdentity.init();
     }
 
     // Load site styles for previews
