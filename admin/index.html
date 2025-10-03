@@ -175,45 +175,48 @@
       background: transparent !important;
     }
 
-    /* Hide collections sidebar and contents - Comprehensive */
-    .nc-root .nc-sidebar,
-    .nc-root .nc-sidebar-header,
-    .nc-root .nc-sidebar-nav,
-    .nc-root .nc-sidebar-nav-list,
-    .nc-root .nc-app-sidebar,
-    .nc-root .nc-layout-sidebar,
-    .nc-root .nc-collection-page-sidebar,
-    .nc-root .nc-collection-sidebar {
+    /* Hide collections sidebar - Specific targeting only */
+    .nc-root .nc-sidebar {
       display: none !important;
     }
 
-    /* Hide contents tab */
-    .nc-root .nc-tabs,
-    .nc-root .nc-tab,
-    .nc-root .nc-tab-button,
-    .nc-root .nc-tabList,
-    .nc-root .nc-tabPanel {
+    .nc-root .nc-app-sidebar {
       display: none !important;
     }
 
-    /* Hide any element with "Contents" text */
-    .nc-root * {
-      position: relative;
-    }
-
-    /* Force hide elements containing specific text */
-    .nc-root div:has-text("Contents"),
-    .nc-root button:has-text("Contents"),
-    .nc-root nav:has-text("Contents"),
-    .nc-root section:has-text("Contents") {
+    .nc-root .nc-layout-sidebar {
       display: none !important;
     }
 
-    .nc-root div:has-text("Collections"),
-    .nc-root button:has-text("Collections"),
-    .nc-root nav:has-text("Collections"),
-    .nc-root section:has-text("Collections") {
+    /* Hide contents tab - Specific targeting only */
+    .nc-root .nc-tabs {
       display: none !important;
+    }
+
+    .nc-root .nc-tab {
+      display: none !important;
+    }
+
+    /* Ensure main content is always visible */
+    .nc-root .nc-main-container {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      margin-left: 0 !important;
+      padding-left: 0 !important;
+    }
+
+    .nc-root .nc-app-main {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .nc-root .nc-collection-page {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
     }
 
     /* Force light background */
@@ -491,59 +494,21 @@
         });
     }
 
-    // Enhanced removal function - target Collections and Contents specifically
+    // Simple removal function - only hide specific elements
     function removeTabs() {
-      // Remove all sidebar elements
-      const sidebarSelectors = [
-        '.nc-sidebar', '.nc-app-sidebar', '.nc-layout-sidebar',
-        '.nc-collection-page-sidebar', '.nc-collection-sidebar',
-        '[class*="sidebar"]', '[class*="collection"]'
-      ];
-      
-      sidebarSelectors.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(element => {
-          element.style.display = 'none';
-          element.style.visibility = 'hidden';
-          element.style.width = '0';
-          element.style.height = '0';
-          element.style.opacity = '0';
-        });
+      // Only hide specific sidebar elements
+      const sidebarElements = document.querySelectorAll('.nc-sidebar, .nc-app-sidebar, .nc-layout-sidebar');
+      sidebarElements.forEach(element => {
+        element.style.display = 'none';
       });
 
-      // Remove all tab elements
-      const tabSelectors = [
-        '.nc-tabs', '.nc-tab', '.nc-tab-button', '.nc-tabList', '.nc-tabPanel',
-        '[class*="tab"]', '[role="tab"]', '[role="tablist"]', '[role="tabpanel"]'
-      ];
-      
-      tabSelectors.forEach(selector => {
-        const elements = document.querySelectorAll(selector);
-        elements.forEach(element => {
-          element.style.display = 'none';
-          element.style.visibility = 'hidden';
-        });
+      // Only hide specific tab elements
+      const tabElements = document.querySelectorAll('.nc-tabs, .nc-tab');
+      tabElements.forEach(element => {
+        element.style.display = 'none';
       });
 
-      // Remove any element containing "Contents" or "Collections" text
-      const allElements = document.querySelectorAll('*');
-      allElements.forEach(element => {
-        const text = element.textContent || element.innerText || '';
-        if (text.includes('Contents') || text.includes('Collections') || text.includes('Search all')) {
-          // Only remove if it's a button, div, nav, or has specific classes
-          if (element.tagName === 'BUTTON' || element.tagName === 'DIV' || element.tagName === 'NAV' ||
-              element.classList.contains('sidebar') || element.classList.contains('collection') ||
-              element.classList.contains('tab') || element.classList.contains('nav')) {
-            element.style.display = 'none';
-            element.style.visibility = 'hidden';
-            element.style.width = '0';
-            element.style.height = '0';
-            element.style.opacity = '0';
-          }
-        }
-      });
-
-      // Ensure main content is visible and takes full width
+      // Ensure main content is visible
       const mainContent = document.querySelector('.nc-main-container, .nc-app-main, .nc-collection-page');
       if (mainContent) {
         mainContent.style.display = 'block';
