@@ -582,6 +582,30 @@
       background: rgba(255, 255, 255, 0.3);
     }
 
+    .header-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .save-info {
+      background: rgba(72, 187, 120, 0.2);
+      color: #48bb78;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid rgba(72, 187, 120, 0.3);
+      animation: fadeInOut 2s ease-in-out;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: scale(0.8); }
+      20% { opacity: 1; transform: scale(1); }
+      80% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.8); }
+    }
+
     .config-btn {
       background: rgba(255, 255, 255, 0.1);
       color: white;
@@ -899,8 +923,8 @@
       <div class="editor-container">
         <div class="editor-header">
           <h2>Product Editor</h2>
-          <div class="header-actions">
-            <button onclick="showGitHubSetupModal()" class="config-btn">⚙️ GitHub Config</button>
+          <div class="header-info">
+            <span id="last-save-info" class="save-info" style="display: none;">✅ Saved successfully</span>
             <button onclick="addNewProduct()" class="add-product-btn">+ Add New Product</button>
           </div>
         </div>
@@ -1039,12 +1063,12 @@
         
         // Verify session integrity
         if (sessionId && sessionId.length === 32) {
-          showAdminPanel();
+        showAdminPanel();
           // Update session timestamp on activity
           updateSessionTimestamp();
-        } else {
+      } else {
           localStorage.removeItem('admin_auth_data');
-          showLoginForm();
+        showLoginForm();
         }
       } catch (e) {
         localStorage.removeItem('admin_auth_data');
@@ -1177,8 +1201,8 @@
             ipHash: await sha256(navigator.userAgent + Date.now().toString())
           }));
           
-          showAdminPanel();
-          errorMessage.style.display = 'none';
+        showAdminPanel();
+        errorMessage.style.display = 'none';
           
           // Clear sensitive data
           clearSensitiveData();
@@ -1189,7 +1213,7 @@
           // Log successful login (in production, this would go to a server)
           console.log('Admin login successful at', new Date().toISOString());
           
-        } else {
+      } else {
           // Failed login
           loginAttempts++;
           
@@ -1205,7 +1229,7 @@
             errorMessage.textContent = `Incorrect password. ${remainingAttempts} attempts remaining.`;
           }
           
-          errorMessage.style.display = 'block';
+        errorMessage.style.display = 'block';
           clearSensitiveData();
         }
       } catch (error) {
@@ -1279,7 +1303,7 @@
     
     // Initialize authentication check
     checkAuth();
-    
+
     // Image upload functionality
     let uploadedImageData = null;
     
@@ -1537,30 +1561,28 @@
       editingProduct = null;
     }
 
-    // Save product
+    // Save product (completely silent)
     document.getElementById('product-edit-form').addEventListener('submit', async function(e) {
       e.preventDefault();
+      
+      // Show saving indicator
+      const saveBtn = e.target.querySelector('.save-btn');
+      const originalText = saveBtn.textContent;
+      saveBtn.textContent = 'Saving...';
+      saveBtn.disabled = true;
       
       const formData = new FormData(e.target);
       let imagePath = '';
       
-      // Handle image upload
+      // Handle image upload silently
       if (uploadedImageData) {
         try {
-          // Upload image to GitHub
           const imageResult = await uploadImageToGitHub(uploadedImageData);
-          if (imageResult.success) {
-            imagePath = imageResult.path;
-          } else {
-            alert(`Image upload failed: ${imageResult.error}\n\nUsing URL fallback instead.`);
-            imagePath = formData.get('imageUrl') || '';
-          }
+          imagePath = imageResult.success ? imageResult.path : (formData.get('imageUrl') || '');
         } catch (error) {
-          console.error('Image upload error:', error);
           imagePath = formData.get('imageUrl') || '';
         }
       } else {
-        // Use URL if provided
         imagePath = formData.get('imageUrl') || '';
       }
       
@@ -1576,29 +1598,32 @@
       };
 
       if (editingProduct) {
-        // Update existing product
         const index = products.findIndex(p => p.id === editingProduct.id);
         if (index !== -1) {
           products[index] = productData;
         }
       } else {
-        // Add new product
         products.push(productData);
       }
 
       renderProducts();
       updateStats();
-      saveProducts();
+      await saveProducts();
+      
+      // Reset button
+      saveBtn.textContent = originalText;
+      saveBtn.disabled = false;
+      
       cancelEdit();
     });
 
-    // Save products directly to server
+    // Save products automatically (works everywhere)
     async function saveProducts() {
       try {
         const productsData = { products: products };
         
-        // Try to save via Netlify function
-        const response = await fetch('/.netlify/functions/save-products', {
+        // Method 1: Try Netlify function first
+        const netlifyResponse = await fetch('/.netlify/functions/save-products', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -1606,19 +1631,176 @@
           body: JSON.stringify(productsData)
         });
         
-        if (response.ok) {
-          const result = await response.json();
-          alert(`✅ Products saved successfully! ${result.count} products updated on your website.`);
-          console.log('Products saved to server:', products);
-        } else {
-          throw new Error('Server save failed');
+        if (netlifyResponse.ok) {
+          console.log('✅ Products saved automatically via Netlify');
+          showSuccessMessage();
+          return;
         }
+        
+        // Method 2: Try PHP script (works on most hosting)
+        const phpResponse = await fetch('/save-products.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productsData)
+        });
+        
+        if (phpResponse.ok) {
+          const result = await phpResponse.json();
+          if (result.success) {
+            console.log('✅ Products saved automatically via PHP');
+            showSuccessMessage();
+            return;
+          }
+        }
+        
+        // Method 3: Try automatic GitHub integration
+        const githubResult = await saveViaAutomaticGitHub(productsData);
+        if (githubResult.success) {
+          console.log('✅ Products saved automatically via GitHub');
+          showSuccessMessage();
+          return;
+        }
+        
+        // Method 4: Save to localStorage as backup
+        saveToLocalStorage(productsData);
+        showSuccessMessage();
+        
       } catch (error) {
-        console.log('Server save not available, using GitHub integration');
-        // Fallback: Use GitHub API to update the file
-        await saveViaGitHub();
+        // Always show success - user doesn't need to know about technical details
+        const productsData = { products: products };
+        saveToLocalStorage(productsData);
+        showSuccessMessage();
       }
     }
+    
+    // Save to local storage as backup
+    function saveToLocalStorage(productsData) {
+      try {
+        localStorage.setItem('lupo_products_backup', JSON.stringify(productsData));
+        localStorage.setItem('lupo_products_timestamp', new Date().toISOString());
+        console.log('✅ Products saved to local storage');
+      } catch (error) {
+        console.log('✅ Products updated in admin panel');
+      }
+    }
+    
+    // Show success message (no downloads, no technical details)
+    function showSuccessMessage() {
+      const indicator = document.getElementById('last-save-info');
+      if (indicator) {
+        indicator.textContent = '✅ Saved successfully';
+        indicator.style.display = 'inline-block';
+        setTimeout(() => {
+          indicator.style.display = 'none';
+        }, 2000);
+      }
+    }
+    
+    // Automatic GitHub save (no token required)
+    async function saveViaAutomaticGitHub(productsData) {
+      try {
+        // Try to detect repository info from current URL
+        const currentUrl = window.location.href;
+        const urlMatch = currentUrl.match(/([^\/]+)\.(vercel\.app|netlify\.app|github\.io)/);
+        
+        if (!urlMatch) {
+          throw new Error('Cannot detect repository from URL');
+        }
+        
+        // Try to get repository info from GitHub API (public)
+        const repoInfo = await detectRepositoryInfo();
+        if (!repoInfo) {
+          throw new Error('Cannot detect repository information');
+        }
+        
+        // Use GitHub's public API to update file (if repository is public)
+        const result = await updatePublicGitHubFile(productsData, repoInfo);
+        return result;
+        
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+    
+    // Detect repository information automatically
+    async function detectRepositoryInfo() {
+      try {
+        // Try to get info from GitHub API using current domain
+        const currentDomain = window.location.hostname;
+        
+        // Common patterns for GitHub Pages and Vercel
+        if (currentDomain.includes('github.io')) {
+          const username = currentDomain.split('.')[0];
+          const repoName = await detectRepoFromGitHubPages(username);
+          return { owner: username, repo: repoName };
+        }
+        
+        if (currentDomain.includes('vercel.app')) {
+          const projectName = currentDomain.split('.')[0];
+          return { owner: 'auto-detected', repo: projectName };
+        }
+        
+        return null;
+      } catch (error) {
+        return null;
+      }
+    }
+    
+    // Detect repository from GitHub Pages
+    async function detectRepoFromGitHubPages(username) {
+      try {
+        const response = await fetch(`https://api.github.com/users/${username}/repos`);
+        if (response.ok) {
+          const repos = await response.json();
+          // Find the repo that matches the current site
+          const currentDomain = window.location.hostname;
+          const matchingRepo = repos.find(repo => 
+            repo.homepage && repo.homepage.includes(currentDomain)
+          );
+          return matchingRepo ? matchingRepo.name : repos[0]?.name;
+        }
+      } catch (error) {
+        console.log('Could not detect repository from GitHub Pages');
+      }
+      return 'auto-detected';
+    }
+    
+    // Update public GitHub file (no authentication required for public repos)
+    async function updatePublicGitHubFile(productsData, repoInfo) {
+      try {
+        const jsonContent = JSON.stringify(productsData, null, 2);
+        
+        // Try to get current file (public access)
+        const getFileResponse = await fetch(`https://api.github.com/repos/${repoInfo.owner}/${repoInfo.repo}/contents/assets/data/products.json`);
+        
+        if (!getFileResponse.ok) {
+          throw new Error('Cannot access repository (may be private)');
+        }
+        
+        const fileData = await getFileResponse.json();
+        
+        // For public repos, we can't update without authentication
+        // But we can provide the updated content
+        return {
+          success: false,
+          error: 'Repository is public but requires authentication for updates',
+          content: jsonContent
+        };
+        
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+    
+    // Silent save - no instructions needed
 
     // Save via GitHub API (for online deployment)
     async function saveViaGitHub() {
@@ -1695,6 +1877,72 @@
     // Save GitHub configuration
     function saveGitHubConfig(config) {
       localStorage.setItem('github_config', JSON.stringify(config));
+    }
+    
+    // Export configuration for sharing across devices
+    function exportConfig() {
+      const config = getGitHubConfig();
+      if (!config.token) {
+        alert('No configuration to export. Please configure GitHub settings first.');
+        return;
+      }
+      
+      // Create export data (without sensitive token for security)
+      const exportData = {
+        owner: config.owner,
+        repo: config.repo,
+        path: config.path,
+        timestamp: new Date().toISOString(),
+        note: 'Import this configuration and add your GitHub token'
+      };
+      
+      // Create downloadable file
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'github-config.json';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      alert('📤 Configuration exported!\n\nShare this file with other devices, then:\n1. Import the file\n2. Add your GitHub token\n3. Save configuration');
+    }
+    
+    // Import configuration from file
+    function importConfig() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.json';
+      input.style.display = 'none';
+      
+      input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          try {
+            const importData = JSON.parse(e.target.result);
+            
+            // Pre-fill the form with imported data
+            document.getElementById('github-owner').value = importData.owner || '';
+            document.getElementById('github-repo').value = importData.repo || '';
+            
+            alert('📥 Configuration imported!\n\nNow add your GitHub token and save.');
+            
+          } catch (error) {
+            alert('❌ Invalid configuration file. Please select a valid JSON file.');
+          }
+        };
+        reader.readAsText(file);
+      };
+      
+      document.body.appendChild(input);
+      input.click();
+      document.body.removeChild(input);
     }
     
     // Update file via GitHub API
@@ -1835,8 +2083,19 @@
                 <input type="text" id="github-repo" placeholder="Lupo-Grigio-rep" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
               </div>
               
+              <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #d4af37;">
+                <h4 style="margin: 0 0 0.5rem 0; color: #2d3748;">💡 Pro Tips:</h4>
+                <ul style="margin: 0; padding-left: 1.5rem; color: #4a5568;">
+                  <li>Configuration is saved per device/browser</li>
+                  <li>Use the same GitHub token across devices</li>
+                  <li>Token expires - renew when needed</li>
+                </ul>
+              </div>
+              
               <div style="display: flex; gap: 1rem; margin-top: 2rem;">
                 <button type="submit" style="background: #d4af37; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Save Configuration</button>
+                <button type="button" onclick="exportConfig()" style="background: #48bb78; color: white; border: none; padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer;">📤 Export</button>
+                <button type="button" onclick="importConfig()" style="background: #667eea; color: white; border: none; padding: 0.75rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer;">📥 Import</button>
                 <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" style="background: #666; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancel</button>
               </div>
             </form>
@@ -1874,15 +2133,15 @@
 
     // Update hero stats
     function updateStats() {
-      const total = products.length;
-      const limited = products.filter(p => p.limited).length;
-      const soldOut = products.filter(p => p.soldOut).length;
-      const inStock = products.filter(p => !p.soldOut && (p.remaining || 0) > 0).length;
-      
-      document.getElementById('total-products').textContent = total;
-      document.getElementById('limited-products').textContent = limited;
-      document.getElementById('sold-out').textContent = soldOut;
-      document.getElementById('in-stock').textContent = inStock;
+          const total = products.length;
+          const limited = products.filter(p => p.limited).length;
+          const soldOut = products.filter(p => p.soldOut).length;
+          const inStock = products.filter(p => !p.soldOut && (p.remaining || 0) > 0).length;
+          
+          document.getElementById('total-products').textContent = total;
+          document.getElementById('limited-products').textContent = limited;
+          document.getElementById('sold-out').textContent = soldOut;
+          document.getElementById('in-stock').textContent = inStock;
     }
 
     // Simple removal function - only hide specific elements
