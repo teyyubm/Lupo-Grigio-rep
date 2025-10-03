@@ -857,6 +857,123 @@
         padding: 1rem;
       }
     }
+    
+    /* Current Product Banner Styles */
+    .current-product-banner {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .banner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .banner-header h3 {
+      color: white;
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+    
+    .cancel-edit-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+    
+    .cancel-edit-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-1px);
+    }
+    
+    .banner-content {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 15px;
+      backdrop-filter: blur(10px);
+    }
+    
+    .product-preview {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .banner-image {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .product-details {
+      flex: 1;
+    }
+    
+    .product-details h4 {
+      color: white;
+      margin: 0 0 10px 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+    
+    .product-params {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 8px;
+    }
+    
+    .param-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+    }
+    
+    .param-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .param-row span:last-child {
+      color: white;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+    }
+    
+    /* Responsive design for banner */
+    @media (max-width: 768px) {
+      .product-preview {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .banner-image {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .product-params {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 <body>
@@ -933,6 +1050,44 @@
         </div>
         
         <div id="product-form" class="product-form" style="display: none;">
+          <!-- Current Product Banner -->
+          <div id="current-product-banner" class="current-product-banner" style="display: none;">
+            <div class="banner-header">
+              <h3>📝 Currently Editing</h3>
+              <button type="button" onclick="cancelEdit()" class="cancel-edit-btn">✕ Cancel</button>
+            </div>
+            <div class="banner-content">
+              <div class="product-preview">
+                <img id="banner-product-image" src="" alt="Product" class="banner-image">
+                <div class="product-details">
+                  <h4 id="banner-product-name">Product Name</h4>
+                  <div class="product-params">
+                    <div class="param-row">
+                      <span class="param-label">💰 Price:</span>
+                      <span id="banner-product-price">$0.00</span>
+                    </div>
+                    <div class="param-row">
+                      <span class="param-label">🧵 Material:</span>
+                      <span id="banner-product-material">Material</span>
+                    </div>
+                    <div class="param-row">
+                      <span class="param-label">📦 Remaining:</span>
+                      <span id="banner-product-remaining">0</span>
+                    </div>
+                    <div class="param-row">
+                      <span class="param-label">⭐ Limited:</span>
+                      <span id="banner-product-limited">No</span>
+                    </div>
+                    <div class="param-row">
+                      <span class="param-label">🚫 Sold Out:</span>
+                      <span id="banner-product-sold-out">No</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <h3 id="form-title">Add New Product</h3>
           <form id="product-edit-form">
             <div class="form-row">
@@ -1471,6 +1626,7 @@
       document.getElementById('form-title').textContent = 'Add New Product';
       document.getElementById('product-form').style.display = 'block';
       document.getElementById('product-edit-form').reset();
+      hideProductBanner();
       
       // Set next available ID
       const maxId = products.length > 0 ? Math.max(...products.map(p => p.id)) : 0;
@@ -1485,6 +1641,9 @@
       editingProduct = product;
       document.getElementById('form-title').textContent = 'Edit Product';
       document.getElementById('product-form').style.display = 'block';
+      
+      // Show and populate the banner
+      showProductBanner(product);
 
       // Fill form with product data
       document.getElementById('product-id').value = product.id;
@@ -1531,9 +1690,30 @@
     }
 
     // Cancel edit
+    // Show product banner with current product details
+    function showProductBanner(product) {
+      const banner = document.getElementById('current-product-banner');
+      banner.style.display = 'block';
+      
+      // Populate banner with product data
+      document.getElementById('banner-product-image').src = product.image || '/assets/images/logo.jpg';
+      document.getElementById('banner-product-name').textContent = product.name;
+      document.getElementById('banner-product-price').textContent = `$${(product.priceCents / 100).toFixed(2)}`;
+      document.getElementById('banner-product-material').textContent = product.material || 'Not specified';
+      document.getElementById('banner-product-remaining').textContent = product.remaining || 0;
+      document.getElementById('banner-product-limited').textContent = product.limited ? 'Yes' : 'No';
+      document.getElementById('banner-product-sold-out').textContent = product.soldOut ? 'Yes' : 'No';
+    }
+    
+    // Hide product banner
+    function hideProductBanner() {
+      document.getElementById('current-product-banner').style.display = 'none';
+    }
+
     function cancelEdit() {
       document.getElementById('product-form').style.display = 'none';
       editingProduct = null;
+      hideProductBanner();
     }
 
     // Save product (completely silent)
