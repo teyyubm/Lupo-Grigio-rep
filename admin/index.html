@@ -522,6 +522,168 @@
       transform: translateY(-2px) !important;
     }
 
+    /* Custom Product Editor Styles */
+    .editor-container {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .editor-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editor-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .add-product-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .add-product-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .products-list {
+      padding: 2rem;
+    }
+
+    .product-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .product-item:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .product-info h4 {
+      margin: 0 0 0.5rem 0;
+      color: var(--text);
+      font-size: 1.1rem;
+    }
+
+    .product-info p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .edit-btn, .delete-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .edit-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .edit-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    .delete-btn {
+      background: var(--error);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      background: #e53e3e;
+    }
+
+    .product-form {
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .save-btn {
+      background: var(--success);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .save-btn:hover {
+      background: #38a169;
+    }
+
+    .cancel-btn {
+      background: var(--text-muted);
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .cancel-btn:hover {
+      background: #4a5568;
+    }
+
     /* Mobile Responsive */
     @media (max-width: 768px) {
       .hero-section {
@@ -613,6 +775,78 @@
             <button type="submit" class="login-btn">Login</button>
           </form>
           <div id="error-message" class="error-message" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Product Editor -->
+    <div id="product-editor" style="display: none;">
+      <div class="editor-container">
+        <div class="editor-header">
+          <h2>Product Editor</h2>
+          <button onclick="addNewProduct()" class="add-product-btn">+ Add New Product</button>
+        </div>
+        
+        <div id="products-list" class="products-list">
+          <!-- Products will be loaded here -->
+        </div>
+        
+        <div id="product-form" class="product-form" style="display: none;">
+          <h3 id="form-title">Add New Product</h3>
+          <form id="product-edit-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="product-id">ID:</label>
+                <input type="number" id="product-id" name="id" required>
+              </div>
+              <div class="form-group">
+                <label for="product-name">Name:</label>
+                <input type="text" id="product-name" name="name" required>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="product-price">Price (cents):</label>
+                <input type="number" id="product-price" name="priceCents" required>
+              </div>
+              <div class="form-group">
+                <label for="product-material">Material:</label>
+                <input type="text" id="product-material" name="material" required>
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="product-remaining">Remaining Stock:</label>
+                <input type="number" id="product-remaining" name="remaining" min="0">
+              </div>
+              <div class="form-group">
+                <label for="product-image">Image URL:</label>
+                <input type="text" id="product-image" name="image">
+              </div>
+            </div>
+            
+            <div class="form-row">
+              <div class="form-group checkbox-group">
+                <label>
+                  <input type="checkbox" id="product-limited" name="limited">
+                  Limited Edition
+                </label>
+              </div>
+              <div class="form-group checkbox-group">
+                <label>
+                  <input type="checkbox" id="product-soldout" name="soldOut">
+                  Sold Out
+                </label>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="save-btn">Save Product</button>
+              <button type="button" onclick="cancelEdit()" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -755,7 +989,9 @@
     // Show admin panel
     function showAdminPanel() {
       document.getElementById('login-form').style.display = 'none';
-      document.getElementById('nc-root').style.display = 'block';
+      document.getElementById('nc-root').style.display = 'none';
+      document.getElementById('product-editor').style.display = 'block';
+      loadProducts();
     }
     
     // Handle login form submission
@@ -910,40 +1146,235 @@
     
     // Initialize authentication check
     checkAuth();
+    
+    // Initialize CMS after authentication
+    function initializeCMS() {
+      if (typeof CMS !== 'undefined') {
+        CMS.init({
+          config: {
+            backend: {
+              name: 'test-repo'
+            },
+            publish_mode: 'simple',
+            media_folder: 'assets/images',
+            public_folder: '/assets/images',
+            collections: [
+              {
+                name: 'products',
+                label: 'Products',
+                label_singular: 'Product',
+                description: 'Edit products for the main page',
+                files: [
+                  {
+                    file: 'assets/data/products.json',
+                    label: 'Products',
+                    name: 'products',
+                    editor: {
+                      preview: true
+                    },
+                    fields: [
+                      {
+                        label: 'Products',
+                        name: 'products',
+                        widget: 'list',
+                        summary: '{{fields.name}} — ${{fields.priceCents}}',
+                        fields: [
+                          { label: 'ID', name: 'id', widget: 'number', required: true },
+                          { label: 'Name', name: 'name', widget: 'string', required: true },
+                          { label: 'Price (cents)', name: 'priceCents', widget: 'number', required: true },
+                          { label: 'Material', name: 'material', widget: 'string', required: true },
+                          { label: 'Limited Edition', name: 'limited', widget: 'boolean', default: false, required: false },
+                          { label: 'Remaining Stock', name: 'remaining', widget: 'number', default: 0, required: false },
+                          { label: 'Sold Out', name: 'soldOut', widget: 'boolean', default: false, required: false },
+                          { label: 'Image', name: 'image', widget: 'image', allow_multiple: false, required: false }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        });
+      }
+    }
+    
+    // Product Management Functions
+    let products = [];
+    let editingProduct = null;
 
-    // Load site styles for previews
-    const link1 = document.createElement('link');
-    link1.rel = 'stylesheet';
-    link1.href = '/assets/styles/theme.css';
-    const link2 = document.createElement('link');
-    link2.rel = 'stylesheet';
-    link2.href = '/assets/styles/main.css';
-    document.head.appendChild(link1);
-    document.head.appendChild(link2);
+    // Load products from JSON file
+    async function loadProducts() {
+      try {
+        const response = await fetch('/assets/data/products.json');
+        const data = await response.json();
+        products = data.products || [];
+        renderProducts();
+        updateStats();
+      } catch (error) {
+        console.error('Error loading products:', error);
+        // Fallback data
+        products = [
+          {
+            id: 1,
+            name: "No. 01 Bifold Wallet",
+            priceCents: 18500,
+            material: "Full-grain Italian leather",
+            limited: true,
+            remaining: 12,
+            image: "/assets/images/ava.jpg"
+          },
+          {
+            id: 2,
+            name: "No. 02 Card Holder",
+            priceCents: 12000,
+            material: "Vegetable-tanned leather",
+            limited: true,
+            remaining: 0,
+            soldOut: true,
+            image: "assets/images/banner.jpg"
+          },
+          {
+            id: 3,
+            name: "No. 03 Zip Wallet",
+            priceCents: 22000,
+            material: "Full-grain leather with brass zip",
+            limited: false,
+            remaining: 34,
+            image: "assets/images/banner.jpg"
+          }
+        ];
+        renderProducts();
+        updateStats();
+      }
+    }
+
+    // Render products list
+    function renderProducts() {
+      const container = document.getElementById('products-list');
+      container.innerHTML = '';
+
+      products.forEach(product => {
+        const productDiv = document.createElement('div');
+        productDiv.className = 'product-item';
+        productDiv.innerHTML = `
+          <div class="product-info">
+            <h4>${product.name}</h4>
+            <p>ID: ${product.id} | Price: $${(product.priceCents / 100).toFixed(2)} | Stock: ${product.remaining}</p>
+            <p>Material: ${product.material}</p>
+            <div class="product-badges">
+              ${product.limited ? '<span class="badge limited">Limited Edition</span>' : ''}
+              ${product.soldOut ? '<span class="badge sold-out">Sold Out</span>' : ''}
+            </div>
+          </div>
+          <div class="product-actions">
+            <button class="edit-btn" onclick="editProduct(${product.id})">Edit</button>
+            <button class="delete-btn" onclick="deleteProduct(${product.id})">Delete</button>
+          </div>
+        `;
+        container.appendChild(productDiv);
+      });
+    }
+
+    // Add new product
+    function addNewProduct() {
+      editingProduct = null;
+      document.getElementById('form-title').textContent = 'Add New Product';
+      document.getElementById('product-form').style.display = 'block';
+      document.getElementById('product-edit-form').reset();
+      
+      // Set next available ID
+      const maxId = products.length > 0 ? Math.max(...products.map(p => p.id)) : 0;
+      document.getElementById('product-id').value = maxId + 1;
+    }
+
+    // Edit existing product
+    function editProduct(id) {
+      const product = products.find(p => p.id === id);
+      if (!product) return;
+
+      editingProduct = product;
+      document.getElementById('form-title').textContent = 'Edit Product';
+      document.getElementById('product-form').style.display = 'block';
+
+      // Fill form with product data
+      document.getElementById('product-id').value = product.id;
+      document.getElementById('product-name').value = product.name;
+      document.getElementById('product-price').value = product.priceCents;
+      document.getElementById('product-material').value = product.material;
+      document.getElementById('product-remaining').value = product.remaining || 0;
+      document.getElementById('product-image').value = product.image || '';
+      document.getElementById('product-limited').checked = product.limited || false;
+      document.getElementById('product-soldout').checked = product.soldOut || false;
+    }
+
+    // Delete product
+    function deleteProduct(id) {
+      if (confirm('Are you sure you want to delete this product?')) {
+        products = products.filter(p => p.id !== id);
+        renderProducts();
+        updateStats();
+        saveProducts();
+      }
+    }
+
+    // Cancel edit
+    function cancelEdit() {
+      document.getElementById('product-form').style.display = 'none';
+      editingProduct = null;
+    }
+
+    // Save product
+    document.getElementById('product-edit-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(e.target);
+      const productData = {
+        id: parseInt(formData.get('id')),
+        name: formData.get('name'),
+        priceCents: parseInt(formData.get('priceCents')),
+        material: formData.get('material'),
+        remaining: parseInt(formData.get('remaining')) || 0,
+        image: formData.get('image') || '',
+        limited: formData.get('limited') === 'on',
+        soldOut: formData.get('soldOut') === 'on'
+      };
+
+      if (editingProduct) {
+        // Update existing product
+        const index = products.findIndex(p => p.id === editingProduct.id);
+        if (index !== -1) {
+          products[index] = productData;
+        }
+      } else {
+        // Add new product
+        products.push(productData);
+      }
+
+      renderProducts();
+      updateStats();
+      saveProducts();
+      cancelEdit();
+    });
+
+    // Save products to JSON (simulated - in real app this would save to server)
+    function saveProducts() {
+      // In a real application, this would make an API call to save the data
+      console.log('Products saved:', products);
+      alert('Products updated successfully! (Note: This is a demo - changes are not persisted to the server)');
+    }
 
     // Update hero stats
     function updateStats() {
-      fetch('/assets/data/products.json')
-        .then(res => res.json())
-        .then(data => {
-          const products = data.products || [];
-          const total = products.length;
-          const limited = products.filter(p => p.limited).length;
-          const soldOut = products.filter(p => p.soldOut).length;
-          const inStock = products.filter(p => !p.soldOut && (p.remaining || 0) > 0).length;
-          
-          document.getElementById('total-products').textContent = total;
-          document.getElementById('limited-products').textContent = limited;
-          document.getElementById('sold-out').textContent = soldOut;
-          document.getElementById('in-stock').textContent = inStock;
-        })
-        .catch(() => {
-          // Fallback if fetch fails
-          document.getElementById('total-products').textContent = '3';
-          document.getElementById('limited-products').textContent = '2';
-          document.getElementById('sold-out').textContent = '1';
-          document.getElementById('in-stock').textContent = '2';
-        });
+      const total = products.length;
+      const limited = products.filter(p => p.limited).length;
+      const soldOut = products.filter(p => p.soldOut).length;
+      const inStock = products.filter(p => !p.soldOut && (p.remaining || 0) > 0).length;
+      
+      document.getElementById('total-products').textContent = total;
+      document.getElementById('limited-products').textContent = limited;
+      document.getElementById('sold-out').textContent = soldOut;
+      document.getElementById('in-stock').textContent = inStock;
     }
 
     // Simple removal function - only hide specific elements
