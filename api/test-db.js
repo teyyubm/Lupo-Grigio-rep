@@ -1,7 +1,7 @@
 // Test database connection
 const { sql } = require('@vercel/postgres');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     // Simple test query
     const result = await sql`SELECT 1 as test, NOW() as current_time`;
@@ -18,4 +18,4 @@ export default async function handler(req, res) {
       details: error.message 
     });
   }
-}
+};

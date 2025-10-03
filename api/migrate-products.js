@@ -1,7 +1,7 @@
 // Simple migration script - just insert one test product
 const { sql } = require('@vercel/postgres');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     // Test database connection first
     const testResult = await sql`SELECT 1 as test`;
@@ -28,4 +28,4 @@ export default async function handler(req, res) {
       stack: error.stack
     });
   }
-}
+};
