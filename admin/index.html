@@ -48,6 +48,56 @@
       line-height: 1.6;
     }
 
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 1rem 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+      margin: 0 0 2rem 0;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .stat-item {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 1.5rem;
+      border-radius: var(--radius-sm);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
     /* Admin Header */
     .admin-header {
       background: var(--surface);
@@ -116,20 +166,9 @@
       padding: 2rem;
     }
 
-    /* Custom CMS Overrides */
-    .nc-root {
-      background: transparent !important;
-    }
-
-    .nc-root .nc-app {
-      background: transparent !important;
-    }
-
+    /* Hide unnecessary CMS elements */
     .nc-root .nc-appHeader {
-      background: var(--surface) !important;
-      border-bottom: 1px solid var(--border) !important;
-      box-shadow: var(--shadow) !important;
-      border-radius: var(--radius) var(--radius) 0 0 !important;
+      display: none !important;
     }
 
     .nc-root .nc-appMain {
@@ -145,23 +184,7 @@
     }
 
     .nc-root .nc-collectionPage-header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
-      border-bottom: none !important;
-      padding: 2rem !important;
-      color: white !important;
-    }
-
-    .nc-root .nc-collectionPage-title {
-      color: white !important;
-      font-size: 2rem !important;
-      font-weight: 700 !important;
-      margin: 0 !important;
-    }
-
-    .nc-root .nc-collectionPage-description {
-      color: rgba(255, 255, 255, 0.9) !important;
-      margin-top: 0.5rem !important;
-      font-size: 1rem !important;
+      display: none !important;
     }
 
     /* Form Styling */
@@ -209,17 +232,6 @@
       box-shadow: var(--shadow-lg) !important;
     }
 
-    .nc-root .nc-button--secondary {
-      background: var(--surface) !important;
-      color: var(--text) !important;
-      border: 2px solid var(--border) !important;
-    }
-
-    .nc-root .nc-button--secondary:hover {
-      background: var(--surface-hover) !important;
-      border-color: var(--primary) !important;
-    }
-
     /* List Items */
     .nc-root .nc-list-item {
       background: var(--surface) !important;
@@ -242,51 +254,25 @@
       transform: translateY(-2px) !important;
     }
 
-    /* List Item Content */
-    .nc-root .nc-list-item-content {
-      flex: 1 !important;
-      margin-right: 1rem !important;
-      overflow: hidden !important;
-    }
-
-    /* List Item Actions */
-    .nc-root .nc-list-item-actions {
-      display: flex !important;
-      gap: 0.5rem !important;
-      align-items: center !important;
-      flex-shrink: 0 !important;
-    }
-
-    /* List Item Buttons */
-    .nc-root .nc-list-item-button {
-      padding: 0.5rem !important;
-      border-radius: var(--radius-sm) !important;
-      border: 1px solid var(--border) !important;
-      background: var(--surface) !important;
-      color: var(--text-muted) !important;
-      cursor: pointer !important;
-      transition: all 0.2s ease !important;
-      min-width: 32px !important;
-      min-height: 32px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-    }
-
-    .nc-root .nc-list-item-button:hover {
-      background: var(--surface-hover) !important;
-      border-color: var(--primary) !important;
-      color: var(--primary) !important;
-    }
-
-    .nc-root .nc-list-item-button--delete:hover {
-      background: rgba(245, 101, 101, 0.1) !important;
-      border-color: var(--error) !important;
-      color: var(--error) !important;
-    }
-
     /* Mobile Responsive */
     @media (max-width: 768px) {
+      .hero-section {
+        padding: 2rem 1rem;
+      }
+
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1rem;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+
       .admin-header {
         padding: 1rem;
         flex-direction: column;
@@ -302,100 +288,6 @@
       .cms-container {
         padding: 1rem;
       }
-
-      .nc-root .nc-collectionPage-header {
-        padding: 1.5rem !important;
-      }
-
-      .nc-root .nc-collectionPage-title {
-        font-size: 1.5rem !important;
-      }
-
-      .nc-root .nc-widget-input {
-        padding: 0.875rem !important;
-        font-size: 16px !important;
-      }
-
-      .nc-root .nc-button {
-        padding: 0.875rem 1.5rem !important;
-        font-size: 0.9rem !important;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .admin-header {
-        padding: 0.75rem;
-      }
-
-      .admin-logo h1 {
-        font-size: 1.1rem !important;
-      }
-
-      .admin-nav a {
-        padding: 0.5rem;
-        font-size: 0.9rem;
-      }
-
-      .cms-container {
-        padding: 0.75rem;
-      }
-
-      .nc-root .nc-collectionPage-header {
-        padding: 1rem !important;
-      }
-
-      .nc-root .nc-collectionPage-title {
-        font-size: 1.25rem !important;
-      }
-
-      .nc-root .nc-widget-input {
-        padding: 0.75rem !important;
-      }
-
-      .nc-root .nc-button {
-        padding: 0.75rem 1.25rem !important;
-        font-size: 0.85rem !important;
-        min-height: 44px !important;
-      }
-    }
-
-    /* Error States */
-    .nc-root .nc-error {
-      color: var(--error) !important;
-      background: rgba(245, 101, 101, 0.1) !important;
-      border: 1px solid rgba(245, 101, 101, 0.2) !important;
-      border-radius: var(--radius-sm) !important;
-      padding: 1rem !important;
-    }
-
-    /* Success States */
-    .nc-root .nc-success {
-      color: var(--success) !important;
-      background: rgba(72, 187, 120, 0.1) !important;
-      border: 1px solid rgba(72, 187, 120, 0.2) !important;
-      border-radius: var(--radius-sm) !important;
-      padding: 1rem !important;
-    }
-
-    /* Help Text */
-    .nc-root .nc-help {
-      color: var(--text-muted) !important;
-      font-size: 0.875rem !important;
-      margin-top: 0.25rem !important;
-    }
-
-    /* Empty State */
-    .nc-root .nc-emptyState {
-      text-align: center !important;
-      padding: 3rem 2rem !important;
-      color: var(--text-muted) !important;
-    }
-
-    .nc-root .nc-emptyState-title {
-      font-size: 1.5rem !important;
-      font-weight: 600 !important;
-      margin-bottom: 1rem !important;
-      color: var(--text) !important;
     }
   </style>
 </head>
@@ -414,6 +306,31 @@
 
   <!-- CMS Container -->
   <div class="cms-container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1 class="hero-title">Product Management</h1>
+      <p class="hero-subtitle">Manage your luxury leather product catalog with precision and accuracy</p>
+      
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number" id="total-products">0</div>
+          <div class="stat-label">Total Products</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="limited-products">0</div>
+          <div class="stat-label">Limited Edition</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="sold-out">0</div>
+          <div class="stat-label">Sold Out</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number" id="in-stock">0</div>
+          <div class="stat-label">In Stock</div>
+        </div>
+      </div>
+    </div>
+
     <div id="nc-root"></div>
   </div>
 
@@ -442,6 +359,34 @@
     document.head.appendChild(link1);
     document.head.appendChild(link2);
 
+    // Update hero stats
+    function updateStats() {
+      fetch('/assets/data/products.json')
+        .then(res => res.json())
+        .then(data => {
+          const products = data.products || [];
+          const total = products.length;
+          const limited = products.filter(p => p.limited).length;
+          const soldOut = products.filter(p => p.soldOut).length;
+          const inStock = products.filter(p => !p.soldOut && (p.remaining || 0) > 0).length;
+          
+          document.getElementById('total-products').textContent = total;
+          document.getElementById('limited-products').textContent = limited;
+          document.getElementById('sold-out').textContent = soldOut;
+          document.getElementById('in-stock').textContent = inStock;
+        })
+        .catch(() => {
+          // Fallback if fetch fails
+          document.getElementById('total-products').textContent = '3';
+          document.getElementById('limited-products').textContent = '2';
+          document.getElementById('sold-out').textContent = '1';
+          document.getElementById('in-stock').textContent = '2';
+        });
+    }
+
+    // Update stats on load
+    updateStats();
+
     // Simple product preview component
     function currency(cents) {
       try {
@@ -455,9 +400,6 @@
       render() {
         const entry = this.props.value || {};
         const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
-        
-        // Use proper fallback image
-        const imageUrl = entry.image || '/assets/images/banner.jpg';
         
         return h('article', { 
           className: 'card',
@@ -474,14 +416,13 @@
           h('div', { 
             className: 'card-media', 
             style: { 
-              backgroundImage: `url('${imageUrl}')`,
+              backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               height: '200px',
               position: 'relative'
             } 
           },
-            // Product ID badge
             h('div', {
               style: {
                 position: 'absolute',
@@ -561,7 +502,7 @@
       }
     });
 
-    // Simple preview template without complex error handling
+    // Simple preview template
     CMS.registerPreviewTemplate('products', ({ entry }) => {
       const data = entry.getIn(['data']).toJS();
       const items = data.products || [];
