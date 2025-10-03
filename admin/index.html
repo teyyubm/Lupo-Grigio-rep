@@ -641,7 +641,7 @@
     document.head.appendChild(link1);
     document.head.appendChild(link2);
 
-    // Enhanced product preview component
+    // Enhanced product preview component with validation
     function currency(cents) {
       try {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format((cents || 0) / 100);
@@ -650,10 +650,44 @@
       }
     }
 
+    function validateProduct(product) {
+      const errors = [];
+      if (!product.name || product.name.trim() === '') {
+        errors.push('Product name is required');
+      }
+      if (!product.priceCents || product.priceCents < 100) {
+        errors.push('Price must be at least $1.00');
+      }
+      if (!product.material || product.material.trim() === '') {
+        errors.push('Material is required');
+      }
+      return errors;
+    }
+
     const ProductPreview = createClass({
       render() {
         const entry = this.props.value || {};
+        const errors = validateProduct(entry);
         const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
+        
+        // Show error state if validation fails
+        if (errors.length > 0) {
+          return h('article', { 
+            className: 'card error',
+            style: { 
+              marginBottom: '1rem',
+              border: '2px solid #ef4444',
+              borderRadius: 'var(--luxury-radius)',
+              background: 'rgba(239, 68, 68, 0.05)',
+              padding: '1.5rem'
+            }
+          },
+            h('div', { style: { color: '#ef4444', fontWeight: '600', marginBottom: '0.5rem' } }, '⚠️ Product Validation Errors:'),
+            h('ul', { style: { margin: 0, paddingLeft: '1.5rem', color: '#ef4444' } },
+              ...errors.map(error => h('li', { key: error }, error))
+            )
+          );
+        }
         
         return h('article', { 
           className: 'card',
@@ -673,13 +707,32 @@
               backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              height: '200px'
+              height: '200px',
+              position: 'relative'
             } 
-          }),
+          },
+            // Product ID badge
+            h('div', {
+              style: {
+                position: 'absolute',
+                top: '0.5rem',
+                right: '0.5rem',
+                background: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                fontWeight: '600'
+              }
+            }, `ID: ${entry.id || 'N/A'}`)
+          ),
           h('div', { className: 'card-body', style: { padding: '1.5rem' } },
             h('div', { className: 'card-title', style: { fontWeight: '700', marginBottom: '0.5rem', fontSize: '1.1rem', color: 'var(--luxury-text)' } }, entry.name || 'Untitled'),
-            h('div', { className: 'card-sub', style: { color: 'var(--luxury-text-muted)', fontSize: '0.9rem' } }, 
+            h('div', { className: 'card-sub', style: { color: 'var(--luxury-text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' } }, 
               `${currency(entry.priceCents)} · ${entry.material || ''}`
+            ),
+            h('div', { style: { fontSize: '0.8rem', color: 'var(--luxury-text-muted)' } },
+              `Stock: ${entry.remaining || 0} remaining`
             )
           ),
           h('div', { 
@@ -758,24 +811,57 @@
       );
     });
 
-    // Add helpful tooltips and validation
+    // Enhanced validation and error handling
     CMS.registerEventListener({
       name: 'preSave',
       handler: ({ entry }) => {
         const data = entry.getIn(['data']).toJS();
         const products = data.products || [];
         
-        // Validate products
+        // Validate all products
+        const allErrors = [];
         for (let i = 0; i < products.length; i++) {
           const product = products[i];
-          if (!product.name || !product.priceCents || !product.material) {
-            alert(`Product ${i + 1} is missing required fields (Name, Price, Material)`);
-            return false;
+          const errors = validateProduct(product);
+          if (errors.length > 0) {
+            allErrors.push(`Product ${i + 1}: ${errors.join(', ')}`);
           }
-          if (product.priceCents <= 0) {
-            alert(`Product ${i + 1} has invalid price`);
-            return false;
+          
+          // Additional validation
+          if (product.name && product.name.length < 3) {
+            allErrors.push(`Product ${i + 1}: Name must be at least 3 characters`);
           }
+          if (product.priceCents && product.priceCents > 1000000) {
+            allErrors.push(`Product ${i + 1}: Price seems too high (over $10,000)`);
+          }
+          if (product.id && product.id < 1) {
+            allErrors.push(`Product ${i + 1}: Product ID must be a positive number`);
+          }
+        }
+        
+        if (allErrors.length > 0) {
+          alert(`Please fix the following errors before saving:\n\n${allErrors.join('\n')}`);
+          return false;
+        }
+        
+        return true;
+      }
+    });
+
+    // Add helpful tooltips and better UX
+    CMS.registerEventListener({
+      name: 'preUnload',
+      handler: ({ entry }) => {
+        const data = entry.getIn(['data']).toJS();
+        const products = data.products || [];
+        
+        // Check for unsaved changes
+        const hasChanges = products.some(product => {
+          return !product.name || !product.priceCents || !product.material;
+        });
+        
+        if (hasChanges) {
+          return confirm('You have unsaved changes. Are you sure you want to leave?');
         }
         
         return true;

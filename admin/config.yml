@@ -14,7 +14,7 @@ collections:
   - name: "products"
     label: "Products"
     label_singular: "Product"
-    description: "Manage your product catalog"
+    description: "Manage your luxury leather product catalog"
     folder: "assets/data"
     slug: "{{slug}}"
     create: true
@@ -31,23 +31,28 @@ collections:
             name: "id"
             widget: "number"
             required: true
-            hint: "Unique identifier for this product"
+            min: 1
+            hint: "Unique identifier for this product (must be a positive number)"
+            default: 1
           - label: "Product Name"
             name: "name"
             widget: "string"
             required: true
-            hint: "Display name shown to customers"
+            hint: "Display name shown to customers (e.g., 'No. 01 Bifold Wallet')"
+            pattern: ['^[A-Za-z0-9\\s\\-\\.]+$', 'Only letters, numbers, spaces, hyphens, and periods allowed']
           - label: "Price (in cents)"
             name: "priceCents"
             widget: "number"
             required: true
-            min: 1
-            hint: "Price in cents (e.g., 18500 = $185.00)"
+            min: 100
+            hint: "Price in cents (minimum $1.00, e.g., 18500 = $185.00)"
+            default: 10000
           - label: "Material"
             name: "material"
             widget: "string"
             required: true
             hint: "Material description (e.g., 'Full-grain Italian leather')"
+            default: "Premium leather"
           - label: "Limited Edition"
             name: "limited"
             widget: "boolean"
@@ -68,12 +73,13 @@ collections:
             name: "image"
             widget: "image"
             allow_multiple: false
-            hint: "Upload product image (recommended: 800x600px)"
+            hint: "Upload product image (recommended: 800x600px, JPG/PNG)"
+            required: false
 
   - name: "settings"
     label: "Site Settings"
     label_singular: "Setting"
-    description: "Configure site-wide settings"
+    description: "Configure site-wide settings and content"
     files:
       - file: "assets/data/settings.json"
         label: "General Settings"
@@ -84,36 +90,43 @@ collections:
           - label: "Site Title"
             name: "title"
             widget: "string"
-            hint: "Main site title"
+            hint: "Main site title for SEO"
+            default: "Lupo Grigio — Limited Edition Leather Goods"
           - label: "Site Description"
             name: "description"
             widget: "text"
             hint: "SEO description for search engines"
+            default: "Deluxe, limited edition leather goods crafted for the discerning. Lupo Grigio wallets and accessories in small, numbered runs."
           - label: "Instagram Handle"
             name: "instagramHandle"
             widget: "string"
             hint: "Instagram username without @ (e.g., lupogrigiobaku)"
+            default: "lupogrigiobaku"
           - label: "Contact Email"
             name: "contactEmail"
             widget: "string"
             hint: "Email address for customer inquiries"
+            default: "atelier@lupogrigio.com"
           - label: "Hero Title"
             name: "heroTitle"
             widget: "string"
             hint: "Main headline on homepage"
+            default: "Limited Edition. Uncompromising Craft."
           - label: "Hero Subtitle"
             name: "heroSubtitle"
             widget: "text"
             hint: "Subtitle text below main headline"
+            default: "Small, numbered runs of premium leather goods. Designed in Italy, made to endure."
           - label: "Story Text"
             name: "storyText"
             widget: "text"
             hint: "Text for the story section"
+            default: "We release only a handful of pieces each season. Each item is individually numbered and crafted from full‑grain leather, developing a rich patina unique to you."
 
   - name: "instagram"
     label: "Instagram Posts"
     label_singular: "Instagram Post"
-    description: "Manage Instagram feed (fallback data)"
+    description: "Manage Instagram feed fallback data"
     files:
       - file: "assets/data/instagram.json"
         label: "Instagram Feed"
@@ -125,6 +138,7 @@ collections:
             name: "profile"
             widget: "string"
             hint: "Full Instagram profile URL"
+            default: "https://www.instagram.com/lupogrigiobaku/"
           - label: "Posts"
             name: "posts"
             widget: "list"
@@ -135,11 +149,14 @@ collections:
                 name: "id"
                 widget: "string"
                 hint: "Unique post identifier"
+                pattern: ['^[a-zA-Z0-9_-]+$', 'Only letters, numbers, hyphens, and underscores allowed']
               - label: "Image URL"
                 name: "image"
                 widget: "string"
                 hint: "URL to post image"
+                pattern: ['^https?://.*\\.(jpg|jpeg|png|gif|webp)$', 'Must be a valid image URL']
               - label: "Post URL"
                 name: "url"
                 widget: "string"
                 hint: "Link to Instagram post"
+                pattern: ['^https://www\\.instagram\\.com/.*', 'Must be a valid Instagram URL']
