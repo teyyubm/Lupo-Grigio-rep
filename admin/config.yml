@@ -7,7 +7,6 @@ publish_mode: editorial_workflow
 media_folder: "assets/images"
 public_folder: "/assets/images"
 
-# Site settings
 site_url: "https://lupogrigio.netlify.app"
 display_url: "https://lupogrigio.netlify.app"
 
@@ -28,64 +27,48 @@ collections:
         collapsed: false
         summary: "{{fields.name}} — {{fields.priceCents}}¢"
         fields:
-          - { 
-              label: "Product ID", 
-              name: "id", 
-              widget: "number", 
-              required: true,
-              hint: "Unique identifier for this product"
-            }
-          - { 
-              label: "Product Name", 
-              name: "name", 
-              widget: "string", 
-              required: true,
-              hint: "Display name shown to customers"
-            }
-          - { 
-              label: "Price (in cents)", 
-              name: "priceCents", 
-              widget: "number", 
-              required: true,
-              min: 1,
-              hint: "Price in cents (e.g., 18500 = $185.00)"
-            }
-          - { 
-              label: "Material", 
-              name: "material", 
-              widget: "string", 
-              required: true,
-              hint: "Material description (e.g., 'Full-grain Italian leather')"
-            }
-          - { 
-              label: "Limited Edition", 
-              name: "limited", 
-              widget: "boolean", 
-              default: false,
-              hint: "Mark as limited edition product"
-            }
-          - { 
-              label: "Remaining Stock", 
-              name: "remaining", 
-              widget: "number", 
-              default: 0,
-              min: 0,
-              hint: "Number of items remaining in stock"
-            }
-          - { 
-              label: "Sold Out", 
-              name: "soldOut", 
-              widget: "boolean", 
-              default: false,
-              hint: "Mark as completely sold out"
-            }
-          - { 
-              label: "Product Image", 
-              name: "image", 
-              widget: "image", 
-              allow_multiple: false,
-              hint: "Upload product image (recommended: 800x600px)"
-            }
+          - label: "Product ID"
+            name: "id"
+            widget: "number"
+            required: true
+            hint: "Unique identifier for this product"
+          - label: "Product Name"
+            name: "name"
+            widget: "string"
+            required: true
+            hint: "Display name shown to customers"
+          - label: "Price (in cents)"
+            name: "priceCents"
+            widget: "number"
+            required: true
+            min: 1
+            hint: "Price in cents (e.g., 18500 = $185.00)"
+          - label: "Material"
+            name: "material"
+            widget: "string"
+            required: true
+            hint: "Material description (e.g., 'Full-grain Italian leather')"
+          - label: "Limited Edition"
+            name: "limited"
+            widget: "boolean"
+            default: false
+            hint: "Mark as limited edition product"
+          - label: "Remaining Stock"
+            name: "remaining"
+            widget: "number"
+            default: 0
+            min: 0
+            hint: "Number of items remaining in stock"
+          - label: "Sold Out"
+            name: "soldOut"
+            widget: "boolean"
+            default: false
+            hint: "Mark as completely sold out"
+          - label: "Product Image"
+            name: "image"
+            widget: "image"
+            allow_multiple: false
+            hint: "Upload product image (recommended: 800x600px)"
 
   - name: "settings"
     label: "Site Settings"
@@ -98,48 +81,34 @@ collections:
         editor:
           preview: false
         fields:
-          - { 
-              label: "Site Title", 
-              name: "title", 
-              widget: "string",
-              hint: "Main site title"
-            }
-          - { 
-              label: "Site Description", 
-              name: "description", 
-              widget: "text",
-              hint: "SEO description for search engines"
-            }
-          - { 
-              label: "Instagram Handle", 
-              name: "instagramHandle", 
-              widget: "string",
-              hint: "Instagram username without @ (e.g., lupogrigiobaku)"
-            }
-          - { 
-              label: "Contact Email", 
-              name: "contactEmail", 
-              widget: "string",
-              hint: "Email address for customer inquiries"
-            }
-          - { 
-              label: "Hero Title", 
-              name: "heroTitle", 
-              widget: "string",
-              hint: "Main headline on homepage"
-            }
-          - { 
-              label: "Hero Subtitle", 
-              name: "heroSubtitle", 
-              widget: "text",
-              hint: "Subtitle text below main headline"
-            }
-          - { 
-              label: "Story Text", 
-              name: "storyText", 
-              widget: "text",
-              hint: "Text for the story section"
-            }
+          - label: "Site Title"
+            name: "title"
+            widget: "string"
+            hint: "Main site title"
+          - label: "Site Description"
+            name: "description"
+            widget: "text"
+            hint: "SEO description for search engines"
+          - label: "Instagram Handle"
+            name: "instagramHandle"
+            widget: "string"
+            hint: "Instagram username without @ (e.g., lupogrigiobaku)"
+          - label: "Contact Email"
+            name: "contactEmail"
+            widget: "string"
+            hint: "Email address for customer inquiries"
+          - label: "Hero Title"
+            name: "heroTitle"
+            widget: "string"
+            hint: "Main headline on homepage"
+          - label: "Hero Subtitle"
+            name: "heroSubtitle"
+            widget: "text"
+            hint: "Subtitle text below main headline"
+          - label: "Story Text"
+            name: "storyText"
+            widget: "text"
+            hint: "Text for the story section"
 
   - name: "instagram"
     label: "Instagram Posts"
@@ -152,35 +121,25 @@ collections:
         editor:
           preview: true
         fields:
-          - { 
-              label: "Instagram Profile URL", 
-              name: "profile", 
-              widget: "string",
-              hint: "Full Instagram profile URL"
-            }
-          - { 
-              label: "Posts", 
-              name: "posts", 
-              widget: "list",
-              collapsed: false,
-              summary: "{{fields.id}}",
-              fields:
-                - { 
-                    label: "Post ID", 
-                    name: "id", 
-                    widget: "string",
-                    hint: "Unique post identifier"
-                  }
-                - { 
-                    label: "Image URL", 
-                    name: "image", 
-                    widget: "string",
-                    hint: "URL to post image"
-                  }
-                - { 
-                    label: "Post URL", 
-                    name: "url", 
-                    widget: "string",
-                    hint: "Link to Instagram post"
-                  }
-            }
+          - label: "Instagram Profile URL"
+            name: "profile"
+            widget: "string"
+            hint: "Full Instagram profile URL"
+          - label: "Posts"
+            name: "posts"
+            widget: "list"
+            collapsed: false
+            summary: "{{fields.id}}"
+            fields:
+              - label: "Post ID"
+                name: "id"
+                widget: "string"
+                hint: "Unique post identifier"
+              - label: "Image URL"
+                name: "image"
+                widget: "string"
+                hint: "URL to post image"
+              - label: "Post URL"
+                name: "url"
+                widget: "string"
+                hint: "Link to Instagram post"
