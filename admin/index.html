@@ -505,22 +505,10 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <script>
-    // Identity handling for Vercel deployment
-    if (window.netlifyIdentity) {
-      window.netlifyIdentity.on('init', user => {
-        const hash = window.location.hash || '';
-        if (!user && hash.includes('invite_token')) {
-          window.netlifyIdentity.acceptInvite().catch(() => {});
-        }
-      });
-      
-      // Initialize Netlify Identity
-      window.netlifyIdentity.init();
-    }
+    // GitHub authentication - no additional setup needed
 
     // Load site styles for previews
     const link1 = document.createElement('link');
