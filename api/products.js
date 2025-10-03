@@ -1,7 +1,7 @@
 // API route: GET /api/products
 // Get all products from database
 
-import { sql } from '@vercel/postgres';
+const { sql } = require('@vercel/postgres');
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

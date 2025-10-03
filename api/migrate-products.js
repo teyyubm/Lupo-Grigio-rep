@@ -1,9 +1,9 @@
 // Migration script: Move products from JSON to database
 // Run this once to migrate your existing products
 
-import { sql } from '@vercel/postgres';
-import fs from 'fs';
-import path from 'path';
+const { sql } = require('@vercel/postgres');
+const fs = require('fs');
+const path = require('path');
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

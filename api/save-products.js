@@ -1,7 +1,7 @@
 // API route: POST /api/products
 // Create or update products in database
 
-import { sql } from '@vercel/postgres';
+const { sql } = require('@vercel/postgres');
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
