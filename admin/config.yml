@@ -1,6 +1,6 @@
 backend:
-  name: proxy
-  proxy_url: https://api.netlify.com
+  name: github
+  repo: teyyubm/Lupo-Grigio-rep
   branch: main
 
 publish_mode: simple
