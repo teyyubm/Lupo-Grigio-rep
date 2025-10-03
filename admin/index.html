@@ -175,6 +175,44 @@
       background: transparent !important;
     }
 
+    /* Hide collections sidebar */
+    .nc-root .nc-sidebar {
+      display: none !important;
+    }
+
+    .nc-root .nc-sidebar-header {
+      display: none !important;
+    }
+
+    .nc-root .nc-sidebar-nav {
+      display: none !important;
+    }
+
+    .nc-root .nc-sidebar-nav-list {
+      display: none !important;
+    }
+
+    .nc-root [class*="sidebar"] {
+      display: none !important;
+    }
+
+    /* Force light background */
+    .nc-root {
+      background: var(--bg) !important;
+    }
+
+    .nc-root .nc-app {
+      background: var(--bg) !important;
+    }
+
+    .nc-root .nc-app-body {
+      background: var(--bg) !important;
+    }
+
+    .nc-root .nc-main-container {
+      background: var(--bg) !important;
+    }
+
     /* Hide Contents and Media tabs - More aggressive approach */
     .nc-root .nc-tabs,
     .nc-root .nc-tab,
@@ -433,14 +471,14 @@
         });
     }
 
-    // Force remove Contents and Media tabs
+    // Force remove Contents, Media tabs and Collections
     function removeTabs() {
-      // Remove any elements containing "Contents" or "Media" text
+      // Remove any elements containing "Contents", "Media", or "Collections" text
       const allElements = document.querySelectorAll('*');
       allElements.forEach(element => {
         const text = element.textContent || element.innerText || '';
-        if (text.includes('Contents') || text.includes('Media')) {
-          if (element.tagName === 'BUTTON' || element.classList.contains('tab') || element.getAttribute('role') === 'tab') {
+        if (text.includes('Contents') || text.includes('Media') || text.includes('Collections')) {
+          if (element.tagName === 'BUTTON' || element.classList.contains('tab') || element.classList.contains('sidebar') || element.getAttribute('role') === 'tab') {
             element.style.display = 'none';
             element.remove();
           }
@@ -454,11 +492,24 @@
         element.remove();
       });
 
+      // Remove any sidebar/collection elements
+      const sidebarElements = document.querySelectorAll('[class*="sidebar"], [class*="collection"]');
+      sidebarElements.forEach(element => {
+        element.style.display = 'none';
+        element.remove();
+      });
+
       // Remove any buttons with tab-like behavior
-      const tabButtons = document.querySelectorAll('button[aria-label*="Contents"], button[aria-label*="Media"], button[title*="Contents"], button[title*="Media"]');
+      const tabButtons = document.querySelectorAll('button[aria-label*="Contents"], button[aria-label*="Media"], button[aria-label*="Collections"], button[title*="Contents"], button[title*="Media"], button[title*="Collections"]');
       tabButtons.forEach(button => {
         button.style.display = 'none';
         button.remove();
+      });
+
+      // Force light background on all CMS elements
+      const cmsElements = document.querySelectorAll('.nc-root, .nc-app, .nc-app-body, .nc-main-container');
+      cmsElements.forEach(element => {
+        element.style.background = 'var(--bg)';
       });
     }
 
