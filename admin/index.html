@@ -480,6 +480,10 @@
       });
     }
 
+    // Debug logging
+    console.log('Admin panel loaded');
+    console.log('CMS available:', typeof CMS !== 'undefined');
+
     // Load site styles for previews
     const link1 = document.createElement('link');
     link1.rel = 'stylesheet';
@@ -587,24 +591,52 @@
       }
     });
 
-    // Register preview template
+    // Register preview template with better error handling
     CMS.registerPreviewTemplate('products', ({ entry }) => {
-      const data = entry.getIn(['data']).toJS();
-      const items = data.products || [];
-      
-      return h('div', { className: 'preview-container' },
-        h('div', { className: 'preview-title' }, `Products Preview (${items.length} items)`),
-        h('div', { 
-          className: 'grid',
-          style: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.5rem'
-          }
-        },
-          ...(items || []).map(p => h(ProductPreview, { value: p }))
-        )
-      );
+      try {
+        console.log('Preview template called with entry:', entry);
+        
+        // Try different ways to access the data
+        let data;
+        if (entry && entry.getIn) {
+          data = entry.getIn(['data']).toJS();
+        } else if (entry && entry.data) {
+          data = entry.data;
+        } else if (entry && entry.toJS) {
+          data = entry.toJS();
+        } else {
+          data = entry;
+        }
+        
+        console.log('Extracted data:', data);
+        
+        const items = data.products || [];
+        
+        return h('div', { className: 'preview-container' },
+          h('div', { className: 'preview-title' }, `Products Preview (${items.length} items)`),
+          h('div', { 
+            className: 'grid',
+            style: {
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '1.5rem'
+            }
+          },
+            ...(items || []).map(p => h(ProductPreview, { value: p }))
+          )
+        );
+      } catch (error) {
+        console.error('Preview error:', error);
+        return h('div', { className: 'preview-container' },
+          h('div', { className: 'preview-title' }, 'Preview Error'),
+          h('div', { style: { color: 'var(--error)', padding: '1rem' } }, 
+            'Unable to load preview. Please check your data structure.'
+          ),
+          h('div', { style: { color: 'var(--text-muted)', padding: '1rem', fontSize: '0.8rem' } }, 
+            `Error: ${error.message}`
+          )
+        );
+      }
     });
   </script>
 </body>
