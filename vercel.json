@@ -1,4 +1,5 @@
 {
+  "outputDirectory": ".",
   "builds": [
     {
       "src": "api/**/*.js",
