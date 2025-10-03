@@ -197,6 +197,18 @@
       display: none !important;
     }
 
+    /* Hide the Contents button in the top bar */
+    .nc-root button:has-text("Contents"),
+    .nc-root [role="button"]:has-text("Contents"),
+    .nc-root .nc-tab-button:has-text("Contents") {
+      display: none !important;
+    }
+
+    /* Hide any element containing "Contents" text */
+    .nc-root *:has-text("Contents") {
+      display: none !important;
+    }
+
     /* Ensure main content is always visible */
     .nc-root .nc-main-container {
       display: block !important;
@@ -506,6 +518,16 @@
       const tabElements = document.querySelectorAll('.nc-tabs, .nc-tab');
       tabElements.forEach(element => {
         element.style.display = 'none';
+      });
+
+      // Hide any button containing "Contents" text
+      const allButtons = document.querySelectorAll('button, [role="button"], .nc-tab-button');
+      allButtons.forEach(button => {
+        const text = button.textContent || button.innerText || '';
+        if (text.includes('Contents')) {
+          button.style.display = 'none';
+          button.style.visibility = 'hidden';
+        }
       });
 
       // Ensure main content is visible
