@@ -1601,6 +1601,7 @@
       products.forEach(product => {
         const productDiv = document.createElement('div');
         productDiv.className = 'product-item';
+        productDiv.setAttribute('data-product-id', product.id);
         productDiv.innerHTML = `
           <div class="product-info">
             <h4>${product.name}</h4>
@@ -1639,37 +1640,39 @@
       if (!product) return;
 
       editingProduct = product;
-      document.getElementById('form-title').textContent = 'Edit Product';
-      document.getElementById('product-form').style.display = 'block';
       
-      // Show and populate the banner
-      showProductBanner(product);
-
+      // Find the product element and replace it with edit form
+      const productElement = document.querySelector(`[data-product-id="${id}"]`);
+      if (!productElement) return;
+      
+      // Create inline edit form
+      const editForm = createInlineEditForm(product);
+      
+      // Replace product display with edit form
+      productElement.innerHTML = editForm;
+      
       // Fill form with product data
-      document.getElementById('product-id').value = product.id;
-      document.getElementById('product-name').value = product.name;
-      document.getElementById('product-price').value = product.priceCents;
-      document.getElementById('product-material').value = product.material;
-      document.getElementById('product-remaining').value = product.remaining || 0;
-      document.getElementById('product-image-url').value = product.image || '';
-      document.getElementById('product-limited').checked = product.limited || false;
-      document.getElementById('product-soldout').checked = product.soldOut || false;
+      const form = productElement.querySelector('.inline-edit-form');
+      form.querySelector('#inline-product-id').value = product.id;
+      form.querySelector('#inline-product-name').value = product.name;
+      form.querySelector('#inline-product-price').value = product.priceCents;
+      form.querySelector('#inline-product-material').value = product.material;
+      form.querySelector('#inline-product-remaining').value = product.remaining || 0;
+      form.querySelector('#inline-product-image-url').value = product.image || '';
+      form.querySelector('#inline-product-limited').checked = product.limited || false;
+      form.querySelector('#inline-product-soldout').checked = product.soldOut || false;
       
-      // Clear any uploaded image and show current image if it exists
-      uploadedImageData = null;
-      document.getElementById('product-image-file').value = '';
-      
+      // Handle image display
+      const imagePreview = form.querySelector('#inline-image-preview');
       if (product.image && product.image.startsWith('/assets/images/')) {
-        // Show existing image
-        document.getElementById('image-preview').innerHTML = `
-          <img src="${product.image}" alt="Current product image">
+        imagePreview.innerHTML = `
+          <img src="${product.image}" alt="Current product image" style="max-width: 100%; max-height: 200px; object-fit: cover;">
           <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
-            <button type="button" onclick="removeImage()" style="background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">×</button>
+            <button type="button" onclick="removeInlineImage()" style="background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">×</button>
           </div>
         `;
       } else {
-        // Show upload placeholder
-        document.getElementById('image-preview').innerHTML = `
+        imagePreview.innerHTML = `
           <div class="upload-placeholder">
             <div class="upload-icon">📷</div>
             <p>Click to upload image</p>
@@ -1677,6 +1680,156 @@
           </div>
         `;
       }
+      
+      // Add image upload event listener
+      const imageFileInput = form.querySelector('#inline-product-image-file');
+      imageFileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          alert('Please select a valid image file (JPG, PNG, WebP)');
+          return;
+        }
+        
+        // Validate file size (32MB max)
+        if (file.size > 32 * 1024 * 1024) {
+          alert('Image file is too large. Please select an image smaller than 32MB.');
+          return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          imagePreview.innerHTML = `
+            <img src="${e.target.result}" alt="Preview" style="max-width: 100%; max-height: 200px; object-fit: cover;">
+            <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
+              <button type="button" onclick="removeInlineImage()" style="background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">×</button>
+            </div>
+          `;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Create inline edit form HTML
+    function createInlineEditForm(product) {
+      return `
+        <div class="inline-edit-form" style="background: #f8f9fa; border: 2px solid #007bff; border-radius: 8px; padding: 20px; margin: 10px 0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="margin: 0; color: #007bff;">✏️ Editing: ${product.name}</h4>
+            <div>
+              <button type="button" onclick="saveInlineEdit(${product.id})" class="save-btn" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 8px;">💾 Save</button>
+              <button type="button" onclick="cancelInlineEdit(${product.id})" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">❌ Cancel</button>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+              <div style="margin-bottom: 10px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">ID:</label>
+                <input type="number" id="inline-product-id" name="id" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              
+              <div style="margin-bottom: 10px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Name:</label>
+                <input type="text" id="inline-product-name" name="name" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              
+              <div style="margin-bottom: 10px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Price (cents):</label>
+                <input type="number" id="inline-product-price" name="priceCents" required style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              
+              <div style="margin-bottom: 10px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Material:</label>
+                <input type="text" id="inline-product-material" name="material" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+              
+              <div style="margin-bottom: 10px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Remaining:</label>
+                <input type="number" id="inline-product-remaining" name="remaining" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+              </div>
+            </div>
+            
+            <div>
+              <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 5px; font-weight: 600;">Image:</label>
+                <div id="inline-image-preview" style="border: 2px dashed #ddd; border-radius: 8px; padding: 20px; text-align: center; background: white; position: relative; min-height: 120px;">
+                  <!-- Image preview will be inserted here -->
+                </div>
+                <input type="file" id="inline-product-image-file" accept="image/*" style="margin-top: 10px; width: 100%;">
+                <div style="margin-top: 10px;">
+                  <label style="display: block; margin-bottom: 5px; font-weight: 600;">Or enter image URL:</label>
+                  <input type="url" id="inline-product-image-url" name="imageUrl" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+              </div>
+              
+              <div style="margin-bottom: 10px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                  <input type="checkbox" id="inline-product-limited" name="limited" style="margin-right: 8px;">
+                  <span style="font-weight: 600;">Limited Edition</span>
+                </label>
+              </div>
+              
+              <div style="margin-bottom: 10px;">
+                <label style="display: flex; align-items: center; cursor: pointer;">
+                  <input type="checkbox" id="inline-product-soldout" name="soldOut" style="margin-right: 8px;">
+                  <span style="font-weight: 600;">Sold Out</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Save inline edit
+    async function saveInlineEdit(id) {
+      const productElement = document.querySelector(`[data-product-id="${id}"]`);
+      const form = productElement.querySelector('.inline-edit-form');
+      
+      const productData = {
+        id: parseInt(form.querySelector('#inline-product-id').value),
+        name: form.querySelector('#inline-product-name').value,
+        priceCents: parseInt(form.querySelector('#inline-product-price').value),
+        material: form.querySelector('#inline-product-material').value,
+        remaining: parseInt(form.querySelector('#inline-product-remaining').value) || 0,
+        image: form.querySelector('#inline-product-image-url').value || '',
+        limited: form.querySelector('#inline-product-limited').checked,
+        soldOut: form.querySelector('#inline-product-soldout').checked
+      };
+
+      // Update product in array
+      const index = products.findIndex(p => p.id === id);
+      if (index !== -1) {
+        products[index] = productData;
+      }
+
+      // Save to database
+      await saveProducts();
+      
+      // Re-render products to show updated product
+      renderProducts();
+    }
+
+    // Cancel inline edit
+    function cancelInlineEdit(id) {
+      // Re-render products to show original product
+      renderProducts();
+    }
+
+    // Remove inline image
+    function removeInlineImage() {
+      const imagePreview = document.getElementById('inline-image-preview');
+      imagePreview.innerHTML = `
+        <div class="upload-placeholder">
+          <div class="upload-icon">📷</div>
+          <p>Click to upload image</p>
+          <small>JPG, PNG, WebP (max 32MB)</small>
+        </div>
+      `;
     }
 
     // Delete product
