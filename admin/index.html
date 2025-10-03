@@ -540,6 +540,27 @@
       align-items: center;
     }
 
+    .header-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .download-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .download-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
     .editor-header h2 {
       margin: 0;
       font-size: 1.5rem;
@@ -784,7 +805,10 @@
       <div class="editor-container">
         <div class="editor-header">
           <h2>Product Editor</h2>
-          <button onclick="addNewProduct()" class="add-product-btn">+ Add New Product</button>
+          <div class="header-actions">
+            <button onclick="downloadUpdatedFile()" class="download-btn">📥 Download Updated File</button>
+            <button onclick="addNewProduct()" class="add-product-btn">+ Add New Product</button>
+          </div>
         </div>
         
         <div id="products-list" class="products-list">
@@ -1357,11 +1381,40 @@
       cancelEdit();
     });
 
-    // Save products to JSON (simulated - in real app this would save to server)
+    // Save products (silent - no download)
     function saveProducts() {
-      // In a real application, this would make an API call to save the data
-      console.log('Products saved:', products);
-      alert('Products updated successfully! (Note: This is a demo - changes are not persisted to the server)');
+      console.log('Products updated in memory:', products);
+      // No automatic download - user can download manually when ready
+    }
+
+    // Download updated products file
+    function downloadUpdatedFile() {
+      try {
+        const productsData = { products: products };
+        const jsonString = JSON.stringify(productsData, null, 2);
+        
+        // Create a blob and download link to save the file
+        const blob = new Blob([jsonString], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        // Create download link
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'products.json';
+        a.style.display = 'none';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        // Show success message with instructions
+        alert(`📥 Updated products.json downloaded!\n\nTo apply changes to your website:\n1. Replace the file at: assets/data/products.json\n2. Refresh your website to see the changes\n\nYour product #5 and all other changes will now appear on your site!`);
+        
+        console.log('Products downloaded:', products);
+      } catch (error) {
+        console.error('Error downloading products:', error);
+        alert('Error downloading file. Please try again.');
+      }
     }
 
     // Update hero stats
