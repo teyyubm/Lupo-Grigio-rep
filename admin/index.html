@@ -236,57 +236,6 @@
       transform: translateY(-2px) !important;
     }
 
-    /* Status Indicators */
-    .nc-root .nc-status {
-      border-radius: 20px !important;
-      font-size: 0.75rem !important;
-      font-weight: 600 !important;
-      padding: 0.5rem 1rem !important;
-    }
-
-    .nc-root .nc-status--draft {
-      background: rgba(237, 137, 54, 0.1) !important;
-      color: var(--warning) !important;
-      border: 1px solid rgba(237, 137, 54, 0.2) !important;
-    }
-
-    .nc-root .nc-status--pending {
-      background: rgba(102, 126, 234, 0.1) !important;
-      color: var(--accent) !important;
-      border: 1px solid rgba(102, 126, 234, 0.2) !important;
-    }
-
-    .nc-root .nc-status--published {
-      background: rgba(72, 187, 120, 0.1) !important;
-      color: var(--success) !important;
-      border: 1px solid rgba(72, 187, 120, 0.2) !important;
-    }
-
-    /* Preview Panel */
-    .nc-root .nc-previewPane {
-      background: var(--surface) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius) !important;
-      box-shadow: var(--shadow-lg) !important;
-    }
-
-    /* Custom Preview Styles */
-    .preview-container {
-      padding: 2rem;
-      background: var(--surface);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-
-    .preview-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      color: var(--text);
-      text-align: center;
-    }
-
     /* Mobile Responsive */
     @media (max-width: 768px) {
       .admin-header {
@@ -315,21 +264,12 @@
 
       .nc-root .nc-widget-input {
         padding: 0.875rem !important;
-        font-size: 16px !important; /* Prevents zoom on iOS */
+        font-size: 16px !important;
       }
 
       .nc-root .nc-button {
         padding: 0.875rem 1.5rem !important;
         font-size: 0.9rem !important;
-      }
-
-      .preview-container {
-        padding: 1.5rem;
-      }
-
-      .preview-title {
-        font-size: 1.25rem;
-        margin-bottom: 1rem;
       }
     }
 
@@ -366,21 +306,8 @@
       .nc-root .nc-button {
         padding: 0.75rem 1.25rem !important;
         font-size: 0.85rem !important;
-        min-height: 44px !important; /* iOS touch target */
+        min-height: 44px !important;
       }
-
-      .preview-container {
-        padding: 1rem;
-      }
-
-      .preview-title {
-        font-size: 1.1rem;
-      }
-    }
-
-    /* Loading States */
-    .nc-root .nc-loading {
-      color: var(--primary) !important;
     }
 
     /* Error States */
@@ -421,30 +348,6 @@
       margin-bottom: 1rem !important;
       color: var(--text) !important;
     }
-
-    /* Collection List */
-    .nc-root .nc-collectionList {
-      background: var(--surface) !important;
-      border-radius: var(--radius) !important;
-      border: 1px solid var(--border) !important;
-      box-shadow: var(--shadow) !important;
-    }
-
-    /* Collection Item */
-    .nc-root .nc-collectionItem {
-      background: var(--surface) !important;
-      border: 1px solid var(--border) !important;
-      border-radius: var(--radius-sm) !important;
-      margin-bottom: 1rem !important;
-      transition: all 0.3s ease !important;
-      box-shadow: var(--shadow) !important;
-    }
-
-    .nc-root .nc-collectionItem:hover {
-      border-color: var(--primary) !important;
-      box-shadow: var(--shadow-lg) !important;
-      transform: translateY(-2px) !important;
-    }
   </style>
 </head>
 <body>
@@ -479,10 +382,6 @@
         }
       });
     }
-
-    // Debug logging
-    console.log('Admin panel loaded');
-    console.log('CMS available:', typeof CMS !== 'undefined');
 
     // Load site styles for previews
     const link1 = document.createElement('link');
@@ -591,52 +490,24 @@
       }
     });
 
-    // Register preview template with better error handling
+    // Simple preview template without complex error handling
     CMS.registerPreviewTemplate('products', ({ entry }) => {
-      try {
-        console.log('Preview template called with entry:', entry);
-        
-        // Try different ways to access the data
-        let data;
-        if (entry && entry.getIn) {
-          data = entry.getIn(['data']).toJS();
-        } else if (entry && entry.data) {
-          data = entry.data;
-        } else if (entry && entry.toJS) {
-          data = entry.toJS();
-        } else {
-          data = entry;
-        }
-        
-        console.log('Extracted data:', data);
-        
-        const items = data.products || [];
-        
-        return h('div', { className: 'preview-container' },
-          h('div', { className: 'preview-title' }, `Products Preview (${items.length} items)`),
-          h('div', { 
-            className: 'grid',
-            style: {
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '1.5rem'
-            }
-          },
-            ...(items || []).map(p => h(ProductPreview, { value: p }))
-          )
-        );
-      } catch (error) {
-        console.error('Preview error:', error);
-        return h('div', { className: 'preview-container' },
-          h('div', { className: 'preview-title' }, 'Preview Error'),
-          h('div', { style: { color: 'var(--error)', padding: '1rem' } }, 
-            'Unable to load preview. Please check your data structure.'
-          ),
-          h('div', { style: { color: 'var(--text-muted)', padding: '1rem', fontSize: '0.8rem' } }, 
-            `Error: ${error.message}`
-          )
-        );
-      }
+      const data = entry.getIn(['data']).toJS();
+      const items = data.products || [];
+      
+      return h('div', { className: 'preview-container', style: { padding: '2rem', background: 'var(--surface)', borderRadius: 'var(--radius)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' } },
+        h('div', { className: 'preview-title', style: { fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: 'var(--text)', textAlign: 'center' } }, `Products Preview (${items.length} items)`),
+        h('div', { 
+          className: 'grid',
+          style: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1.5rem'
+          }
+        },
+          ...(items || []).map(p => h(ProductPreview, { value: p }))
+        )
+      );
     });
   </script>
 </body>
