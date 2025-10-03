@@ -213,43 +213,60 @@
       display: none !important;
     }
 
-    /* Hide any element containing "Contents" text - More aggressive */
-    .nc-root *:has-text("Contents"),
-    .nc-root *:has-text("Media"),
-    .nc-root div:has-text("Contents"),
-    .nc-root span:has-text("Contents"),
+    /* Hide only specific elements containing "Contents" text - Less aggressive */
     .nc-root button:has-text("Contents"),
     .nc-root [role="button"]:has-text("Contents"),
     .nc-root .nc-tab-button:has-text("Contents"),
-    .nc-root .nc-tabList-button:has-text("Contents") {
+    .nc-root .nc-tabList-button:has-text("Contents"),
+    .nc-root button:has-text("Media"),
+    .nc-root [role="button"]:has-text("Media"),
+    .nc-root .nc-tab-button:has-text("Media"),
+    .nc-root .nc-tabList-button:has-text("Media") {
       display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      height: 0 !important;
-      width: 0 !important;
-      overflow: hidden !important;
     }
 
-    /* Ensure main content is always visible */
+    /* Ensure main content is always visible and takes full space */
     .nc-root .nc-main-container {
       display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
       width: 100% !important;
+      height: 100vh !important;
       margin-left: 0 !important;
       padding-left: 0 !important;
+      padding-top: 0 !important;
     }
 
     .nc-root .nc-app-main {
       display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
+      width: 100% !important;
+      height: 100vh !important;
     }
 
     .nc-root .nc-collection-page {
       display: block !important;
       visibility: visible !important;
       opacity: 1 !important;
+      width: 100% !important;
+      height: 100vh !important;
+    }
+
+    .nc-root .nc-app {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      height: 100vh !important;
+    }
+
+    .nc-root .nc-app-body {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: 100% !important;
+      height: 100vh !important;
     }
 
     /* Force light background */
@@ -552,19 +569,21 @@
         }
       });
 
-      // Hide ANY element containing "Contents" or "Media" text - Very aggressive
+      // Hide ONLY specific elements containing "Contents" or "Media" text - More selective
       const allElements = document.querySelectorAll('*');
       allElements.forEach(element => {
         const text = element.textContent || element.innerText || '';
-        if (text.trim() === 'Contents' || text.trim() === 'Media' || 
-            text.includes('Contents') || text.includes('Media')) {
-          // Hide any element containing these texts
-          element.style.display = 'none';
-          element.style.visibility = 'hidden';
-          element.style.opacity = '0';
-          element.style.height = '0';
-          element.style.width = '0';
-          element.style.overflow = 'hidden';
+        if (text.trim() === 'Contents' || text.trim() === 'Media') {
+          // Only hide if it's a button, tab, or header element
+          if (element.tagName === 'BUTTON' || 
+              element.classList.contains('tab') || 
+              element.classList.contains('tabList') ||
+              element.classList.contains('header') ||
+              element.getAttribute('role') === 'tab' ||
+              element.getAttribute('role') === 'button') {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+          }
         }
       });
 
