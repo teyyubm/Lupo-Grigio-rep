@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
   <!-- CMS Styles -->
   <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
@@ -17,21 +17,23 @@
   <!-- Custom Admin Styles -->
   <style>
     :root {
-      --luxury-gold: #d4af37;
-      --luxury-gold-light: #f4e4bc;
-      --luxury-gold-dark: #b8941f;
-      --luxury-black: #1a1a1a;
-      --luxury-white: #ffffff;
-      --luxury-cream: #fafafa;
-      --luxury-gray: #f5f5f5;
-      --luxury-border: #e5e5e5;
-      --luxury-text: #2d2d2d;
-      --luxury-text-muted: #666666;
-      --luxury-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-      --luxury-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
-      --luxury-shadow-gold: 0 4px 20px rgba(212, 175, 55, 0.15);
-      --luxury-radius: 12px;
-      --luxury-radius-sm: 8px;
+      --primary: #d4af37;
+      --primary-dark: #b8941f;
+      --secondary: #2d3748;
+      --accent: #667eea;
+      --success: #48bb78;
+      --warning: #ed8936;
+      --error: #f56565;
+      --bg: #f7fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #2d3748;
+      --text-muted: #718096;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius: 12px;
+      --radius-sm: 8px;
     }
 
     * {
@@ -40,24 +42,24 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--luxury-cream);
-      color: var(--luxury-text);
+      background: var(--bg);
+      color: var(--text);
       margin: 0;
       line-height: 1.6;
     }
 
-    /* Premium Header */
+    /* Admin Header */
     .admin-header {
-      background: var(--luxury-white);
-      border-bottom: 1px solid var(--luxury-border);
-      padding: 1.5rem 2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: var(--luxury-shadow);
+      box-shadow: var(--shadow);
     }
 
     .admin-logo {
@@ -65,27 +67,22 @@
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      color: var(--luxury-text);
+      color: var(--text);
     }
 
     .admin-logo img {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--luxury-gold);
-      box-shadow: var(--luxury-shadow-gold);
+      border: 2px solid var(--primary);
     }
 
     .admin-logo h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 1.25rem;
+      font-weight: 600;
       margin: 0;
-      background: linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-dark));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: var(--primary);
     }
 
     .admin-nav {
@@ -95,39 +92,31 @@
     }
 
     .admin-nav a {
-      color: var(--luxury-text-muted);
+      color: var(--text-muted);
       text-decoration: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: var(--luxury-radius-sm);
-      transition: all 0.3s ease;
-      font-weight: 500;
-      border: 1px solid transparent;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.2s;
     }
 
     .admin-nav a:hover {
-      color: var(--luxury-gold);
+      color: var(--primary);
       background: rgba(212, 175, 55, 0.1);
-      border-color: var(--luxury-gold);
-      transform: translateY(-1px);
     }
 
     .admin-nav a.active {
-      color: var(--luxury-gold);
+      color: var(--primary);
       background: rgba(212, 175, 55, 0.15);
-      border-color: var(--luxury-gold);
-      box-shadow: var(--luxury-shadow-gold);
     }
 
     /* CMS Container */
     .cms-container {
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
       padding: 2rem;
-      background: var(--luxury-cream);
-      min-height: calc(100vh - 100px);
     }
 
-    /* Custom CMS Overrides - White Theme */
+    /* Custom CMS Overrides */
     .nc-root {
       background: transparent !important;
     }
@@ -137,10 +126,10 @@
     }
 
     .nc-root .nc-appHeader {
-      background: var(--luxury-white) !important;
-      border-bottom: 1px solid var(--luxury-border) !important;
-      box-shadow: var(--luxury-shadow) !important;
-      border-radius: var(--luxury-radius) var(--luxury-radius) 0 0 !important;
+      background: var(--surface) !important;
+      border-bottom: 1px solid var(--border) !important;
+      box-shadow: var(--shadow) !important;
+      border-radius: var(--radius) var(--radius) 0 0 !important;
     }
 
     .nc-root .nc-appMain {
@@ -148,23 +137,22 @@
     }
 
     .nc-root .nc-collectionPage {
-      background: var(--luxury-white) !important;
-      border-radius: var(--luxury-radius) !important;
-      border: 1px solid var(--luxury-border) !important;
-      box-shadow: var(--luxury-shadow) !important;
+      background: var(--surface) !important;
+      border-radius: var(--radius) !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: var(--shadow-lg) !important;
       overflow: hidden !important;
     }
 
     .nc-root .nc-collectionPage-header {
-      background: linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-dark)) !important;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
       border-bottom: none !important;
       padding: 2rem !important;
-      color: var(--luxury-white) !important;
+      color: white !important;
     }
 
     .nc-root .nc-collectionPage-title {
-      color: var(--luxury-white) !important;
-      font-family: 'Playfair Display', serif !important;
+      color: white !important;
       font-size: 2rem !important;
       font-weight: 700 !important;
       margin: 0 !important;
@@ -182,25 +170,23 @@
     }
 
     .nc-root .nc-widget-input {
-      background: var(--luxury-white) !important;
-      border: 2px solid var(--luxury-border) !important;
-      color: var(--luxury-text) !important;
-      border-radius: var(--luxury-radius-sm) !important;
-      padding: 1rem !important;
+      background: var(--surface) !important;
+      border: 2px solid var(--border) !important;
+      color: var(--text) !important;
+      border-radius: var(--radius-sm) !important;
+      padding: 0.75rem 1rem !important;
       font-size: 1rem !important;
       transition: all 0.3s ease !important;
-      box-shadow: var(--luxury-shadow) !important;
     }
 
     .nc-root .nc-widget-input:focus {
-      border-color: var(--luxury-gold) !important;
+      border-color: var(--primary) !important;
       box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1) !important;
       outline: none !important;
-      transform: translateY(-1px) !important;
     }
 
     .nc-root .nc-widget-label {
-      color: var(--luxury-text) !important;
+      color: var(--text) !important;
       font-weight: 600 !important;
       font-size: 0.9rem !important;
       margin-bottom: 0.5rem !important;
@@ -208,46 +194,45 @@
 
     /* Buttons */
     .nc-root .nc-button {
-      background: linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-dark)) !important;
-      color: var(--luxury-white) !important;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+      color: white !important;
       border: none !important;
-      border-radius: var(--luxury-radius-sm) !important;
+      border-radius: var(--radius-sm) !important;
       font-weight: 600 !important;
-      padding: 1rem 2rem !important;
+      padding: 0.75rem 1.5rem !important;
       transition: all 0.3s ease !important;
-      box-shadow: var(--luxury-shadow-gold) !important;
+      box-shadow: var(--shadow) !important;
     }
 
     .nc-root .nc-button:hover {
       transform: translateY(-2px) !important;
-      box-shadow: var(--luxury-shadow-hover) !important;
+      box-shadow: var(--shadow-lg) !important;
     }
 
     .nc-root .nc-button--secondary {
-      background: var(--luxury-white) !important;
-      color: var(--luxury-text) !important;
-      border: 2px solid var(--luxury-border) !important;
+      background: var(--surface) !important;
+      color: var(--text) !important;
+      border: 2px solid var(--border) !important;
     }
 
     .nc-root .nc-button--secondary:hover {
-      background: var(--luxury-gray) !important;
-      border-color: var(--luxury-gold) !important;
-      transform: translateY(-1px) !important;
+      background: var(--surface-hover) !important;
+      border-color: var(--primary) !important;
     }
 
     /* List Items */
     .nc-root .nc-list-item {
-      background: var(--luxury-white) !important;
-      border: 1px solid var(--luxury-border) !important;
-      border-radius: var(--luxury-radius-sm) !important;
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius-sm) !important;
       margin-bottom: 1rem !important;
       transition: all 0.3s ease !important;
-      box-shadow: var(--luxury-shadow) !important;
+      box-shadow: var(--shadow) !important;
     }
 
     .nc-root .nc-list-item:hover {
-      border-color: var(--luxury-gold) !important;
-      box-shadow: var(--luxury-shadow-hover) !important;
+      border-color: var(--primary) !important;
+      box-shadow: var(--shadow-lg) !important;
       transform: translateY(-2px) !important;
     }
 
@@ -260,64 +245,49 @@
     }
 
     .nc-root .nc-status--draft {
-      background: rgba(245, 158, 11, 0.1) !important;
-      color: #f59e0b !important;
-      border: 1px solid rgba(245, 158, 11, 0.2) !important;
+      background: rgba(237, 137, 54, 0.1) !important;
+      color: var(--warning) !important;
+      border: 1px solid rgba(237, 137, 54, 0.2) !important;
     }
 
     .nc-root .nc-status--pending {
-      background: rgba(59, 130, 246, 0.1) !important;
-      color: #3b82f6 !important;
-      border: 1px solid rgba(59, 130, 246, 0.2) !important;
+      background: rgba(102, 126, 234, 0.1) !important;
+      color: var(--accent) !important;
+      border: 1px solid rgba(102, 126, 234, 0.2) !important;
     }
 
     .nc-root .nc-status--published {
-      background: rgba(16, 185, 129, 0.1) !important;
-      color: #10b981 !important;
-      border: 1px solid rgba(16, 185, 129, 0.2) !important;
+      background: rgba(72, 187, 120, 0.1) !important;
+      color: var(--success) !important;
+      border: 1px solid rgba(72, 187, 120, 0.2) !important;
     }
 
     /* Preview Panel */
     .nc-root .nc-previewPane {
-      background: var(--luxury-white) !important;
-      border: 1px solid var(--luxury-border) !important;
-      border-radius: var(--luxury-radius) !important;
-      box-shadow: var(--luxury-shadow) !important;
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow-lg) !important;
     }
 
     /* Custom Preview Styles */
     .preview-container {
       padding: 2rem;
-      background: var(--luxury-white);
-      border-radius: var(--luxury-radius);
-      border: 1px solid var(--luxury-border);
-      box-shadow: var(--luxury-shadow);
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
     }
 
     .preview-title {
-      font-family: 'Playfair Display', serif;
       font-size: 1.5rem;
       font-weight: 700;
       margin-bottom: 1.5rem;
-      color: var(--luxury-text);
+      color: var(--text);
       text-align: center;
     }
 
     /* Mobile Responsive */
-    @media (max-width: 1024px) {
-      .cms-container {
-        padding: 1.5rem;
-      }
-      
-      .nc-root .nc-collectionPage-header {
-        padding: 1.5rem !important;
-      }
-      
-      .nc-root .nc-collectionPage-title {
-        font-size: 1.75rem !important;
-      }
-    }
-
     @media (max-width: 768px) {
       .admin-header {
         padding: 1rem;
@@ -326,19 +296,9 @@
         align-items: stretch;
       }
 
-      .admin-logo h1 {
-        font-size: 1.25rem !important;
-      }
-
       .admin-nav {
         justify-content: center;
         flex-wrap: wrap;
-        gap: 0.5rem;
-      }
-
-      .admin-nav a {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
       }
 
       .cms-container {
@@ -346,15 +306,11 @@
       }
 
       .nc-root .nc-collectionPage-header {
-        padding: 1.25rem !important;
+        padding: 1.5rem !important;
       }
 
       .nc-root .nc-collectionPage-title {
         font-size: 1.5rem !important;
-      }
-
-      .nc-root .nc-collectionPage-description {
-        font-size: 0.9rem !important;
       }
 
       .nc-root .nc-widget-input {
@@ -367,10 +323,6 @@
         font-size: 0.9rem !important;
       }
 
-      .nc-root .nc-list-item {
-        margin-bottom: 0.75rem !important;
-      }
-
       .preview-container {
         padding: 1.5rem;
       }
@@ -379,10 +331,6 @@
         font-size: 1.25rem;
         margin-bottom: 1rem;
       }
-
-      .nc-root .nc-collectionPage {
-        margin-bottom: 1rem !important;
-      }
     }
 
     @media (max-width: 480px) {
@@ -390,26 +338,13 @@
         padding: 0.75rem;
       }
 
-      .admin-logo {
-        gap: 8px;
-      }
-
-      .admin-logo img {
-        width: 32px;
-        height: 32px;
-      }
-
       .admin-logo h1 {
         font-size: 1.1rem !important;
       }
 
-      .admin-nav {
-        gap: 0.25rem;
-      }
-
       .admin-nav a {
         padding: 0.5rem;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
       }
 
       .cms-container {
@@ -422,10 +357,6 @@
 
       .nc-root .nc-collectionPage-title {
         font-size: 1.25rem !important;
-      }
-
-      .nc-root .nc-collectionPage-description {
-        font-size: 0.8rem !important;
       }
 
       .nc-root .nc-widget-input {
@@ -435,10 +366,7 @@
       .nc-root .nc-button {
         padding: 0.75rem 1.25rem !important;
         font-size: 0.85rem !important;
-      }
-
-      .nc-root .nc-widget-label {
-        font-size: 0.8rem !important;
+        min-height: 44px !important; /* iOS touch target */
       }
 
       .preview-container {
@@ -448,112 +376,34 @@
       .preview-title {
         font-size: 1.1rem;
       }
-
-      /* Touch-friendly buttons */
-      .nc-root .nc-button {
-        min-height: 44px !important; /* iOS touch target */
-        min-width: 44px !important;
-      }
-
-      /* Better mobile form layout */
-      .nc-root .nc-widget {
-        margin-bottom: 1rem !important;
-      }
-
-      /* Mobile preview grid */
-      .preview-container .grid {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-      }
-    }
-
-    /* Tablet specific */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      .cms-container {
-        padding: 1.5rem;
-      }
-
-      .nc-root .nc-collectionPage-header {
-        padding: 1.75rem !important;
-      }
-
-      .nc-root .nc-collectionPage-title {
-        font-size: 1.75rem !important;
-      }
-
-      .preview-container .grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 1.25rem !important;
-      }
-    }
-
-    /* Large desktop */
-    @media (min-width: 1400px) {
-      .cms-container {
-        padding: 3rem;
-      }
-
-      .nc-root .nc-collectionPage-header {
-        padding: 3rem !important;
-      }
-
-      .nc-root .nc-collectionPage-title {
-        font-size: 2.5rem !important;
-      }
-
-      .preview-container .grid {
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 2rem !important;
-      }
-    }
-
-    /* Landscape mobile */
-    @media (max-height: 500px) and (orientation: landscape) {
-      .admin-header {
-        padding: 0.5rem 1rem;
-        flex-direction: row;
-        gap: 1rem;
-      }
-
-      .cms-container {
-        padding: 0.5rem;
-      }
-
-      .nc-root .nc-collectionPage-header {
-        padding: 1rem !important;
-      }
-
-      .nc-root .nc-collectionPage-title {
-        font-size: 1.25rem !important;
-      }
     }
 
     /* Loading States */
     .nc-root .nc-loading {
-      color: var(--luxury-gold) !important;
+      color: var(--primary) !important;
     }
 
     /* Error States */
     .nc-root .nc-error {
-      color: #ef4444 !important;
-      background: rgba(239, 68, 68, 0.1) !important;
-      border: 1px solid rgba(239, 68, 68, 0.2) !important;
-      border-radius: var(--luxury-radius-sm) !important;
+      color: var(--error) !important;
+      background: rgba(245, 101, 101, 0.1) !important;
+      border: 1px solid rgba(245, 101, 101, 0.2) !important;
+      border-radius: var(--radius-sm) !important;
       padding: 1rem !important;
     }
 
     /* Success States */
     .nc-root .nc-success {
-      color: #10b981 !important;
-      background: rgba(16, 185, 129, 0.1) !important;
-      border: 1px solid rgba(16, 185, 129, 0.2) !important;
-      border-radius: var(--luxury-radius-sm) !important;
+      color: var(--success) !important;
+      background: rgba(72, 187, 120, 0.1) !important;
+      border: 1px solid rgba(72, 187, 120, 0.2) !important;
+      border-radius: var(--radius-sm) !important;
       padding: 1rem !important;
     }
 
     /* Help Text */
     .nc-root .nc-help {
-      color: var(--luxury-text-muted) !important;
+      color: var(--text-muted) !important;
       font-size: 0.875rem !important;
       margin-top: 0.25rem !important;
     }
@@ -562,37 +412,37 @@
     .nc-root .nc-emptyState {
       text-align: center !important;
       padding: 3rem 2rem !important;
-      color: var(--luxury-text-muted) !important;
+      color: var(--text-muted) !important;
     }
 
     .nc-root .nc-emptyState-title {
       font-size: 1.5rem !important;
       font-weight: 600 !important;
       margin-bottom: 1rem !important;
-      color: var(--luxury-text) !important;
+      color: var(--text) !important;
     }
 
     /* Collection List */
     .nc-root .nc-collectionList {
-      background: var(--luxury-white) !important;
-      border-radius: var(--luxury-radius) !important;
-      border: 1px solid var(--luxury-border) !important;
-      box-shadow: var(--luxury-shadow) !important;
+      background: var(--surface) !important;
+      border-radius: var(--radius) !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: var(--shadow) !important;
     }
 
     /* Collection Item */
     .nc-root .nc-collectionItem {
-      background: var(--luxury-white) !important;
-      border: 1px solid var(--luxury-border) !important;
-      border-radius: var(--luxury-radius-sm) !important;
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--radius-sm) !important;
       margin-bottom: 1rem !important;
       transition: all 0.3s ease !important;
-      box-shadow: var(--luxury-shadow) !important;
+      box-shadow: var(--shadow) !important;
     }
 
     .nc-root .nc-collectionItem:hover {
-      border-color: var(--luxury-gold) !important;
-      box-shadow: var(--luxury-shadow-hover) !important;
+      border-color: var(--primary) !important;
+      box-shadow: var(--shadow-lg) !important;
       transform: translateY(-2px) !important;
     }
   </style>
@@ -606,7 +456,6 @@
     </a>
     <nav class="admin-nav">
       <a href="/admin/#/collections/products" class="active">Products</a>
-      <a href="/admin/#/collections/settings">Settings</a>
       <a href="/" target="_blank">View Site</a>
     </nav>
   </header>
@@ -641,7 +490,7 @@
     document.head.appendChild(link1);
     document.head.appendChild(link2);
 
-    // Enhanced product preview component with validation
+    // Simple product preview component
     function currency(cents) {
       try {
         return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format((cents || 0) / 100);
@@ -650,54 +499,20 @@
       }
     }
 
-    function validateProduct(product) {
-      const errors = [];
-      if (!product.name || product.name.trim() === '') {
-        errors.push('Product name is required');
-      }
-      if (!product.priceCents || product.priceCents < 100) {
-        errors.push('Price must be at least $1.00');
-      }
-      if (!product.material || product.material.trim() === '') {
-        errors.push('Material is required');
-      }
-      return errors;
-    }
-
     const ProductPreview = createClass({
       render() {
         const entry = this.props.value || {};
-        const errors = validateProduct(entry);
         const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
-        
-        // Show error state if validation fails
-        if (errors.length > 0) {
-          return h('article', { 
-            className: 'card error',
-            style: { 
-              marginBottom: '1rem',
-              border: '2px solid #ef4444',
-              borderRadius: 'var(--luxury-radius)',
-              background: 'rgba(239, 68, 68, 0.05)',
-              padding: '1.5rem'
-            }
-          },
-            h('div', { style: { color: '#ef4444', fontWeight: '600', marginBottom: '0.5rem' } }, '⚠️ Product Validation Errors:'),
-            h('ul', { style: { margin: 0, paddingLeft: '1.5rem', color: '#ef4444' } },
-              ...errors.map(error => h('li', { key: error }, error))
-            )
-          );
-        }
         
         return h('article', { 
           className: 'card',
           style: { 
             marginBottom: '1rem',
-            border: '1px solid var(--luxury-border)',
-            borderRadius: 'var(--luxury-radius)',
+            border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)',
             overflow: 'hidden',
-            background: 'var(--luxury-white)',
-            boxShadow: 'var(--luxury-shadow)',
+            background: 'var(--surface)',
+            boxShadow: 'var(--shadow)',
             transition: 'all 0.3s ease'
           }
         },
@@ -707,39 +522,20 @@
               backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              height: '200px',
-              position: 'relative'
+              height: '200px'
             } 
-          },
-            // Product ID badge
-            h('div', {
-              style: {
-                position: 'absolute',
-                top: '0.5rem',
-                right: '0.5rem',
-                background: 'rgba(0, 0, 0, 0.7)',
-                color: 'white',
-                padding: '0.25rem 0.5rem',
-                borderRadius: '4px',
-                fontSize: '0.75rem',
-                fontWeight: '600'
-              }
-            }, `ID: ${entry.id || 'N/A'}`)
-          ),
+          }),
           h('div', { className: 'card-body', style: { padding: '1.5rem' } },
-            h('div', { className: 'card-title', style: { fontWeight: '700', marginBottom: '0.5rem', fontSize: '1.1rem', color: 'var(--luxury-text)' } }, entry.name || 'Untitled'),
-            h('div', { className: 'card-sub', style: { color: 'var(--luxury-text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' } }, 
+            h('div', { className: 'card-title', style: { fontWeight: '700', marginBottom: '0.5rem', fontSize: '1.1rem', color: 'var(--text)' } }, entry.name || 'Untitled'),
+            h('div', { className: 'card-sub', style: { color: 'var(--text-muted)', fontSize: '0.9rem' } }, 
               `${currency(entry.priceCents)} · ${entry.material || ''}`
-            ),
-            h('div', { style: { fontSize: '0.8rem', color: 'var(--luxury-text-muted)' } },
-              `Stock: ${entry.remaining || 0} remaining`
             )
           ),
           h('div', { 
             className: 'card-footer', 
             style: { 
               padding: '1rem 1.5rem',
-              borderTop: '1px solid var(--luxury-border)',
+              borderTop: '1px solid var(--border)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
@@ -753,7 +549,7 @@
                   padding: '0.5rem 1rem',
                   borderRadius: '20px',
                   background: 'rgba(212, 175, 55, 0.1)',
-                  color: 'var(--luxury-gold)',
+                  color: 'var(--primary)',
                   border: '1px solid rgba(212, 175, 55, 0.2)',
                   fontWeight: '600'
                 }
@@ -764,25 +560,25 @@
                   fontSize: '0.75rem',
                   padding: '0.5rem 1rem',
                   borderRadius: '20px',
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  color: '#ef4444',
-                  border: '1px solid rgba(239, 68, 68, 0.2)',
+                  background: 'rgba(245, 101, 101, 0.1)',
+                  color: 'var(--error)',
+                  border: '1px solid rgba(245, 101, 101, 0.2)',
                   fontWeight: '600'
                 }
               }, 'Sold Out') : null
             ),
-            isSold ? h('span', { className: 'muted', style: { color: 'var(--luxury-text-muted)', fontWeight: '500' } }, 'Unavailable') : 
+            isSold ? h('span', { className: 'muted', style: { color: 'var(--text-muted)', fontWeight: '500' } }, 'Unavailable') : 
               h('button', { 
                 className: 'button small',
                 style: {
-                  background: 'linear-gradient(135deg, var(--luxury-gold), var(--luxury-gold-dark))',
-                  color: 'var(--luxury-white)',
+                  background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
+                  color: 'white',
                   border: 'none',
                   padding: '0.75rem 1.5rem',
-                  borderRadius: 'var(--luxury-radius-sm)',
+                  borderRadius: 'var(--radius-sm)',
                   fontWeight: '600',
                   cursor: 'pointer',
-                  boxShadow: 'var(--luxury-shadow-gold)',
+                  boxShadow: 'var(--shadow)',
                   transition: 'all 0.3s ease'
                 }
               }, 'Add to Cart')
@@ -792,7 +588,7 @@
     });
 
     // Register preview template
-    CMS.registerPreviewTemplate('products_list', ({ entry }) => {
+    CMS.registerPreviewTemplate('products', ({ entry }) => {
       const data = entry.getIn(['data']).toJS();
       const items = data.products || [];
       
@@ -809,63 +605,6 @@
           ...(items || []).map(p => h(ProductPreview, { value: p }))
         )
       );
-    });
-
-    // Enhanced validation and error handling
-    CMS.registerEventListener({
-      name: 'preSave',
-      handler: ({ entry }) => {
-        const data = entry.getIn(['data']).toJS();
-        const products = data.products || [];
-        
-        // Validate all products
-        const allErrors = [];
-        for (let i = 0; i < products.length; i++) {
-          const product = products[i];
-          const errors = validateProduct(product);
-          if (errors.length > 0) {
-            allErrors.push(`Product ${i + 1}: ${errors.join(', ')}`);
-          }
-          
-          // Additional validation
-          if (product.name && product.name.length < 3) {
-            allErrors.push(`Product ${i + 1}: Name must be at least 3 characters`);
-          }
-          if (product.priceCents && product.priceCents > 1000000) {
-            allErrors.push(`Product ${i + 1}: Price seems too high (over $10,000)`);
-          }
-          if (product.id && product.id < 1) {
-            allErrors.push(`Product ${i + 1}: Product ID must be a positive number`);
-          }
-        }
-        
-        if (allErrors.length > 0) {
-          alert(`Please fix the following errors before saving:\n\n${allErrors.join('\n')}`);
-          return false;
-        }
-        
-        return true;
-      }
-    });
-
-    // Add helpful tooltips and better UX
-    CMS.registerEventListener({
-      name: 'preUnload',
-      handler: ({ entry }) => {
-        const data = entry.getIn(['data']).toJS();
-        const products = data.products || [];
-        
-        // Check for unsaved changes
-        const hasChanges = products.some(product => {
-          return !product.name || !product.priceCents || !product.material;
-        });
-        
-        if (hasChanges) {
-          return confirm('You have unsaved changes. Are you sure you want to leave?');
-        }
-        
-        return true;
-      }
     });
   </script>
 </body>
