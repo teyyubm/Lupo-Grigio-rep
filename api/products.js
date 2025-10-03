@@ -3,7 +3,7 @@
 
 const { sql } = require('@vercel/postgres');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -15,10 +15,10 @@ export default async function handler(req, res) {
         name,
         price_cents,
         material,
+        limited,
         remaining,
-        image_url,
-        is_limited,
-        is_sold_out,
+        sold_out,
+        image,
         created_at,
         updated_at
       FROM products 
@@ -31,10 +31,10 @@ export default async function handler(req, res) {
       name: row.name,
       priceCents: row.price_cents,
       material: row.material,
+      limited: row.limited,
       remaining: row.remaining,
-      image: row.image_url,
-      limited: row.is_limited,
-      soldOut: row.is_sold_out,
+      soldOut: row.sold_out,
+      image: row.image,
       createdAt: row.created_at,
       updatedAt: row.updated_at
     }));
@@ -42,6 +42,6 @@ export default async function handler(req, res) {
     res.status(200).json({ products });
   } catch (error) {
     console.error('Database error:', error);
-    res.status(500).json({ error: 'Failed to fetch products' });
+    res.status(500).json({ error: 'Failed to fetch products', details: error.message });
   }
-}
+};

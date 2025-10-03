@@ -1,9 +1,9 @@
-// API route: POST /api/products
+// API route: POST /api/save-products
 // Create or update products in database
 
 const { sql } = require('@vercel/postgres');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -24,12 +24,13 @@ export default async function handler(req, res) {
       for (const product of products) {
         await sql`
           INSERT INTO products (
-            id, name, price_cents, material, remaining, 
-            image_url, is_limited, is_sold_out
+            id, name, price_cents, material, limited, 
+            remaining, sold_out, image
           ) VALUES (
             ${product.id}, ${product.name}, ${product.priceCents}, 
-            ${product.material}, ${product.remaining}, ${product.image}, 
-            ${product.limited || false}, ${product.soldOut || false}
+            ${product.material}, ${product.limited || false}, 
+            ${product.remaining || 0}, ${product.soldOut || false}, 
+            ${product.image || ''}
           )
         `;
       }
@@ -43,6 +44,6 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Database error:', error);
-    res.status(500).json({ error: 'Failed to save products' });
+    res.status(500).json({ error: 'Failed to save products', details: error.message });
   }
-}
+};
