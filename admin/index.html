@@ -100,8 +100,8 @@
 
     /* Admin Header */
     .admin-header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      border-bottom: 1px solid #333;
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
@@ -109,7 +109,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow-lg);
     }
 
     .admin-logo {
@@ -117,7 +117,7 @@
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      color: var(--text);
+      color: white;
     }
 
     .admin-logo img {
@@ -142,7 +142,7 @@
     }
 
     .admin-nav a {
-      color: var(--text-muted);
+      color: rgba(255, 255, 255, 0.8);
       text-decoration: none;
       padding: 0.5rem 1rem;
       border-radius: var(--radius-sm);
@@ -151,12 +151,12 @@
 
     .admin-nav a:hover {
       color: var(--primary);
-      background: rgba(212, 175, 55, 0.1);
+      background: rgba(212, 175, 55, 0.2);
     }
 
     .admin-nav a.active {
       color: var(--primary);
-      background: rgba(212, 175, 55, 0.15);
+      background: rgba(212, 175, 55, 0.3);
     }
 
     /* CMS Container */
