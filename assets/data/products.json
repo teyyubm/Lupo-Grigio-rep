@@ -28,6 +28,17 @@
       "remaining": 34,
       "image": "assets/images/banner.jpg"
     }
+  ],
+  "": [
+    {
+      "limited": false,
+      "remaining": -21,
+      "soldOut": false,
+      "id": -1,
+      "image": "/assets/images/ava.jpg",
+      "priceCents": 14567,
+      "material": "leather",
+      "name": "meow"
+    }
   ]
 }
-
