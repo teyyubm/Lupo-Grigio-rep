@@ -10,6 +10,47 @@
     <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
     <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
     <script>
+      // Inject site styles for accurate previews
+      const link1 = document.createElement('link');
+      link1.rel = 'stylesheet';
+      link1.href = '/assets/styles/theme.css';
+      const link2 = document.createElement('link');
+      link2.rel = 'stylesheet';
+      link2.href = '/assets/styles/main.css';
+      document.head.appendChild(link1);
+      document.head.appendChild(link2);
+
+      // Register a simple product preview
+      function currency(cents){ try{ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format((cents||0)/100); }catch(e){ return `$${(cents||0)/100}`; } }
+      const ProductPreview = createClass({
+        render() {
+          const entry = this.props.value || {};
+          const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
+          return h('article', { className: 'card' },
+            h('div', { className: 'card-media', style: { backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`, backgroundSize:'cover', backgroundPosition:'center' } }),
+            h('div', { className: 'card-body' },
+              h('div', { className: 'card-title' }, entry.name || 'Untitled'),
+              h('div', { className: 'card-sub' }, `${currency(entry.priceCents)} · ${entry.material || ''}`)
+            ),
+            h('div', { className: 'card-footer' },
+              h('div', { className: 'pills' },
+                entry.limited ? h('span', { className: 'pill limited' }, 'Limited') : null,
+                isSold ? h('span', { className: 'pill sold' }, 'Sold Out') : null
+              ),
+              isSold ? h('span', { className: 'muted' }, 'Unavailable') : h('button', { className: 'button small' }, 'Add')
+            )
+          );
+        }
+      });
+      CMS.registerPreviewTemplate('products_list', ({ entry }) => {
+        const list = entry.getIn(['data']).toJS();
+        const items = Array.isArray(list) ? list : (list && list.Products) || [];
+        return h('div', { className: 'grid' },
+          ...(items || []).map(p => h(ProductPreview, { value: p }))
+        );
+      });
+    </script>
+    <script>
       if (window.netlifyIdentity) {
         window.netlifyIdentity.on('init', user => {
           const hash = window.location.hash || '';

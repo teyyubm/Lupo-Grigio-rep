@@ -17,11 +17,12 @@ collections:
         label: "Products List"
         name: "products_list"
         editor:
-          preview: false
+          preview: true
         fields:
           - label: "Products"
             name: ""
             widget: "list"
+            collapsed: false
             summary: "{{fields.name}} — ${{fields.priceCents}}"
             fields:
               - { label: "ID", name: "id", widget: "number" }
