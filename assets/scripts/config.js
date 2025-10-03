@@ -4,7 +4,7 @@
 // Examples:
 //  - Cloudflare Workers: https://<your-worker>.<subdomain>.workers.dev
 //  - Netlify Functions:  /.netlify/functions/instagram
-export const INSTAGRAM_PROXY_URL = '';
+export const INSTAGRAM_PROXY_URL = '/.netlify/functions/instagram';
 
 // Expected proxy response shape:
 // { profile: 'https://instagram.com/yourhandle', posts: [{ id, image, url }] }

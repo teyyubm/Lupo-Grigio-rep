@@ -394,7 +394,7 @@ function renderInstagram() {
     return;
   }
 
-  const fallback = 'assets/images/product-fallback.jpg';
+  const fallback = 'assets/images/banner.jpg';
   posts.forEach(post => {
     const tile = document.createElement('div');
     tile.className = 'ig-tile';

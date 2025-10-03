@@ -1,12 +1,12 @@
 {
   "profile": "https://www.instagram.com/lupogrigiobaku/",
   "posts": [
-    { "id": "p1", "image": "assets/images/ig-1.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
-    { "id": "p2", "image": "assets/images/ig-2.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
-    { "id": "p3", "image": "assets/images/ig-3.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
-    { "id": "p4", "image": "assets/images/ig-4.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
-    { "id": "p5", "image": "assets/images/ig-5.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
-    { "id": "p6", "image": "assets/images/ig-6.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" }
+    { "id": "p1", "image": "assets/images/banner.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
+    { "id": "p2", "image": "assets/images/banner.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
+    { "id": "p3", "image": "assets/images/banner.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
+    { "id": "p4", "image": "assets/images/banner.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
+    { "id": "p5", "image": "assets/images/banner.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" },
+    { "id": "p6", "image": "assets/images/banner.jpg", "url": "https://www.instagram.com/lupogrigiobaku/" }
   ]
 }
 

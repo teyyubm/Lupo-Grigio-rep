@@ -6,7 +6,7 @@
     "material": "Full-grain Italian leather",
     "limited": true,
     "remaining": 12,
-    "image": "assets/images/wallet-bifold.jpg"
+    "image": "assets/images/banner.jpg"
   },
   {
     "id": 2,
@@ -16,7 +16,7 @@
     "limited": true,
     "remaining": 0,
     "soldOut": true,
-    "image": "assets/images/wallet-cardholder.jpg"
+    "image": "assets/images/banner.jpg"
   },
   {
     "id": 3,
@@ -25,7 +25,7 @@
     "material": "Full-grain leather with brass zip",
     "limited": false,
     "remaining": 34,
-    "image": "assets/images/wallet-zip.jpg"
+    "image": "assets/images/banner.jpg"
   }
 ]
 
