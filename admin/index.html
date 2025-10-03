@@ -197,34 +197,37 @@
       display: none !important;
     }
 
-    /* Hide the entire tab bar with Contents and Media */
+    /* Hide the entire header bar with Contents */
     .nc-root .nc-tabList,
     .nc-root .nc-tabList-container,
     .nc-root .nc-tabList-wrapper,
     .nc-root [role="tablist"],
     .nc-root .nc-tabList-item,
-    .nc-root .nc-tabList-button {
+    .nc-root .nc-tabList-button,
+    .nc-root .nc-header,
+    .nc-root .nc-header-bar,
+    .nc-root .nc-header-tabs,
+    .nc-root .nc-header-nav,
+    .nc-root .nc-app-header,
+    .nc-root .nc-main-header {
       display: none !important;
     }
 
-    /* Hide the Contents button in the top bar */
+    /* Hide any element containing "Contents" text - More aggressive */
+    .nc-root *:has-text("Contents"),
+    .nc-root *:has-text("Media"),
+    .nc-root div:has-text("Contents"),
+    .nc-root span:has-text("Contents"),
     .nc-root button:has-text("Contents"),
     .nc-root [role="button"]:has-text("Contents"),
-    .nc-root .nc-tab-button:has-text("Contents") {
+    .nc-root .nc-tab-button:has-text("Contents"),
+    .nc-root .nc-tabList-button:has-text("Contents") {
       display: none !important;
-    }
-
-    /* Hide the Media button in the top bar */
-    .nc-root button:has-text("Media"),
-    .nc-root [role="button"]:has-text("Media"),
-    .nc-root .nc-tab-button:has-text("Media") {
-      display: none !important;
-    }
-
-    /* Hide any element containing "Contents" or "Media" text */
-    .nc-root *:has-text("Contents"),
-    .nc-root *:has-text("Media") {
-      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      width: 0 !important;
+      overflow: hidden !important;
     }
 
     /* Ensure main content is always visible */
@@ -549,19 +552,29 @@
         }
       });
 
-      // Hide any element containing tab-related text
+      // Hide ANY element containing "Contents" or "Media" text - Very aggressive
       const allElements = document.querySelectorAll('*');
       allElements.forEach(element => {
         const text = element.textContent || element.innerText || '';
-        if (text.includes('Contents') || text.includes('Media')) {
-          // Only hide if it's a tab-related element
-          if (element.classList.contains('tab') || element.classList.contains('tabList') || 
-              element.getAttribute('role') === 'tab' || element.getAttribute('role') === 'tablist' ||
-              element.tagName === 'BUTTON') {
-            element.style.display = 'none';
-            element.style.visibility = 'hidden';
-          }
+        if (text.trim() === 'Contents' || text.trim() === 'Media' || 
+            text.includes('Contents') || text.includes('Media')) {
+          // Hide any element containing these texts
+          element.style.display = 'none';
+          element.style.visibility = 'hidden';
+          element.style.opacity = '0';
+          element.style.height = '0';
+          element.style.width = '0';
+          element.style.overflow = 'hidden';
         }
+      });
+
+      // Also hide header elements
+      const headerElements = document.querySelectorAll('.nc-header, .nc-header-bar, .nc-header-tabs, .nc-header-nav, .nc-app-header, .nc-main-header');
+      headerElements.forEach(element => {
+        element.style.display = 'none';
+        element.style.visibility = 'hidden';
+        element.style.opacity = '0';
+        element.style.height = '0';
       });
 
       // Ensure main content is visible
