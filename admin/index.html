@@ -582,6 +582,21 @@
       background: rgba(255, 255, 255, 0.3);
     }
 
+    .config-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .config-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
     .products-list {
       padding: 2rem;
     }
@@ -806,7 +821,7 @@
         <div class="editor-header">
           <h2>Product Editor</h2>
           <div class="header-actions">
-            <button onclick="downloadUpdatedFile()" class="download-btn">📥 Download Updated File</button>
+            <button onclick="showGitHubSetupModal()" class="config-btn">⚙️ GitHub Config</button>
             <button onclick="addNewProduct()" class="add-product-btn">+ Add New Product</button>
           </div>
         </div>
@@ -1381,40 +1396,226 @@
       cancelEdit();
     });
 
-    // Save products (silent - no download)
-    function saveProducts() {
-      console.log('Products updated in memory:', products);
-      // No automatic download - user can download manually when ready
-    }
-
-    // Download updated products file
-    function downloadUpdatedFile() {
+    // Save products directly to server
+    async function saveProducts() {
       try {
         const productsData = { products: products };
-        const jsonString = JSON.stringify(productsData, null, 2);
         
-        // Create a blob and download link to save the file
-        const blob = new Blob([jsonString], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
+        // Try to save via Netlify function
+        const response = await fetch('/.netlify/functions/save-products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productsData)
+        });
         
-        // Create download link
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'products.json';
-        a.style.display = 'none';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        
-        // Show success message with instructions
-        alert(`📥 Updated products.json downloaded!\n\nTo apply changes to your website:\n1. Replace the file at: assets/data/products.json\n2. Refresh your website to see the changes\n\nYour product #5 and all other changes will now appear on your site!`);
-        
-        console.log('Products downloaded:', products);
+        if (response.ok) {
+          const result = await response.json();
+          alert(`✅ Products saved successfully! ${result.count} products updated on your website.`);
+          console.log('Products saved to server:', products);
+        } else {
+          throw new Error('Server save failed');
+        }
       } catch (error) {
-        console.error('Error downloading products:', error);
-        alert('Error downloading file. Please try again.');
+        console.log('Server save not available, using GitHub integration');
+        // Fallback: Use GitHub API to update the file
+        await saveViaGitHub();
       }
+    }
+
+    // Save via GitHub API (for online deployment)
+    async function saveViaGitHub() {
+      try {
+        const productsData = { products: products };
+        const jsonContent = JSON.stringify(productsData, null, 2);
+        
+        // Get GitHub configuration
+        const githubConfig = getGitHubConfig();
+        if (!githubConfig.token) {
+          showGitHubSetupModal();
+          return;
+        }
+        
+        // Show loading message
+        const loadingMsg = document.createElement('div');
+        loadingMsg.innerHTML = `
+          <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
+            <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center;">
+              <h3>🔄 Updating Products...</h3>
+              <p>Please wait while we update your products.json file via GitHub...</p>
+              <div style="margin-top: 1rem;">
+                <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #d4af37; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+              </div>
+            </div>
+          </div>
+          <style>
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          </style>
+        `;
+        document.body.appendChild(loadingMsg);
+        
+        // Update file via GitHub API
+        const result = await updateGitHubFile(jsonContent, githubConfig);
+        
+        // Remove loading message
+        document.body.removeChild(loadingMsg);
+        
+        if (result.success) {
+          alert(`✅ Products updated successfully!\n\n${result.count} products have been saved to GitHub.\nYour website will update automatically within a few minutes.\n\nCommit: ${result.commitSha.substring(0, 7)}`);
+        } else {
+          throw new Error(result.error || 'Failed to update file');
+        }
+        
+      } catch (error) {
+        console.error('Error with GitHub save:', error);
+        alert(`❌ Error updating products: ${error.message}\n\nPlease check your GitHub configuration or try manual update.`);
+        
+        // Fallback: Show manual copy instructions
+        console.log('=== MANUAL UPDATE REQUIRED ===');
+        console.log('Copy this JSON to your products.json file:');
+        console.log(JSON.stringify({ products: products }, null, 2));
+        console.log('=== END OF JSON ===');
+      }
+    }
+    
+    // Get GitHub configuration from localStorage
+    function getGitHubConfig() {
+      const config = localStorage.getItem('github_config');
+      if (config) {
+        return JSON.parse(config);
+      }
+      return {
+        token: '',
+        owner: '',
+        repo: '',
+        path: 'assets/data/products.json'
+      };
+    }
+    
+    // Save GitHub configuration
+    function saveGitHubConfig(config) {
+      localStorage.setItem('github_config', JSON.stringify(config));
+    }
+    
+    // Update file via GitHub API
+    async function updateGitHubFile(content, config) {
+      try {
+        // First, get the current file to get the SHA
+        const getFileResponse = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`, {
+          headers: {
+            'Authorization': `token ${config.token}`,
+            'Accept': 'application/vnd.github.v3+json'
+          }
+        });
+        
+        if (!getFileResponse.ok) {
+          throw new Error(`Failed to get current file: ${getFileResponse.statusText}`);
+        }
+        
+        const fileData = await getFileResponse.json();
+        
+        // Update the file
+        const updateResponse = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${config.path}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${config.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Update products.json - ${new Date().toLocaleString()}`,
+            content: btoa(unescape(encodeURIComponent(content))), // Base64 encode
+            sha: fileData.sha
+          })
+        });
+        
+        if (!updateResponse.ok) {
+          const errorData = await updateResponse.json();
+          throw new Error(`Failed to update file: ${errorData.message || updateResponse.statusText}`);
+        }
+        
+        const result = await updateResponse.json();
+        
+        return {
+          success: true,
+          count: JSON.parse(content).products.length,
+          commitSha: result.commit.sha,
+          commitUrl: result.commit.html_url
+        };
+        
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+    
+    // Show GitHub setup modal
+    function showGitHubSetupModal() {
+      const modal = document.createElement('div');
+      modal.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 10000;">
+          <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%;">
+            <h2>🔧 GitHub API Setup</h2>
+            <p>To enable automatic product updates, please configure your GitHub API access:</p>
+            
+            <form id="github-config-form">
+              <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">GitHub Personal Access Token:</label>
+                <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+                <small style="color: #666;">Create one at: <a href="https://github.com/settings/tokens" target="_blank">github.com/settings/tokens</a></small>
+              </div>
+              
+              <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Repository Owner:</label>
+                <input type="text" id="github-owner" placeholder="your-username" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+              </div>
+              
+              <div style="margin-bottom: 1rem;">
+                <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Repository Name:</label>
+                <input type="text" id="github-repo" placeholder="Lupo-Grigio-rep" style="width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px;">
+              </div>
+              
+              <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                <button type="submit" style="background: #d4af37; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; flex: 1;">Save Configuration</button>
+                <button type="button" onclick="document.body.removeChild(this.closest('div').parentElement)" style="background: #666; color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+      
+      // Handle form submission
+      document.getElementById('github-config-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const config = {
+          token: document.getElementById('github-token').value,
+          owner: document.getElementById('github-owner').value,
+          repo: document.getElementById('github-repo').value,
+          path: 'assets/data/products.json'
+        };
+        
+        if (!config.token || !config.owner || !config.repo) {
+          alert('Please fill in all fields');
+          return;
+        }
+        
+        saveGitHubConfig(config);
+        document.body.removeChild(modal);
+        
+        alert('✅ GitHub configuration saved!\n\nNow you can save products and they will automatically update on your website.');
+        
+        // Retry the save operation
+        saveViaGitHub();
+      });
     }
 
     // Update hero stats
