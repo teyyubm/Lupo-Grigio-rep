@@ -10,103 +10,110 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Sample products data (from your JSON file)
-    const productsData = {
-      products: [
-        {
-          id: 1,
-          name: "No. 01 Bifold Wallet",
-          priceCents: 18500,
-          material: "Full-grain Italian leather",
-          limited: true,
-          remaining: 12,
-          image: "/assets/images/ava.jpg"
-        },
-        {
-          id: 2,
-          name: "No. 02 Card Holder",
-          priceCents: 12000,
-          material: "Vegetable-tanned leather",
-          limited: true,
-          remaining: 0,
-          soldOut: true,
-          image: "assets/images/banner.jpg"
-        },
-        {
-          id: 3,
-          name: "No. 03 Zip Wallet",
-          priceCents: 22000,
-          material: "Full-grain leather with brass zip",
-          limited: false,
-          remaining: 34,
-          image: "assets/images/banner.jpg"
-        },
-        {
-          limited: false,
-          remaining: 0,
-          soldOut: false,
-          name: "trt",
-          priceCents: 23234234,
-          material: "efssd",
-          image: "/assets/images/logo.jpg",
-          id: 4
-        },
-        {
-          id: 5,
-          name: "234",
-          priceCents: 243,
-          material: "ewrwer",
-          remaining: 3242,
-          image: "/assets/images/product-1759512648762.png",
-          limited: false,
-          soldOut: false
-        },
-        {
-          id: 6,
-          name: "234",
-          priceCents: 32432,
-          material: "leather",
-          remaining: 22,
-          image: "/assets/images/product-1759512680557.webp",
-          limited: true,
-          soldOut: false
-        }
-      ]
-    };
+    // Test database connection first
+    await sql`SELECT 1 as test`;
     
-    if (!productsData.products || !Array.isArray(productsData.products)) {
-      return res.status(400).json({ error: 'Invalid products data format' });
-    }
+    // Clear existing products
+    await sql`DELETE FROM products`;
+    
+    // Insert products one by one with proper error handling
+    const products = [
+      {
+        id: 1,
+        name: "No. 01 Bifold Wallet",
+        price_cents: 18500,
+        material: "Full-grain Italian leather",
+        limited: true,
+        remaining: 12,
+        sold_out: false,
+        image: "/assets/images/ava.jpg"
+      },
+      {
+        id: 2,
+        name: "No. 02 Card Holder",
+        price_cents: 12000,
+        material: "Vegetable-tanned leather",
+        limited: true,
+        remaining: 0,
+        sold_out: true,
+        image: "assets/images/banner.jpg"
+      },
+      {
+        id: 3,
+        name: "No. 03 Zip Wallet",
+        price_cents: 22000,
+        material: "Full-grain leather with brass zip",
+        limited: false,
+        remaining: 34,
+        sold_out: false,
+        image: "assets/images/banner.jpg"
+      },
+      {
+        id: 4,
+        name: "trt",
+        price_cents: 23234234,
+        material: "efssd",
+        limited: false,
+        remaining: 0,
+        sold_out: false,
+        image: "/assets/images/logo.jpg"
+      },
+      {
+        id: 5,
+        name: "234",
+        price_cents: 243,
+        material: "ewrwer",
+        limited: false,
+        remaining: 3242,
+        sold_out: false,
+        image: "/assets/images/product-1759512648762.png"
+      },
+      {
+        id: 6,
+        name: "234",
+        price_cents: 32432,
+        material: "leather",
+        limited: true,
+        remaining: 22,
+        sold_out: false,
+        image: "/assets/images/product-1759512680557.webp"
+      }
+    ];
 
-    // Start transaction
-    await sql.begin(async (sql) => {
-      // Clear existing products
-      await sql`DELETE FROM products`;
-      
-      // Insert products from data
-      for (const product of productsData.products) {
+    let insertedCount = 0;
+    for (const product of products) {
+      try {
         await sql`
           INSERT INTO products (
             id, name, price_cents, material, limited, 
             remaining, sold_out, image
           ) VALUES (
-            ${product.id}, ${product.name}, ${product.priceCents}, 
-            ${product.material}, ${product.limited || false}, 
-            ${product.remaining || 0}, ${product.soldOut || false}, 
-            ${product.image || ''}
+            ${product.id}, ${product.name}, ${product.price_cents}, 
+            ${product.material}, ${product.limited}, 
+            ${product.remaining}, ${product.sold_out}, 
+            ${product.image}
           )
         `;
+        insertedCount++;
+      } catch (insertError) {
+        console.error(`Error inserting product ${product.id}:`, insertError);
+        // Continue with other products
       }
-    });
+    }
 
     res.status(200).json({ 
       success: true, 
-      message: `Migrated ${productsData.products.length} products to database`,
-      count: productsData.products.length 
+      message: `Successfully migrated ${insertedCount} products to database`,
+      count: insertedCount,
+      total: products.length
     });
 
   } catch (error) {
     console.error('Migration error:', error);
-    res.status(500).json({ error: 'Migration failed: ' + error.message });
+    res.status(500).json({ 
+      error: 'Migration failed', 
+      details: error.message,
+      stack: error.stack
+    });
   }
 }
