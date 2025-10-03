@@ -15,13 +15,13 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid products data' });
     }
 
-    // Start transaction
-    await sql.begin(async (sql) => {
-      // Clear existing products
-      await sql`DELETE FROM products`;
-      
-      // Insert new products
-      for (const product of products) {
+    // Clear existing products
+    await sql`DELETE FROM products`;
+    
+    // Insert new products one by one
+    let insertedCount = 0;
+    for (const product of products) {
+      try {
         await sql`
           INSERT INTO products (
             id, name, price_cents, material, limited, 
@@ -33,13 +33,18 @@ module.exports = async function handler(req, res) {
             ${product.image || ''}
           )
         `;
+        insertedCount++;
+      } catch (insertError) {
+        console.error(`Error inserting product ${product.id}:`, insertError);
+        // Continue with other products
       }
-    });
+    }
 
     res.status(200).json({ 
       success: true, 
       message: 'Products saved successfully',
-      count: products.length 
+      count: insertedCount,
+      total: products.length
     });
 
   } catch (error) {
