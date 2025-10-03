@@ -1,65 +1,494 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lupo Grigio CMS</title>
-    <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
-  </head>
-  <body>
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-    <script>
-      // Inject site styles for accurate previews
-      const link1 = document.createElement('link');
-      link1.rel = 'stylesheet';
-      link1.href = '/assets/styles/theme.css';
-      const link2 = document.createElement('link');
-      link2.rel = 'stylesheet';
-      link2.href = '/assets/styles/main.css';
-      document.head.appendChild(link1);
-      document.head.appendChild(link2);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lupo Grigio Admin</title>
+  <link rel="icon" href="/assets/images/logo.jpg" />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  
+  <!-- CMS Styles -->
+  <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
+  
+  <!-- Custom Admin Styles -->
+  <style>
+    :root {
+      --admin-bg: #0a0a0a;
+      --admin-surface: #1a1a1a;
+      --admin-border: #333;
+      --admin-text: #ffffff;
+      --admin-muted: #999;
+      --admin-accent: #c7a26a;
+      --admin-success: #10b981;
+      --admin-warning: #f59e0b;
+      --admin-error: #ef4444;
+      --admin-radius: 8px;
+      --admin-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
 
-      // Register a simple product preview
-      function currency(cents){ try{ return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD'}).format((cents||0)/100); }catch(e){ return `$${(cents||0)/100}`; } }
-      const ProductPreview = createClass({
-        render() {
-          const entry = this.props.value || {};
-          const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
-          return h('article', { className: 'card' },
-            h('div', { className: 'card-media', style: { backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`, backgroundSize:'cover', backgroundPosition:'center' } }),
-            h('div', { className: 'card-body' },
-              h('div', { className: 'card-title' }, entry.name || 'Untitled'),
-              h('div', { className: 'card-sub' }, `${currency(entry.priceCents)} · ${entry.material || ''}`)
-            ),
-            h('div', { className: 'card-footer' },
-              h('div', { className: 'pills' },
-                entry.limited ? h('span', { className: 'pill limited' }, 'Limited') : null,
-                isSold ? h('span', { className: 'pill sold' }, 'Sold Out') : null
-              ),
-              isSold ? h('span', { className: 'muted' }, 'Unavailable') : h('button', { className: 'button small' }, 'Add')
-            )
-          );
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--admin-bg);
+      color: var(--admin-text);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    /* Admin Header */
+    .admin-header {
+      background: var(--admin-surface);
+      border-bottom: 1px solid var(--admin-border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .admin-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--admin-text);
+    }
+
+    .admin-logo img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .admin-logo h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .admin-nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .admin-nav a {
+      color: var(--admin-muted);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--admin-radius);
+      transition: all 0.2s;
+    }
+
+    .admin-nav a:hover {
+      color: var(--admin-text);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .admin-nav a.active {
+      color: var(--admin-accent);
+      background: rgba(199, 162, 106, 0.1);
+    }
+
+    /* CMS Container */
+    .cms-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* Custom CMS Overrides */
+    .nc-root {
+      background: transparent !important;
+    }
+
+    .nc-root .nc-app {
+      background: transparent !important;
+    }
+
+    .nc-root .nc-appHeader {
+      background: var(--admin-surface) !important;
+      border-bottom: 1px solid var(--admin-border) !important;
+    }
+
+    .nc-root .nc-appMain {
+      background: transparent !important;
+    }
+
+    .nc-root .nc-collectionPage {
+      background: var(--admin-surface) !important;
+      border-radius: var(--admin-radius) !important;
+      border: 1px solid var(--admin-border) !important;
+      box-shadow: var(--admin-shadow) !important;
+    }
+
+    .nc-root .nc-collectionPage-header {
+      background: transparent !important;
+      border-bottom: 1px solid var(--admin-border) !important;
+      padding: 1.5rem !important;
+    }
+
+    .nc-root .nc-collectionPage-title {
+      color: var(--admin-text) !important;
+      font-size: 1.5rem !important;
+      font-weight: 600 !important;
+    }
+
+    .nc-root .nc-collectionPage-description {
+      color: var(--admin-muted) !important;
+      margin-top: 0.5rem !important;
+    }
+
+    /* Form Styling */
+    .nc-root .nc-widget {
+      background: transparent !important;
+    }
+
+    .nc-root .nc-widget-input {
+      background: var(--admin-surface) !important;
+      border: 1px solid var(--admin-border) !important;
+      color: var(--admin-text) !important;
+      border-radius: var(--admin-radius) !important;
+    }
+
+    .nc-root .nc-widget-input:focus {
+      border-color: var(--admin-accent) !important;
+      box-shadow: 0 0 0 3px rgba(199, 162, 106, 0.1) !important;
+    }
+
+    .nc-root .nc-widget-label {
+      color: var(--admin-text) !important;
+      font-weight: 500 !important;
+    }
+
+    /* Buttons */
+    .nc-root .nc-button {
+      background: var(--admin-accent) !important;
+      color: #000 !important;
+      border: none !important;
+      border-radius: var(--admin-radius) !important;
+      font-weight: 500 !important;
+      transition: all 0.2s !important;
+    }
+
+    .nc-root .nc-button:hover {
+      background: #b8945a !important;
+      transform: translateY(-1px) !important;
+    }
+
+    .nc-root .nc-button--secondary {
+      background: var(--admin-surface) !important;
+      color: var(--admin-text) !important;
+      border: 1px solid var(--admin-border) !important;
+    }
+
+    .nc-root .nc-button--secondary:hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+
+    /* List Items */
+    .nc-root .nc-list-item {
+      background: var(--admin-surface) !important;
+      border: 1px solid var(--admin-border) !important;
+      border-radius: var(--admin-radius) !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .nc-root .nc-list-item:hover {
+      border-color: var(--admin-accent) !important;
+      box-shadow: var(--admin-shadow) !important;
+    }
+
+    /* Status Indicators */
+    .nc-root .nc-status {
+      border-radius: 999px !important;
+      font-size: 0.75rem !important;
+      font-weight: 500 !important;
+      padding: 0.25rem 0.75rem !important;
+    }
+
+    .nc-root .nc-status--draft {
+      background: rgba(245, 158, 11, 0.1) !important;
+      color: var(--admin-warning) !important;
+    }
+
+    .nc-root .nc-status--pending {
+      background: rgba(59, 130, 246, 0.1) !important;
+      color: #3b82f6 !important;
+    }
+
+    .nc-root .nc-status--published {
+      background: rgba(16, 185, 129, 0.1) !important;
+      color: var(--admin-success) !important;
+    }
+
+    /* Preview Panel */
+    .nc-root .nc-previewPane {
+      background: var(--admin-surface) !important;
+      border: 1px solid var(--admin-border) !important;
+      border-radius: var(--admin-radius) !important;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .admin-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .admin-nav {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .cms-container {
+        padding: 1rem;
+      }
+
+      .nc-root .nc-collectionPage-header {
+        padding: 1rem !important;
+      }
+
+      .nc-root .nc-collectionPage-title {
+        font-size: 1.25rem !important;
+      }
+    }
+
+    /* Loading States */
+    .nc-root .nc-loading {
+      color: var(--admin-accent) !important;
+    }
+
+    /* Error States */
+    .nc-root .nc-error {
+      color: var(--admin-error) !important;
+      background: rgba(239, 68, 68, 0.1) !important;
+      border: 1px solid rgba(239, 68, 68, 0.2) !important;
+      border-radius: var(--admin-radius) !important;
+      padding: 1rem !important;
+    }
+
+    /* Success States */
+    .nc-root .nc-success {
+      color: var(--admin-success) !important;
+      background: rgba(16, 185, 129, 0.1) !important;
+      border: 1px solid rgba(16, 185, 129, 0.2) !important;
+      border-radius: var(--admin-radius) !important;
+      padding: 1rem !important;
+    }
+
+    /* Help Text */
+    .nc-root .nc-help {
+      color: var(--admin-muted) !important;
+      font-size: 0.875rem !important;
+      margin-top: 0.25rem !important;
+    }
+
+    /* Custom Preview Styles */
+    .preview-container {
+      padding: 1rem;
+      background: var(--admin-surface);
+      border-radius: var(--admin-radius);
+      border: 1px solid var(--admin-border);
+    }
+
+    .preview-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--admin-text);
+    }
+  </style>
+</head>
+<body>
+  <!-- Admin Header -->
+  <header class="admin-header">
+    <a href="/" class="admin-logo">
+      <img src="/assets/images/logo.jpg" alt="Lupo Grigio" />
+      <h1>Lupo Grigio Admin</h1>
+    </a>
+    <nav class="admin-nav">
+      <a href="/admin/#/collections/products" class="active">Products</a>
+      <a href="/admin/#/collections/settings">Settings</a>
+      <a href="/" target="_blank">View Site</a>
+    </nav>
+  </header>
+
+  <!-- CMS Container -->
+  <div class="cms-container">
+    <div id="nc-root"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  
+  <script>
+    // Identity handling
+    if (window.netlifyIdentity) {
+      window.netlifyIdentity.on('init', user => {
+        const hash = window.location.hash || '';
+        if (!user && hash.includes('invite_token')) {
+          window.netlifyIdentity.acceptInvite().catch(() => {});
         }
       });
-      CMS.registerPreviewTemplate('products_list', ({ entry }) => {
-        const data = entry.getIn(['data']).toJS();
-        const items = data.products || [];
-        return h('div', { className: 'grid' },
-          ...(items || []).map(p => h(ProductPreview, { value: p }))
-        );
-      });
-    </script>
-    <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', user => {
-          const hash = window.location.hash || '';
-          if (!user && hash.includes('invite_token')) {
-            window.netlifyIdentity.acceptInvite().catch(() => {});
-          }
-        });
-      }
-    </script>
-  </body>
-  </html>
+    }
 
+    // Load site styles for previews
+    const link1 = document.createElement('link');
+    link1.rel = 'stylesheet';
+    link1.href = '/assets/styles/theme.css';
+    const link2 = document.createElement('link');
+    link2.rel = 'stylesheet';
+    link2.href = '/assets/styles/main.css';
+    document.head.appendChild(link1);
+    document.head.appendChild(link2);
+
+    // Enhanced product preview component
+    function currency(cents) {
+      try {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format((cents || 0) / 100);
+      } catch (e) {
+        return `$${(cents || 0) / 100}`;
+      }
+    }
+
+    const ProductPreview = createClass({
+      render() {
+        const entry = this.props.value || {};
+        const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
+        
+        return h('article', { 
+          className: 'card',
+          style: { 
+            marginBottom: '1rem',
+            border: '1px solid var(--admin-border)',
+            borderRadius: 'var(--admin-radius)',
+            overflow: 'hidden'
+          }
+        },
+          h('div', { 
+            className: 'card-media', 
+            style: { 
+              backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              height: '200px'
+            } 
+          }),
+          h('div', { className: 'card-body', style: { padding: '1rem' } },
+            h('div', { className: 'card-title', style: { fontWeight: '600', marginBottom: '0.5rem' } }, entry.name || 'Untitled'),
+            h('div', { className: 'card-sub', style: { color: 'var(--admin-muted)', fontSize: '0.875rem' } }, 
+              `${currency(entry.priceCents)} · ${entry.material || ''}`
+            )
+          ),
+          h('div', { 
+            className: 'card-footer', 
+            style: { 
+              padding: '1rem',
+              borderTop: '1px solid var(--admin-border)',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center'
+            }
+          },
+            h('div', { className: 'pills', style: { display: 'flex', gap: '0.5rem' } },
+              entry.limited ? h('span', { 
+                className: 'pill limited',
+                style: {
+                  fontSize: '0.75rem',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '999px',
+                  background: 'rgba(199, 162, 106, 0.1)',
+                  color: 'var(--admin-accent)',
+                  border: '1px solid rgba(199, 162, 106, 0.2)'
+                }
+              }, 'Limited') : null,
+              isSold ? h('span', { 
+                className: 'pill sold',
+                style: {
+                  fontSize: '0.75rem',
+                  padding: '0.25rem 0.5rem',
+                  borderRadius: '999px',
+                  background: 'rgba(239, 68, 68, 0.1)',
+                  color: 'var(--admin-error)',
+                  border: '1px solid rgba(239, 68, 68, 0.2)'
+                }
+              }, 'Sold Out') : null
+            ),
+            isSold ? h('span', { className: 'muted', style: { color: 'var(--admin-muted)' } }, 'Unavailable') : 
+              h('button', { 
+                className: 'button small',
+                style: {
+                  background: 'var(--admin-accent)',
+                  color: '#000',
+                  border: 'none',
+                  padding: '0.5rem 1rem',
+                  borderRadius: 'var(--admin-radius)',
+                  fontWeight: '500',
+                  cursor: 'pointer'
+                }
+              }, 'Add')
+          )
+        );
+      }
+    });
+
+    // Register preview template
+    CMS.registerPreviewTemplate('products_list', ({ entry }) => {
+      const data = entry.getIn(['data']).toJS();
+      const items = data.products || [];
+      
+      return h('div', { className: 'preview-container' },
+        h('div', { className: 'preview-title' }, `Products Preview (${items.length} items)`),
+        h('div', { 
+          className: 'grid',
+          style: {
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '1rem'
+          }
+        },
+          ...(items || []).map(p => h(ProductPreview, { value: p }))
+        )
+      );
+    });
+
+    // Add helpful tooltips and validation
+    CMS.registerEventListener({
+      name: 'preSave',
+      handler: ({ entry }) => {
+        const data = entry.getIn(['data']).toJS();
+        const products = data.products || [];
+        
+        // Validate products
+        for (let i = 0; i < products.length; i++) {
+          const product = products[i];
+          if (!product.name || !product.priceCents || !product.material) {
+            alert(`Product ${i + 1} is missing required fields (Name, Price, Material)`);
+            return false;
+          }
+          if (product.priceCents <= 0) {
+            alert(`Product ${i + 1} has invalid price`);
+            return false;
+          }
+        }
+        
+        return true;
+      }
+    });
+  </script>
+</body>
+</html>
