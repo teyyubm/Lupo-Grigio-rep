@@ -175,25 +175,36 @@
       background: transparent !important;
     }
 
-    /* Hide collections sidebar */
-    .nc-root .nc-sidebar {
+    /* Hide collections sidebar - More aggressive */
+    .nc-root .nc-sidebar,
+    .nc-root .nc-sidebar-header,
+    .nc-root .nc-sidebar-nav,
+    .nc-root .nc-sidebar-nav-list,
+    .nc-root [class*="sidebar"],
+    .nc-root [class*="collection"],
+    /* Target specific Decap CMS sidebar elements */
+    .nc-root .nc-app-sidebar,
+    .nc-root .nc-app-sidebar-header,
+    .nc-root .nc-app-sidebar-nav,
+    .nc-root .nc-app-sidebar-nav-list,
+    /* Target any element with sidebar-related classes */
+    .nc-root .nc-layout-sidebar,
+    .nc-root .nc-layout-sidebar-header,
+    .nc-root .nc-layout-sidebar-nav,
+    /* Hide any element containing "Contents" or "Collections" text */
+    .nc-root *:has-text("Contents"),
+    .nc-root *:has-text("Collections"),
+    /* Force hide any left-side elements */
+    .nc-root .nc-app-layout-left,
+    .nc-root .nc-app-layout-sidebar {
       display: none !important;
-    }
-
-    .nc-root .nc-sidebar-header {
-      display: none !important;
-    }
-
-    .nc-root .nc-sidebar-nav {
-      display: none !important;
-    }
-
-    .nc-root .nc-sidebar-nav-list {
-      display: none !important;
-    }
-
-    .nc-root [class*="sidebar"] {
-      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      overflow: hidden !important;
     }
 
     /* Force light background */
@@ -471,15 +482,22 @@
         });
     }
 
-    // Force remove Contents, Media tabs and Collections
+    // Force remove Contents, Media tabs and Collections - Enhanced
     function removeTabs() {
       // Remove any elements containing "Contents", "Media", or "Collections" text
       const allElements = document.querySelectorAll('*');
       allElements.forEach(element => {
         const text = element.textContent || element.innerText || '';
-        if (text.includes('Contents') || text.includes('Media') || text.includes('Collections')) {
-          if (element.tagName === 'BUTTON' || element.classList.contains('tab') || element.classList.contains('sidebar') || element.getAttribute('role') === 'tab') {
+        if (text.includes('Contents') || text.includes('Media') || text.includes('Collections') || text.includes('Search all')) {
+          // Remove buttons, divs, and any interactive elements
+          if (element.tagName === 'BUTTON' || element.tagName === 'DIV' || element.tagName === 'NAV' || 
+              element.classList.contains('tab') || element.classList.contains('sidebar') || 
+              element.classList.contains('collection') || element.getAttribute('role') === 'tab') {
             element.style.display = 'none';
+            element.style.visibility = 'hidden';
+            element.style.opacity = '0';
+            element.style.width = '0';
+            element.style.height = '0';
             element.remove();
           }
         }
@@ -489,13 +507,17 @@
       const tabElements = document.querySelectorAll('[class*="tab"], [role="tab"], [role="tablist"], [role="tabpanel"]');
       tabElements.forEach(element => {
         element.style.display = 'none';
+        element.style.visibility = 'hidden';
         element.remove();
       });
 
       // Remove any sidebar/collection elements
-      const sidebarElements = document.querySelectorAll('[class*="sidebar"], [class*="collection"]');
+      const sidebarElements = document.querySelectorAll('[class*="sidebar"], [class*="collection"], [class*="layout-left"]');
       sidebarElements.forEach(element => {
         element.style.display = 'none';
+        element.style.visibility = 'hidden';
+        element.style.width = '0';
+        element.style.height = '0';
         element.remove();
       });
 
@@ -503,6 +525,7 @@
       const tabButtons = document.querySelectorAll('button[aria-label*="Contents"], button[aria-label*="Media"], button[aria-label*="Collections"], button[title*="Contents"], button[title*="Media"], button[title*="Collections"]');
       tabButtons.forEach(button => {
         button.style.display = 'none';
+        button.style.visibility = 'hidden';
         button.remove();
       });
 
@@ -510,6 +533,16 @@
       const cmsElements = document.querySelectorAll('.nc-root, .nc-app, .nc-app-body, .nc-main-container');
       cmsElements.forEach(element => {
         element.style.background = 'var(--bg)';
+      });
+
+      // Hide any left-side layout elements
+      const leftElements = document.querySelectorAll('[class*="left"], [class*="sidebar"], [class*="nav"]');
+      leftElements.forEach(element => {
+        if (element.textContent.includes('Contents') || element.textContent.includes('Collections')) {
+          element.style.display = 'none';
+          element.style.visibility = 'hidden';
+          element.remove();
+        }
       });
     }
 
