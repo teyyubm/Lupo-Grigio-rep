@@ -270,7 +270,21 @@
       backdrop-filter: blur(20px) !important;
     }
 
-    /* Mobile Responsive */
+    /* Mobile Responsive - Enhanced */
+    @media (max-width: 1024px) {
+      .cms-container {
+        padding: 1.5rem;
+      }
+      
+      .nc-root .nc-collectionPage-header {
+        padding: 1.5rem !important;
+      }
+      
+      .nc-root .nc-collectionPage-title {
+        font-size: 1.75rem !important;
+      }
+    }
+
     @media (max-width: 768px) {
       .admin-header {
         padding: 1rem;
@@ -279,21 +293,251 @@
         align-items: stretch;
       }
 
+      .admin-logo h1 {
+        font-size: 1.1rem !important;
+      }
+
       .admin-nav {
         justify-content: center;
         flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .admin-nav a {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
       }
 
       .cms-container {
         padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        min-height: calc(100vh - 120px);
       }
 
       .nc-root .nc-collectionPage-header {
-        padding: 1.5rem !important;
+        padding: 1.25rem !important;
       }
 
       .nc-root .nc-collectionPage-title {
         font-size: 1.5rem !important;
+      }
+
+      .nc-root .nc-collectionPage-description {
+        font-size: 1rem !important;
+      }
+
+      .nc-root .nc-widget-input {
+        padding: 0.875rem !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+      }
+
+      .nc-root .nc-button {
+        padding: 0.875rem 1.5rem !important;
+        font-size: 0.9rem !important;
+      }
+
+      .nc-root .nc-list-item {
+        margin-bottom: 0.75rem !important;
+      }
+
+      .preview-container {
+        padding: 1.5rem;
+      }
+
+      .preview-title {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+
+      .nc-root .nc-collectionPage {
+        margin-bottom: 1rem !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .admin-header {
+        padding: 0.75rem;
+      }
+
+      .admin-logo {
+        gap: 8px;
+      }
+
+      .admin-logo img {
+        width: 28px;
+        height: 28px;
+      }
+
+      .admin-logo h1 {
+        font-size: 1rem !important;
+      }
+
+      .admin-nav {
+        gap: 0.25rem;
+      }
+
+      .admin-nav a {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      .cms-container {
+        padding: 0.75rem;
+      }
+
+      .nc-root .nc-collectionPage-header {
+        padding: 1rem !important;
+      }
+
+      .nc-root .nc-collectionPage-title {
+        font-size: 1.25rem !important;
+      }
+
+      .nc-root .nc-collectionPage-description {
+        font-size: 0.9rem !important;
+      }
+
+      .nc-root .nc-widget-input {
+        padding: 0.75rem !important;
+      }
+
+      .nc-root .nc-button {
+        padding: 0.75rem 1.25rem !important;
+        font-size: 0.85rem !important;
+      }
+
+      .nc-root .nc-widget-label {
+        font-size: 0.8rem !important;
+      }
+
+      .preview-container {
+        padding: 1rem;
+      }
+
+      .preview-title {
+        font-size: 1.1rem;
+      }
+
+      /* Mobile-specific CMS overrides */
+      .nc-root .nc-appHeader {
+        padding: 0.75rem !important;
+      }
+
+      .nc-root .nc-collectionList {
+        padding: 0.75rem !important;
+      }
+
+      .nc-root .nc-collectionItem {
+        padding: 0.75rem !important;
+      }
+
+      /* Touch-friendly buttons */
+      .nc-root .nc-button {
+        min-height: 44px !important; /* iOS touch target */
+        min-width: 44px !important;
+      }
+
+      /* Better mobile form layout */
+      .nc-root .nc-widget {
+        margin-bottom: 1rem !important;
+      }
+
+      /* Mobile preview grid */
+      .preview-container .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+      }
+    }
+
+    /* Tablet specific */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .cms-container {
+        padding: 1.5rem;
+      }
+
+      .nc-root .nc-collectionPage-header {
+        padding: 1.75rem !important;
+      }
+
+      .nc-root .nc-collectionPage-title {
+        font-size: 1.75rem !important;
+      }
+
+      .preview-container .grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.25rem !important;
+      }
+    }
+
+    /* Large desktop */
+    @media (min-width: 1400px) {
+      .cms-container {
+        padding: 3rem;
+      }
+
+      .nc-root .nc-collectionPage-header {
+        padding: 3rem !important;
+      }
+
+      .nc-root .nc-collectionPage-title {
+        font-size: 2.5rem !important;
+      }
+
+      .preview-container .grid {
+        grid-template-columns: repeat(4, 1fr) !important;
+        gap: 2rem !important;
+      }
+    }
+
+    /* Landscape mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .admin-header {
+        padding: 0.5rem 1rem;
+        flex-direction: row;
+        gap: 1rem;
+      }
+
+      .cms-container {
+        padding: 0.5rem;
+        min-height: calc(100vh - 60px);
+      }
+
+      .nc-root .nc-collectionPage-header {
+        padding: 1rem !important;
+      }
+
+      .nc-root .nc-collectionPage-title {
+        font-size: 1.25rem !important;
+      }
+    }
+
+    /* High DPI displays */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      .admin-logo img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+      }
+    }
+
+    /* Dark mode preference */
+    @media (prefers-color-scheme: dark) {
+      .nc-root .nc-widget-input {
+        background: rgba(45, 55, 72, 0.9) !important;
+        color: #e2e8f0 !important;
+        border-color: #4a5568 !important;
+      }
+
+      .nc-root .nc-widget-label {
+        color: #e2e8f0 !important;
+      }
+    }
+
+    /* Reduced motion preference */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
       }
     }
 
@@ -543,8 +787,20 @@
           className: 'grid',
           style: {
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.5rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '1.5rem',
+            '@media (max-width: 768px)': {
+              gridTemplateColumns: '1fr',
+              gap: '1rem'
+            },
+            '@media (min-width: 769px) and (max-width: 1024px)': {
+              gridTemplateColumns: 'repeat(2, 1fr)',
+              gap: '1.25rem'
+            },
+            '@media (min-width: 1400px)': {
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: '2rem'
+            }
           }
         },
           ...(items || []).map(p => h(ProductPreview, { value: p }))
