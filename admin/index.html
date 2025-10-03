@@ -11,8 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   
-  <!-- CMS Styles -->
-  <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
+  <!-- Custom Admin Panel Styles -->
   
   <!-- Custom Admin Styles -->
   <style>
@@ -1012,7 +1011,7 @@
   </div>
 
   <!-- Scripts -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <!-- Custom Admin Panel Scripts -->
   
   <script>
     // Secure Authentication System
@@ -1361,56 +1360,10 @@
       `;
     }
     
-    // Initialize CMS after authentication
-    function initializeCMS() {
-      if (typeof CMS !== 'undefined') {
-        CMS.init({
-          config: {
-            backend: {
-              name: 'test-repo'
-            },
-            publish_mode: 'simple',
-            media_folder: 'assets/images',
-            public_folder: '/assets/images',
-            collections: [
-              {
-                name: 'products',
-                label: 'Products',
-                label_singular: 'Product',
-                description: 'Edit products for the main page',
-                files: [
-                  {
-                    file: 'assets/data/products.json',
-                    label: 'Products',
-                    name: 'products',
-                    editor: {
-                      preview: true
-                    },
-                    fields: [
-                      {
-                        label: 'Products',
-                        name: 'products',
-                        widget: 'list',
-                        summary: '{{fields.name}} — ${{fields.priceCents}}',
-                        fields: [
-                          { label: 'ID', name: 'id', widget: 'number', required: true },
-                          { label: 'Name', name: 'name', widget: 'string', required: true },
-                          { label: 'Price (cents)', name: 'priceCents', widget: 'number', required: true },
-                          { label: 'Material', name: 'material', widget: 'string', required: true },
-                          { label: 'Limited Edition', name: 'limited', widget: 'boolean', default: false, required: false },
-                          { label: 'Remaining Stock', name: 'remaining', widget: 'number', default: 0, required: false },
-                          { label: 'Sold Out', name: 'soldOut', widget: 'boolean', default: false, required: false },
-                          { label: 'Image', name: 'image', widget: 'image', allow_multiple: false, required: false }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          }
-        });
-      }
+    // Initialize custom admin panel after authentication
+    function initializeAdminPanel() {
+      loadProducts();
+      updateStats();
     }
     
     // Product Management Functions
@@ -2260,16 +2213,16 @@
     setTimeout(removeTabs, 1000);
     setTimeout(removeTabs, 3000);
 
-    // Also run when the CMS loads
-    if (window.CMS) {
-      window.CMS.registerEventListener({
-        name: 'preSave',
-        handler: () => {
-          removeTabs();
-          return true;
-        }
+    // Remove any leftover CMS elements
+    function removeCMSElements() {
+      const cmsElements = document.querySelectorAll('.nc-root, .nc-app, .nc-app-body, .nc-main-container');
+      cmsElements.forEach(element => {
+        element.remove();
       });
     }
+    
+    // Run cleanup
+    removeCMSElements();
 
     // Simple product preview component
     function currency(cents) {
@@ -2386,24 +2339,14 @@
       }
     });
 
-    // Simple preview template
-    CMS.registerPreviewTemplate('products', ({ entry }) => {
-      const data = entry.getIn(['data']).toJS();
-      const items = data.products || [];
-      
-      return h('div', { className: 'preview-container', style: { padding: '2rem', background: 'var(--surface)', borderRadius: 'var(--radius)', border: '1px solid var(--border)', boxShadow: 'var(--shadow)' } },
-        h('div', { className: 'preview-title', style: { fontSize: '1.5rem', fontWeight: '700', marginBottom: '1.5rem', color: 'var(--text)', textAlign: 'center' } }, `Products Preview (${items.length} items)`),
-        h('div', { 
-          className: 'grid',
-          style: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.5rem'
-          }
-        },
-          ...(items || []).map(p => h(ProductPreview, { value: p }))
-        )
-      );
+    // Initialize admin panel when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      if (isAuthenticated()) {
+        showAdminPanel();
+        initializeAdminPanel();
+      } else {
+        showLoginForm();
+      }
     });
   </script>
 </body>
