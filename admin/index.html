@@ -575,6 +575,199 @@
       }
     }
 
+    /* Netlify Identity Widget Styling */
+    .netlify-identity-widget {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: rgba(0, 0, 0, 0.8) !important;
+      backdrop-filter: blur(10px) !important;
+      z-index: 10000 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 1rem !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner {
+      background: rgba(255, 255, 255, 0.95) !important;
+      backdrop-filter: blur(20px) !important;
+      border-radius: 16px !important;
+      padding: 2rem !important;
+      width: 100% !important;
+      max-width: 400px !important;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+      border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner h1 {
+      font-family: 'Inter', sans-serif !important;
+      font-size: 1.5rem !important;
+      font-weight: 700 !important;
+      color: #2d3748 !important;
+      margin-bottom: 1.5rem !important;
+      text-align: center !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner form {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner input {
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: 2px solid #e2e8f0 !important;
+      border-radius: 12px !important;
+      padding: 1rem !important;
+      font-size: 1rem !important;
+      color: #2d3748 !important;
+      transition: all 0.3s ease !important;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner input:focus {
+      border-color: #667eea !important;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2) !important;
+      outline: none !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner button {
+      background: linear-gradient(135deg, #667eea, #764ba2) !important;
+      color: white !important;
+      border: none !important;
+      border-radius: 12px !important;
+      padding: 1rem 2rem !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3) !important;
+      width: 100% !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner button:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 12px 24px rgba(102, 126, 234, 0.4) !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner a {
+      color: #667eea !important;
+      text-decoration: none !important;
+      font-size: 0.9rem !important;
+      text-align: center !important;
+      margin-top: 0.5rem !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner a:hover {
+      text-decoration: underline !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-divider {
+      display: flex !important;
+      align-items: center !important;
+      margin: 1.5rem 0 !important;
+      color: #718096 !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-divider::before,
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-divider::after {
+      content: '' !important;
+      flex: 1 !important;
+      height: 1px !important;
+      background: #e2e8f0 !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-divider span {
+      padding: 0 1rem !important;
+      font-size: 0.9rem !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-button {
+      background: rgba(255, 255, 255, 0.9) !important;
+      border: 2px solid #e2e8f0 !important;
+      color: #2d3748 !important;
+      border-radius: 12px !important;
+      padding: 1rem 2rem !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.3s ease !important;
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.5rem !important;
+    }
+
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-button:hover {
+      border-color: #667eea !important;
+      background: rgba(255, 255, 255, 1) !important;
+      transform: translateY(-2px) !important;
+    }
+
+    /* Mobile Identity Widget */
+    @media (max-width: 768px) {
+      .netlify-identity-widget {
+        padding: 0.75rem !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner {
+        padding: 1.5rem !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner h1 {
+        font-size: 1.25rem !important;
+        margin-bottom: 1rem !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner input {
+        padding: 0.875rem !important;
+        font-size: 16px !important; /* Prevents zoom on iOS */
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner button,
+      .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-button {
+        padding: 0.875rem 1.5rem !important;
+        font-size: 0.9rem !important;
+        min-height: 44px !important; /* iOS touch target */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .netlify-identity-widget {
+        padding: 0.5rem !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner {
+        padding: 1.25rem !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner h1 {
+        font-size: 1.1rem !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner input {
+        padding: 0.75rem !important;
+      }
+
+      .netlify-identity-widget .netlify-identity-widget-inner button,
+      .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-button {
+        padding: 0.75rem 1.25rem !important;
+        font-size: 0.85rem !important;
+      }
+    }
+
+    /* Hide default Netlify branding */
+    .netlify-identity-widget .netlify-identity-widget-inner .netlify-identity-widget-footer {
+      display: none !important;
+    }
+
     /* Loading States */
     .nc-root .nc-loading {
       color: #667eea !important;
