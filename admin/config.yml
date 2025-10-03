@@ -1,7 +1,5 @@
 backend:
-  name: github
-  repo: teyyubm/Lupo-Grigio-rep
-  branch: main
+  name: test-repo
 
 publish_mode: simple
 

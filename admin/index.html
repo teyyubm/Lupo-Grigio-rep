@@ -284,6 +284,104 @@
       background: var(--bg) !important;
     }
 
+    /* Custom Login Form Styles */
+    .login-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+    }
+
+    .login-box {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .login-box h2 {
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .login-btn:hover {
+      background: #b8941f;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Logout Button Styles */
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-left: 1rem;
+    }
+
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+
     .nc-root .nc-app {
       background: var(--bg) !important;
     }
@@ -471,6 +569,7 @@
     <nav class="admin-nav">
       <a href="/admin/#/collections/products" class="active">Products</a>
       <a href="/" target="_blank">View Site</a>
+      <button onclick="logout()" class="logout-btn">Logout</button>
     </nav>
   </header>
 
@@ -501,6 +600,23 @@
       </div>
     </div>
 
+    <!-- Custom Login Form -->
+    <div id="login-form" style="display: none;">
+      <div class="login-container">
+        <div class="login-box">
+          <h2>Admin Login</h2>
+          <form id="auth-form">
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+          </form>
+          <div id="error-message" class="error-message" style="display: none;"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="nc-root"></div>
   </div>
 
@@ -508,7 +624,56 @@
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   
   <script>
-    // GitHub authentication - no additional setup needed
+    // Custom Authentication System
+    const ADMIN_PASSWORD = 'lupo2024'; // Change this to your desired password
+    
+    // Check if user is already authenticated
+    function checkAuth() {
+      const isAuthenticated = localStorage.getItem('admin_authenticated');
+      if (isAuthenticated === 'true') {
+        showAdminPanel();
+      } else {
+        showLoginForm();
+      }
+    }
+    
+    // Show login form
+    function showLoginForm() {
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('nc-root').style.display = 'none';
+    }
+    
+    // Show admin panel
+    function showAdminPanel() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('nc-root').style.display = 'block';
+    }
+    
+    // Handle login form submission
+    document.getElementById('auth-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const errorMessage = document.getElementById('error-message');
+      
+      if (password === ADMIN_PASSWORD) {
+        localStorage.setItem('admin_authenticated', 'true');
+        showAdminPanel();
+        errorMessage.style.display = 'none';
+      } else {
+        errorMessage.textContent = 'Incorrect password. Please try again.';
+        errorMessage.style.display = 'block';
+        document.getElementById('password').value = '';
+      }
+    });
+    
+    // Logout function (can be called from anywhere)
+    function logout() {
+      localStorage.removeItem('admin_authenticated');
+      showLoginForm();
+    }
+    
+    // Initialize authentication check
+    checkAuth();
 
     // Load site styles for previews
     const link1 = document.createElement('link');
