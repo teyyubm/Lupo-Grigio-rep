@@ -27,6 +27,16 @@
       "limited": false,
       "remaining": 34,
       "image": "assets/images/banner.jpg"
+    },
+    {
+      "limited": false,
+      "remaining": 0,
+      "soldOut": false,
+      "name": "trt",
+      "priceCents": 23234234,
+      "material": "efssd",
+      "image": "/assets/images/logo.jpg",
+      "id": 4
     }
   ]
 }
