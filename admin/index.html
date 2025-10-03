@@ -9,7 +9,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
   
   <!-- CMS Styles -->
   <link rel="stylesheet" href="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.css" />
@@ -17,17 +17,23 @@
   <!-- Custom Admin Styles -->
   <style>
     :root {
-      --admin-bg: #0a0a0a;
-      --admin-surface: #1a1a1a;
-      --admin-border: #333;
-      --admin-text: #ffffff;
-      --admin-muted: #999;
-      --admin-accent: #c7a26a;
-      --admin-success: #10b981;
-      --admin-warning: #f59e0b;
-      --admin-error: #ef4444;
-      --admin-radius: 8px;
-      --admin-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --primary: #c7a26a;
+      --primary-dark: #b8945a;
+      --secondary: #2d3748;
+      --accent: #667eea;
+      --success: #48bb78;
+      --warning: #ed8936;
+      --error: #f56565;
+      --bg: #f7fafc;
+      --surface: #ffffff;
+      --surface-hover: #f1f5f9;
+      --border: #e2e8f0;
+      --text: #2d3748;
+      --text-muted: #718096;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      --radius: 12px;
+      --radius-sm: 8px;
     }
 
     * {
@@ -36,16 +42,18 @@
 
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--admin-bg);
-      color: var(--admin-text);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: var(--text);
       margin: 0;
       line-height: 1.6;
+      min-height: 100vh;
     }
 
     /* Admin Header */
     .admin-header {
-      background: var(--admin-surface);
-      border-bottom: 1px solid var(--admin-border);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
       padding: 1rem 2rem;
       display: flex;
       align-items: center;
@@ -53,6 +61,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      box-shadow: var(--shadow);
     }
 
     .admin-logo {
@@ -60,44 +69,54 @@
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      color: var(--admin-text);
+      color: var(--text);
     }
 
     .admin-logo img {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       object-fit: cover;
+      border: 2px solid var(--primary);
     }
 
     .admin-logo h1 {
-      font-size: 1.25rem;
-      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
       margin: 0;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
 
     .admin-nav {
       display: flex;
-      gap: 1rem;
+      gap: 0.5rem;
       align-items: center;
     }
 
     .admin-nav a {
-      color: var(--admin-muted);
+      color: var(--text-muted);
       text-decoration: none;
-      padding: 0.5rem 1rem;
-      border-radius: var(--admin-radius);
-      transition: all 0.2s;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-sm);
+      transition: all 0.3s ease;
+      font-weight: 500;
+      position: relative;
     }
 
     .admin-nav a:hover {
-      color: var(--admin-text);
-      background: rgba(255, 255, 255, 0.05);
+      color: var(--primary);
+      background: rgba(199, 162, 106, 0.1);
+      transform: translateY(-2px);
     }
 
     .admin-nav a.active {
-      color: var(--admin-accent);
-      background: rgba(199, 162, 106, 0.1);
+      color: var(--primary);
+      background: rgba(199, 162, 106, 0.15);
+      box-shadow: var(--shadow);
     }
 
     /* CMS Container */
@@ -117,8 +136,10 @@
     }
 
     .nc-root .nc-appHeader {
-      background: var(--admin-surface) !important;
-      border-bottom: 1px solid var(--admin-border) !important;
+      background: var(--surface) !important;
+      border-bottom: 1px solid var(--border) !important;
+      box-shadow: var(--shadow) !important;
+      border-radius: var(--radius) var(--radius) 0 0 !important;
     }
 
     .nc-root .nc-appMain {
@@ -126,27 +147,31 @@
     }
 
     .nc-root .nc-collectionPage {
-      background: var(--admin-surface) !important;
-      border-radius: var(--admin-radius) !important;
-      border: 1px solid var(--admin-border) !important;
-      box-shadow: var(--admin-shadow) !important;
+      background: var(--surface) !important;
+      border-radius: var(--radius) !important;
+      border: 1px solid var(--border) !important;
+      box-shadow: var(--shadow-lg) !important;
+      overflow: hidden !important;
     }
 
     .nc-root .nc-collectionPage-header {
-      background: transparent !important;
-      border-bottom: 1px solid var(--admin-border) !important;
-      padding: 1.5rem !important;
+      background: linear-gradient(135deg, var(--primary), var(--accent)) !important;
+      border-bottom: none !important;
+      padding: 2rem !important;
+      color: white !important;
     }
 
     .nc-root .nc-collectionPage-title {
-      color: var(--admin-text) !important;
-      font-size: 1.5rem !important;
-      font-weight: 600 !important;
+      color: white !important;
+      font-size: 2rem !important;
+      font-weight: 700 !important;
+      margin: 0 !important;
     }
 
     .nc-root .nc-collectionPage-description {
-      color: var(--admin-muted) !important;
+      color: rgba(255, 255, 255, 0.9) !important;
       margin-top: 0.5rem !important;
+      font-size: 1.1rem !important;
     }
 
     /* Form Styling */
@@ -155,88 +180,103 @@
     }
 
     .nc-root .nc-widget-input {
-      background: var(--admin-surface) !important;
-      border: 1px solid var(--admin-border) !important;
-      color: var(--admin-text) !important;
-      border-radius: var(--admin-radius) !important;
+      background: var(--surface) !important;
+      border: 2px solid var(--border) !important;
+      color: var(--text) !important;
+      border-radius: var(--radius-sm) !important;
+      padding: 0.75rem 1rem !important;
+      font-size: 1rem !important;
+      transition: all 0.3s ease !important;
     }
 
     .nc-root .nc-widget-input:focus {
-      border-color: var(--admin-accent) !important;
+      border-color: var(--primary) !important;
       box-shadow: 0 0 0 3px rgba(199, 162, 106, 0.1) !important;
+      outline: none !important;
     }
 
     .nc-root .nc-widget-label {
-      color: var(--admin-text) !important;
-      font-weight: 500 !important;
+      color: var(--text) !important;
+      font-weight: 600 !important;
+      font-size: 0.9rem !important;
+      margin-bottom: 0.5rem !important;
     }
 
     /* Buttons */
     .nc-root .nc-button {
-      background: var(--admin-accent) !important;
-      color: #000 !important;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+      color: white !important;
       border: none !important;
-      border-radius: var(--admin-radius) !important;
-      font-weight: 500 !important;
-      transition: all 0.2s !important;
+      border-radius: var(--radius-sm) !important;
+      font-weight: 600 !important;
+      padding: 0.75rem 1.5rem !important;
+      transition: all 0.3s ease !important;
+      box-shadow: var(--shadow) !important;
     }
 
     .nc-root .nc-button:hover {
-      background: #b8945a !important;
-      transform: translateY(-1px) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: var(--shadow-lg) !important;
     }
 
     .nc-root .nc-button--secondary {
-      background: var(--admin-surface) !important;
-      color: var(--admin-text) !important;
-      border: 1px solid var(--admin-border) !important;
+      background: var(--surface) !important;
+      color: var(--text) !important;
+      border: 2px solid var(--border) !important;
     }
 
     .nc-root .nc-button--secondary:hover {
-      background: rgba(255, 255, 255, 0.05) !important;
+      background: var(--surface-hover) !important;
+      border-color: var(--primary) !important;
     }
 
     /* List Items */
     .nc-root .nc-list-item {
-      background: var(--admin-surface) !important;
-      border: 1px solid var(--admin-border) !important;
-      border-radius: var(--admin-radius) !important;
-      margin-bottom: 0.75rem !important;
+      background: var(--surface) !important;
+      border: 2px solid var(--border) !important;
+      border-radius: var(--radius-sm) !important;
+      margin-bottom: 1rem !important;
+      transition: all 0.3s ease !important;
     }
 
     .nc-root .nc-list-item:hover {
-      border-color: var(--admin-accent) !important;
-      box-shadow: var(--admin-shadow) !important;
+      border-color: var(--primary) !important;
+      box-shadow: var(--shadow-lg) !important;
+      transform: translateY(-2px) !important;
     }
 
     /* Status Indicators */
     .nc-root .nc-status {
       border-radius: 999px !important;
       font-size: 0.75rem !important;
-      font-weight: 500 !important;
-      padding: 0.25rem 0.75rem !important;
+      font-weight: 600 !important;
+      padding: 0.5rem 1rem !important;
     }
 
     .nc-root .nc-status--draft {
-      background: rgba(245, 158, 11, 0.1) !important;
-      color: var(--admin-warning) !important;
+      background: rgba(237, 137, 54, 0.1) !important;
+      color: var(--warning) !important;
+      border: 1px solid rgba(237, 137, 54, 0.2) !important;
     }
 
     .nc-root .nc-status--pending {
-      background: rgba(59, 130, 246, 0.1) !important;
-      color: #3b82f6 !important;
+      background: rgba(102, 126, 234, 0.1) !important;
+      color: var(--accent) !important;
+      border: 1px solid rgba(102, 126, 234, 0.2) !important;
     }
 
     .nc-root .nc-status--published {
-      background: rgba(16, 185, 129, 0.1) !important;
-      color: var(--admin-success) !important;
+      background: rgba(72, 187, 120, 0.1) !important;
+      color: var(--success) !important;
+      border: 1px solid rgba(72, 187, 120, 0.2) !important;
     }
 
     /* Preview Panel */
     .nc-root .nc-previewPane {
-      background: var(--admin-surface) !important;
-      border: 1px solid var(--admin-border) !important;
-      border-radius: var(--admin-radius) !important;
+      background: var(--surface) !important;
+      border: 2px solid var(--border) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow-lg) !important;
     }
 
     /* Mobile Responsive */
@@ -258,57 +298,97 @@
       }
 
       .nc-root .nc-collectionPage-header {
-        padding: 1rem !important;
+        padding: 1.5rem !important;
       }
 
       .nc-root .nc-collectionPage-title {
-        font-size: 1.25rem !important;
+        font-size: 1.5rem !important;
       }
     }
 
     /* Loading States */
     .nc-root .nc-loading {
-      color: var(--admin-accent) !important;
+      color: var(--primary) !important;
     }
 
     /* Error States */
     .nc-root .nc-error {
-      color: var(--admin-error) !important;
-      background: rgba(239, 68, 68, 0.1) !important;
-      border: 1px solid rgba(239, 68, 68, 0.2) !important;
-      border-radius: var(--admin-radius) !important;
+      color: var(--error) !important;
+      background: rgba(245, 101, 101, 0.1) !important;
+      border: 2px solid rgba(245, 101, 101, 0.2) !important;
+      border-radius: var(--radius-sm) !important;
       padding: 1rem !important;
     }
 
     /* Success States */
     .nc-root .nc-success {
-      color: var(--admin-success) !important;
-      background: rgba(16, 185, 129, 0.1) !important;
-      border: 1px solid rgba(16, 185, 129, 0.2) !important;
-      border-radius: var(--admin-radius) !important;
+      color: var(--success) !important;
+      background: rgba(72, 187, 120, 0.1) !important;
+      border: 2px solid rgba(72, 187, 120, 0.2) !important;
+      border-radius: var(--radius-sm) !important;
       padding: 1rem !important;
     }
 
     /* Help Text */
     .nc-root .nc-help {
-      color: var(--admin-muted) !important;
+      color: var(--text-muted) !important;
       font-size: 0.875rem !important;
-      margin-top: 0.25rem !important;
+      margin-top: 0.5rem !important;
+      font-style: italic !important;
     }
 
     /* Custom Preview Styles */
     .preview-container {
-      padding: 1rem;
-      background: var(--admin-surface);
-      border-radius: var(--admin-radius);
-      border: 1px solid var(--admin-border);
+      padding: 2rem;
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      box-shadow: var(--shadow);
     }
 
     .preview-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      color: var(--admin-text);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+      text-align: center;
+    }
+
+    /* Empty State */
+    .nc-root .nc-emptyState {
+      text-align: center !important;
+      padding: 3rem 2rem !important;
+      color: var(--text-muted) !important;
+    }
+
+    .nc-root .nc-emptyState-title {
+      font-size: 1.5rem !important;
+      font-weight: 600 !important;
+      margin-bottom: 1rem !important;
+      color: var(--text) !important;
+    }
+
+    /* Collection List */
+    .nc-root .nc-collectionList {
+      background: var(--surface) !important;
+      border-radius: var(--radius) !important;
+      border: 2px solid var(--border) !important;
+      box-shadow: var(--shadow) !important;
+    }
+
+    /* Collection Item */
+    .nc-root .nc-collectionItem {
+      background: var(--surface) !important;
+      border: 2px solid var(--border) !important;
+      border-radius: var(--radius-sm) !important;
+      margin-bottom: 1rem !important;
+      transition: all 0.3s ease !important;
+    }
+
+    .nc-root .nc-collectionItem:hover {
+      border-color: var(--primary) !important;
+      box-shadow: var(--shadow-lg) !important;
+      transform: translateY(-2px) !important;
     }
   </style>
 </head>
@@ -374,9 +454,12 @@
           className: 'card',
           style: { 
             marginBottom: '1rem',
-            border: '1px solid var(--admin-border)',
-            borderRadius: 'var(--admin-radius)',
-            overflow: 'hidden'
+            border: '2px solid var(--border)',
+            borderRadius: 'var(--radius)',
+            overflow: 'hidden',
+            background: 'var(--surface)',
+            boxShadow: 'var(--shadow)',
+            transition: 'all 0.3s ease'
           }
         },
           h('div', { 
@@ -388,17 +471,17 @@
               height: '200px'
             } 
           }),
-          h('div', { className: 'card-body', style: { padding: '1rem' } },
-            h('div', { className: 'card-title', style: { fontWeight: '600', marginBottom: '0.5rem' } }, entry.name || 'Untitled'),
-            h('div', { className: 'card-sub', style: { color: 'var(--admin-muted)', fontSize: '0.875rem' } }, 
+          h('div', { className: 'card-body', style: { padding: '1.5rem' } },
+            h('div', { className: 'card-title', style: { fontWeight: '700', marginBottom: '0.5rem', fontSize: '1.1rem' } }, entry.name || 'Untitled'),
+            h('div', { className: 'card-sub', style: { color: 'var(--text-muted)', fontSize: '0.9rem' } }, 
               `${currency(entry.priceCents)} · ${entry.material || ''}`
             )
           ),
           h('div', { 
             className: 'card-footer', 
             style: { 
-              padding: '1rem',
-              borderTop: '1px solid var(--admin-border)',
+              padding: '1rem 1.5rem',
+              borderTop: '2px solid var(--border)',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center'
@@ -409,38 +492,42 @@
                 className: 'pill limited',
                 style: {
                   fontSize: '0.75rem',
-                  padding: '0.25rem 0.5rem',
+                  padding: '0.5rem 1rem',
                   borderRadius: '999px',
                   background: 'rgba(199, 162, 106, 0.1)',
-                  color: 'var(--admin-accent)',
-                  border: '1px solid rgba(199, 162, 106, 0.2)'
+                  color: 'var(--primary)',
+                  border: '2px solid rgba(199, 162, 106, 0.2)',
+                  fontWeight: '600'
                 }
               }, 'Limited') : null,
               isSold ? h('span', { 
                 className: 'pill sold',
                 style: {
                   fontSize: '0.75rem',
-                  padding: '0.25rem 0.5rem',
+                  padding: '0.5rem 1rem',
                   borderRadius: '999px',
-                  background: 'rgba(239, 68, 68, 0.1)',
-                  color: 'var(--admin-error)',
-                  border: '1px solid rgba(239, 68, 68, 0.2)'
+                  background: 'rgba(245, 101, 101, 0.1)',
+                  color: 'var(--error)',
+                  border: '2px solid rgba(245, 101, 101, 0.2)',
+                  fontWeight: '600'
                 }
               }, 'Sold Out') : null
             ),
-            isSold ? h('span', { className: 'muted', style: { color: 'var(--admin-muted)' } }, 'Unavailable') : 
+            isSold ? h('span', { className: 'muted', style: { color: 'var(--text-muted)', fontWeight: '500' } }, 'Unavailable') : 
               h('button', { 
                 className: 'button small',
                 style: {
-                  background: 'var(--admin-accent)',
-                  color: '#000',
+                  background: 'linear-gradient(135deg, var(--primary), var(--primary-dark))',
+                  color: 'white',
                   border: 'none',
-                  padding: '0.5rem 1rem',
-                  borderRadius: 'var(--admin-radius)',
-                  fontWeight: '500',
-                  cursor: 'pointer'
+                  padding: '0.75rem 1.5rem',
+                  borderRadius: 'var(--radius-sm)',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  boxShadow: 'var(--shadow)',
+                  transition: 'all 0.3s ease'
                 }
-              }, 'Add')
+              }, 'Add to Cart')
           )
         );
       }
@@ -458,7 +545,7 @@
           style: {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1rem'
+            gap: '1.5rem'
           }
         },
           ...(items || []).map(p => h(ProductPreview, { value: p }))
