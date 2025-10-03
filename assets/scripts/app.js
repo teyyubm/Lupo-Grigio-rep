@@ -24,10 +24,30 @@ function formatCurrency(cents) {
 }
 
 async function loadProducts() {
-  const res = await fetch(PRODUCTS_JSON_URL, { cache: 'no-store' });
-  if (!res.ok) throw new Error('Failed to load products');
-  const data = await res.json();
-  state.products = data.products || data; // Handle both nested and direct array formats
+  try {
+    // Try to load from database first
+    const dbResponse = await fetch('/api/products', { cache: 'no-store' });
+    if (dbResponse.ok) {
+      const data = await dbResponse.json();
+      state.products = data.products || [];
+      console.log('✅ Products loaded from database');
+      return;
+    }
+  } catch (error) {
+    console.log('Database not available, falling back to JSON file');
+  }
+  
+  // Fallback to JSON file
+  try {
+    const res = await fetch(PRODUCTS_JSON_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error('Failed to load products');
+    const data = await res.json();
+    state.products = data.products || data; // Handle both nested and direct array formats
+    console.log('✅ Products loaded from JSON file');
+  } catch (error) {
+    console.error('Failed to load products:', error);
+    state.products = [];
+  }
 }
 
 function getCartCount() {
