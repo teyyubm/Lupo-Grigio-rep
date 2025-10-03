@@ -1,31 +1,33 @@
-[
-  {
-    "id": 1,
-    "name": "No. 01 Bifold Wallet",
-    "priceCents": 18500,
-    "material": "Full-grain Italian leather",
-    "limited": true,
-    "remaining": 12,
-    "image": "assets/images/banner.jpg"
-  },
-  {
-    "id": 2,
-    "name": "No. 02 Card Holder",
-    "priceCents": 12000,
-    "material": "Vegetable-tanned leather",
-    "limited": true,
-    "remaining": 0,
-    "soldOut": true,
-    "image": "assets/images/banner.jpg"
-  },
-  {
-    "id": 3,
-    "name": "No. 03 Zip Wallet",
-    "priceCents": 22000,
-    "material": "Full-grain leather with brass zip",
-    "limited": false,
-    "remaining": 34,
-    "image": "assets/images/banner.jpg"
-  }
-]
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "No. 01 Bifold Wallet",
+      "priceCents": 18500,
+      "material": "Full-grain Italian leather",
+      "limited": true,
+      "remaining": 12,
+      "image": "assets/images/banner.jpg"
+    },
+    {
+      "id": 2,
+      "name": "No. 02 Card Holder",
+      "priceCents": 12000,
+      "material": "Vegetable-tanned leather",
+      "limited": true,
+      "remaining": 0,
+      "soldOut": true,
+      "image": "assets/images/banner.jpg"
+    },
+    {
+      "id": 3,
+      "name": "No. 03 Zip Wallet",
+      "priceCents": 22000,
+      "material": "Full-grain leather with brass zip",
+      "limited": false,
+      "remaining": 34,
+      "image": "assets/images/banner.jpg"
+    }
+  ]
+}
 

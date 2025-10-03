@@ -20,7 +20,7 @@ collections:
           preview: true
         fields:
           - label: "Products"
-            name: ""
+            name: "products"
             widget: "list"
             collapsed: false
             summary: "{{fields.name}} — ${{fields.priceCents}}"

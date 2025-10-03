@@ -26,7 +26,8 @@ function formatCurrency(cents) {
 async function loadProducts() {
   const res = await fetch(PRODUCTS_JSON_URL, { cache: 'no-store' });
   if (!res.ok) throw new Error('Failed to load products');
-  state.products = await res.json();
+  const data = await res.json();
+  state.products = data.products || data; // Handle both nested and direct array formats
 }
 
 function getCartCount() {
