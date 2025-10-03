@@ -1606,6 +1606,7 @@
     async function saveProducts() {
       try {
         const productsData = { products: products };
+        console.log('Saving products:', productsData);
         
         // Method 1: Try database API first
         const dbResponse = await fetch('/api/save-products', {
@@ -1616,13 +1617,21 @@
           body: JSON.stringify(productsData)
         });
         
+        console.log('Database response status:', dbResponse.status);
+        
         if (dbResponse.ok) {
           const result = await dbResponse.json();
+          console.log('Database response:', result);
           if (result.success) {
             console.log('✅ Products saved to database');
             showSuccessMessage();
             return;
+          } else {
+            console.error('Database save failed:', result);
           }
+        } else {
+          const errorText = await dbResponse.text();
+          console.error('Database API error:', dbResponse.status, errorText);
         }
         
         // Method 2: Try Netlify function
