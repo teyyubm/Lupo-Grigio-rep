@@ -7,7 +7,8 @@
       "material": "Full-grain Italian leather",
       "limited": true,
       "remaining": 12,
-      "image": "assets/images/banner.jpg"
+      "image": "assets/images/banner.jpg",
+      "soldOut": true
     },
     {
       "id": 2,
@@ -26,7 +27,18 @@
       "material": "Full-grain leather with brass zip",
       "limited": false,
       "remaining": 34,
-      "image": "assets/images/banner.jpg"
+      "image": "assets/images/banner.jpg",
+      "soldOut": false
+    },
+    {
+      "limited": false,
+      "remaining": 0,
+      "soldOut": false,
+      "name": "rrr",
+      "priceCents": 2345661,
+      "material": "leather",
+      "image": "/assets/images/ava.jpg",
+      "id": 4
     }
   ],
   "": [
