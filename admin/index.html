@@ -225,15 +225,64 @@
       background: var(--surface) !important;
       border: 1px solid var(--border) !important;
       border-radius: var(--radius-sm) !important;
-      margin-bottom: 1rem !important;
+      margin-bottom: 1.5rem !important;
+      margin-right: 1rem !important;
+      padding: 1rem !important;
       transition: all 0.3s ease !important;
       box-shadow: var(--shadow) !important;
+      min-height: 60px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
     }
 
     .nc-root .nc-list-item:hover {
       border-color: var(--primary) !important;
       box-shadow: var(--shadow-lg) !important;
       transform: translateY(-2px) !important;
+    }
+
+    /* List Item Content */
+    .nc-root .nc-list-item-content {
+      flex: 1 !important;
+      margin-right: 1rem !important;
+      overflow: hidden !important;
+    }
+
+    /* List Item Actions */
+    .nc-root .nc-list-item-actions {
+      display: flex !important;
+      gap: 0.5rem !important;
+      align-items: center !important;
+      flex-shrink: 0 !important;
+    }
+
+    /* List Item Buttons */
+    .nc-root .nc-list-item-button {
+      padding: 0.5rem !important;
+      border-radius: var(--radius-sm) !important;
+      border: 1px solid var(--border) !important;
+      background: var(--surface) !important;
+      color: var(--text-muted) !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      min-width: 32px !important;
+      min-height: 32px !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+
+    .nc-root .nc-list-item-button:hover {
+      background: var(--surface-hover) !important;
+      border-color: var(--primary) !important;
+      color: var(--primary) !important;
+    }
+
+    .nc-root .nc-list-item-button--delete:hover {
+      background: rgba(245, 101, 101, 0.1) !important;
+      border-color: var(--error) !important;
+      color: var(--error) !important;
     }
 
     /* Mobile Responsive */
@@ -407,6 +456,9 @@
         const entry = this.props.value || {};
         const isSold = entry.soldOut === true || ((entry.limited || false) && (entry.remaining || 0) === 0);
         
+        // Use proper fallback image
+        const imageUrl = entry.image || '/assets/images/banner.jpg';
+        
         return h('article', { 
           className: 'card',
           style: { 
@@ -422,16 +474,35 @@
           h('div', { 
             className: 'card-media', 
             style: { 
-              backgroundImage: `url('${entry.image || '/assets/images/banner.jpg'}')`,
+              backgroundImage: `url('${imageUrl}')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              height: '200px'
+              height: '200px',
+              position: 'relative'
             } 
-          }),
+          },
+            // Product ID badge
+            h('div', {
+              style: {
+                position: 'absolute',
+                top: '0.5rem',
+                right: '0.5rem',
+                background: 'rgba(0, 0, 0, 0.7)',
+                color: 'white',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '4px',
+                fontSize: '0.75rem',
+                fontWeight: '600'
+              }
+            }, `ID: ${entry.id || 'N/A'}`)
+          ),
           h('div', { className: 'card-body', style: { padding: '1.5rem' } },
             h('div', { className: 'card-title', style: { fontWeight: '700', marginBottom: '0.5rem', fontSize: '1.1rem', color: 'var(--text)' } }, entry.name || 'Untitled'),
-            h('div', { className: 'card-sub', style: { color: 'var(--text-muted)', fontSize: '0.9rem' } }, 
+            h('div', { className: 'card-sub', style: { color: 'var(--text-muted)', fontSize: '0.9rem', marginBottom: '0.5rem' } }, 
               `${currency(entry.priceCents)} · ${entry.material || ''}`
+            ),
+            h('div', { style: { fontSize: '0.8rem', color: 'var(--text-muted)' } },
+              `Stock: ${entry.remaining || 0} remaining`
             )
           ),
           h('div', { 
