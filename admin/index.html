@@ -720,6 +720,85 @@
       background: #4a5568;
     }
 
+    /* Image Upload Styles */
+    .image-upload-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .image-upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-sm);
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--surface);
+    }
+
+    .image-upload-area:hover {
+      border-color: var(--primary);
+      background: rgba(212, 175, 55, 0.05);
+    }
+
+    .image-preview {
+      position: relative;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .upload-placeholder {
+      color: var(--text-muted);
+    }
+
+    .upload-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-placeholder p {
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+
+    .upload-placeholder small {
+      font-size: 0.8rem;
+    }
+
+    .image-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow);
+    }
+
+    .image-url-fallback {
+      margin-top: 1rem;
+    }
+
+    .image-url-fallback label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .image-url-fallback input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .image-url-fallback input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
     /* Mobile Responsive */
     @media (max-width: 768px) {
       .hero-section {
@@ -861,8 +940,23 @@
                 <input type="number" id="product-remaining" name="remaining" min="0">
               </div>
               <div class="form-group">
-                <label for="product-image">Image URL:</label>
-                <input type="text" id="product-image" name="image">
+                <label for="product-image">Product Image:</label>
+                <div class="image-upload-container">
+                  <input type="file" id="product-image-file" name="imageFile" accept="image/*" style="display: none;">
+                  <div class="image-upload-area" onclick="document.getElementById('product-image-file').click()">
+                    <div id="image-preview" class="image-preview">
+                      <div class="upload-placeholder">
+                        <div class="upload-icon">📷</div>
+                        <p>Click to upload image</p>
+                        <small>JPG, PNG, WebP (max 5MB)</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="image-url-fallback">
+                    <label for="product-image-url">Or enter image URL:</label>
+                    <input type="text" id="product-image-url" name="imageUrl" placeholder="https://example.com/image.jpg">
+                  </div>
+                </div>
               </div>
             </div>
             
@@ -1186,6 +1280,63 @@
     // Initialize authentication check
     checkAuth();
     
+    // Image upload functionality
+    let uploadedImageData = null;
+    
+    // Handle image file upload
+    document.getElementById('product-image-file').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please select a valid image file (JPG, PNG, WebP)');
+        return;
+      }
+      
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Image file is too large. Please select an image smaller than 5MB.');
+        return;
+      }
+      
+      // Show preview
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = `
+          <img src="${e.target.result}" alt="Product preview">
+          <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
+            <button type="button" onclick="removeImage()" style="background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">×</button>
+          </div>
+        `;
+        
+        // Store image data for upload
+        uploadedImageData = {
+          file: file,
+          dataUrl: e.target.result,
+          fileName: file.name
+        };
+        
+        // Clear URL input since we're using file upload
+        document.getElementById('product-image-url').value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+    
+    // Remove uploaded image
+    function removeImage() {
+      uploadedImageData = null;
+      document.getElementById('product-image-file').value = '';
+      document.getElementById('image-preview').innerHTML = `
+        <div class="upload-placeholder">
+          <div class="upload-icon">📷</div>
+          <p>Click to upload image</p>
+          <small>JPG, PNG, WebP (max 5MB)</small>
+        </div>
+      `;
+    }
+    
     // Initialize CMS after authentication
     function initializeCMS() {
       if (typeof CMS !== 'undefined') {
@@ -1342,9 +1493,32 @@
       document.getElementById('product-price').value = product.priceCents;
       document.getElementById('product-material').value = product.material;
       document.getElementById('product-remaining').value = product.remaining || 0;
-      document.getElementById('product-image').value = product.image || '';
+      document.getElementById('product-image-url').value = product.image || '';
       document.getElementById('product-limited').checked = product.limited || false;
       document.getElementById('product-soldout').checked = product.soldOut || false;
+      
+      // Clear any uploaded image and show current image if it exists
+      uploadedImageData = null;
+      document.getElementById('product-image-file').value = '';
+      
+      if (product.image && product.image.startsWith('/assets/images/')) {
+        // Show existing image
+        document.getElementById('image-preview').innerHTML = `
+          <img src="${product.image}" alt="Current product image">
+          <div style="position: absolute; top: 0.5rem; right: 0.5rem;">
+            <button type="button" onclick="removeImage()" style="background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 1.2rem;">×</button>
+          </div>
+        `;
+      } else {
+        // Show upload placeholder
+        document.getElementById('image-preview').innerHTML = `
+          <div class="upload-placeholder">
+            <div class="upload-icon">📷</div>
+            <p>Click to upload image</p>
+            <small>JPG, PNG, WebP (max 5MB)</small>
+          </div>
+        `;
+      }
     }
 
     // Delete product
@@ -1364,17 +1538,39 @@
     }
 
     // Save product
-    document.getElementById('product-edit-form').addEventListener('submit', function(e) {
+    document.getElementById('product-edit-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const formData = new FormData(e.target);
+      let imagePath = '';
+      
+      // Handle image upload
+      if (uploadedImageData) {
+        try {
+          // Upload image to GitHub
+          const imageResult = await uploadImageToGitHub(uploadedImageData);
+          if (imageResult.success) {
+            imagePath = imageResult.path;
+          } else {
+            alert(`Image upload failed: ${imageResult.error}\n\nUsing URL fallback instead.`);
+            imagePath = formData.get('imageUrl') || '';
+          }
+        } catch (error) {
+          console.error('Image upload error:', error);
+          imagePath = formData.get('imageUrl') || '';
+        }
+      } else {
+        // Use URL if provided
+        imagePath = formData.get('imageUrl') || '';
+      }
+      
       const productData = {
         id: parseInt(formData.get('id')),
         name: formData.get('name'),
         priceCents: parseInt(formData.get('priceCents')),
         material: formData.get('material'),
         remaining: parseInt(formData.get('remaining')) || 0,
-        image: formData.get('image') || '',
+        image: imagePath,
         limited: formData.get('limited') === 'on',
         soldOut: formData.get('soldOut') === 'on'
       };
@@ -1545,6 +1741,64 @@
           count: JSON.parse(content).products.length,
           commitSha: result.commit.sha,
           commitUrl: result.commit.html_url
+        };
+        
+      } catch (error) {
+        return {
+          success: false,
+          error: error.message
+        };
+      }
+    }
+    
+    // Upload image to GitHub
+    async function uploadImageToGitHub(imageData) {
+      try {
+        const config = getGitHubConfig();
+        if (!config.token) {
+          throw new Error('GitHub configuration not found');
+        }
+        
+        // Generate unique filename
+        const timestamp = Date.now();
+        const fileExtension = imageData.fileName.split('.').pop();
+        const fileName = `product-${timestamp}.${fileExtension}`;
+        const imagePath = `assets/images/${fileName}`;
+        
+        // Convert file to base64
+        const base64Content = await new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result.split(',')[1]); // Remove data:image/...;base64, prefix
+          reader.onerror = reject;
+          reader.readAsDataURL(imageData.file);
+        });
+        
+        // Upload image to GitHub
+        const uploadResponse = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}/contents/${imagePath}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `token ${config.token}`,
+            'Accept': 'application/vnd.github.v3+json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: `Add product image: ${fileName}`,
+            content: base64Content
+          })
+        });
+        
+        if (!uploadResponse.ok) {
+          const errorData = await uploadResponse.json();
+          throw new Error(`Failed to upload image: ${errorData.message || uploadResponse.statusText}`);
+        }
+        
+        const result = await uploadResponse.json();
+        
+        return {
+          success: true,
+          path: `/${imagePath}`,
+          fileName: fileName,
+          commitSha: result.commit.sha
         };
         
       } catch (error) {
