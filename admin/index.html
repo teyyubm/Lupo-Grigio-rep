@@ -44,7 +44,7 @@
       });
       CMS.registerPreviewTemplate('products_list', ({ entry }) => {
         const list = entry.getIn(['data']).toJS();
-        const items = Array.isArray(list) ? list : (list && list.Products) || [];
+        const items = Array.isArray(list) ? list : [];
         return h('div', { className: 'grid' },
           ...(items || []).map(p => h(ProductPreview, { value: p }))
         );

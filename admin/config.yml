@@ -33,4 +33,3 @@ collections:
               - { label: "Remaining", name: "remaining", widget: "number", default: 0 }
               - { label: "Sold Out", name: "soldOut", widget: "boolean", default: false }
               - { label: "Image", name: "image", widget: "image", allow_multiple: false }
-
