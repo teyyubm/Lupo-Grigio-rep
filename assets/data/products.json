@@ -44,8 +44,18 @@
       "priceCents": 243,
       "material": "ewrwer",
       "remaining": 3242,
-      "image": "",
+      "image": "/assets/images/product-1759512648762.png",
       "limited": false,
+      "soldOut": false
+    },
+    {
+      "id": 6,
+      "name": "234",
+      "priceCents": 32432,
+      "material": "leather",
+      "remaining": 22,
+      "image": "/assets/images/product-1759512680557.webp",
+      "limited": true,
       "soldOut": false
     }
   ]
