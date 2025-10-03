@@ -1417,47 +1417,32 @@
     let products = [];
     let editingProduct = null;
 
-    // Load products from JSON file
+    // Load products from database
     async function loadProducts() {
       try {
-        const response = await fetch('/assets/data/products.json');
+        const response = await fetch('/api/products');
+        if (!response.ok) {
+          throw new Error('Failed to load products from database');
+        }
         const data = await response.json();
         products = data.products || [];
         renderProducts();
         updateStats();
       } catch (error) {
-        console.error('Error loading products:', error);
-        // Fallback data
-        products = [
-          {
-            id: 1,
-            name: "No. 01 Bifold Wallet",
-            priceCents: 18500,
-            material: "Full-grain Italian leather",
-            limited: true,
-            remaining: 12,
-            image: "/assets/images/ava.jpg"
-          },
-          {
-            id: 2,
-            name: "No. 02 Card Holder",
-            priceCents: 12000,
-            material: "Vegetable-tanned leather",
-            limited: true,
-            remaining: 0,
-            soldOut: true,
-            image: "assets/images/banner.jpg"
-          },
-          {
-            id: 3,
-            name: "No. 03 Zip Wallet",
-            priceCents: 22000,
-            material: "Full-grain leather with brass zip",
-            limited: false,
-            remaining: 34,
-            image: "assets/images/banner.jpg"
+        console.error('Error loading products from database:', error);
+        // Fallback to JSON file
+        try {
+          const jsonResponse = await fetch('/assets/data/products.json');
+          if (jsonResponse.ok) {
+            const jsonData = await jsonResponse.json();
+            products = jsonData.products || [];
+          } else {
+            products = [];
           }
-        ];
+        } catch (jsonError) {
+          console.error('Error loading products from JSON:', jsonError);
+          products = [];
+        }
         renderProducts();
         updateStats();
       }
@@ -1617,12 +1602,30 @@
       cancelEdit();
     });
 
-    // Save products automatically (works everywhere)
+    // Save products to database
     async function saveProducts() {
       try {
         const productsData = { products: products };
         
-        // Method 1: Try Netlify function first
+        // Method 1: Try database API first
+        const dbResponse = await fetch('/api/save-products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(productsData)
+        });
+        
+        if (dbResponse.ok) {
+          const result = await dbResponse.json();
+          if (result.success) {
+            console.log('✅ Products saved to database');
+            showSuccessMessage();
+            return;
+          }
+        }
+        
+        // Method 2: Try Netlify function
         const netlifyResponse = await fetch('/.netlify/functions/save-products', {
           method: 'POST',
           headers: {
@@ -1632,12 +1635,12 @@
         });
         
         if (netlifyResponse.ok) {
-          console.log('✅ Products saved automatically via Netlify');
+          console.log('✅ Products saved via Netlify');
           showSuccessMessage();
           return;
         }
         
-        // Method 2: Try PHP script (works on most hosting)
+        // Method 3: Try PHP script
         const phpResponse = await fetch('/save-products.php', {
           method: 'POST',
           headers: {
@@ -1649,18 +1652,10 @@
         if (phpResponse.ok) {
           const result = await phpResponse.json();
           if (result.success) {
-            console.log('✅ Products saved automatically via PHP');
+            console.log('✅ Products saved via PHP');
             showSuccessMessage();
             return;
           }
-        }
-        
-        // Method 3: Try automatic GitHub integration
-        const githubResult = await saveViaAutomaticGitHub(productsData);
-        if (githubResult.success) {
-          console.log('✅ Products saved automatically via GitHub');
-          showSuccessMessage();
-          return;
         }
         
         // Method 4: Save to localStorage as backup
