@@ -1718,7 +1718,13 @@
       return `
         <div class="inline-edit-form" style="background: #f8f9fa; border: 2px solid #007bff; border-radius: 8px; padding: 20px; margin: 10px 0;">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h4 style="margin: 0; color: #007bff;">✏️ Editing: ${product.name}</h4>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img src="${product.image || '/assets/images/logo.jpg'}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 2px solid #007bff; cursor: pointer;" onclick="showImageModal('${product.image || '/assets/images/logo.jpg'}', '${product.name}')" title="Click to view full size">
+              <div>
+                <h4 style="margin: 0; color: #007bff;">✏️ Editing: ${product.name}</h4>
+                <p style="margin: 2px 0 0 0; font-size: 0.9rem; color: #666;">ID: ${product.id} | $${(product.priceCents / 100).toFixed(2)}</p>
+              </div>
+            </div>
             <div>
               <button type="button" onclick="saveInlineEdit(${product.id})" class="save-btn" style="background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-right: 8px;">💾 Save</button>
               <button type="button" onclick="cancelInlineEdit(${product.id})" style="background: #dc3545; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">❌ Cancel</button>
@@ -1818,6 +1824,40 @@
     function cancelInlineEdit(id) {
       // Re-render products to show original product
       renderProducts();
+    }
+
+    // Show image modal for larger view
+    function showImageModal(imageSrc, productName) {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        cursor: pointer;
+      `;
+      
+      modal.innerHTML = `
+        <div style="position: relative; max-width: 90%; max-height: 90%;">
+          <img src="${imageSrc}" alt="${productName}" style="max-width: 100%; max-height: 100%; border-radius: 8px;">
+          <div style="position: absolute; top: -40px; right: 0; color: white; font-size: 1.2rem; font-weight: bold;">${productName}</div>
+          <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: -40px; left: 0; background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 4px; cursor: pointer;">✕ Close</button>
+        </div>
+      `;
+      
+      modal.onclick = function(e) {
+        if (e.target === modal) {
+          modal.remove();
+        }
+      };
+      
+      document.body.appendChild(modal);
     }
 
     // Remove inline image
