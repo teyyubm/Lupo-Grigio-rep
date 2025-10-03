@@ -197,6 +197,16 @@
       display: none !important;
     }
 
+    /* Hide the entire tab bar with Contents and Media */
+    .nc-root .nc-tabList,
+    .nc-root .nc-tabList-container,
+    .nc-root .nc-tabList-wrapper,
+    .nc-root [role="tablist"],
+    .nc-root .nc-tabList-item,
+    .nc-root .nc-tabList-button {
+      display: none !important;
+    }
+
     /* Hide the Contents button in the top bar */
     .nc-root button:has-text("Contents"),
     .nc-root [role="button"]:has-text("Contents"),
@@ -204,8 +214,16 @@
       display: none !important;
     }
 
-    /* Hide any element containing "Contents" text */
-    .nc-root *:has-text("Contents") {
+    /* Hide the Media button in the top bar */
+    .nc-root button:has-text("Media"),
+    .nc-root [role="button"]:has-text("Media"),
+    .nc-root .nc-tab-button:has-text("Media") {
+      display: none !important;
+    }
+
+    /* Hide any element containing "Contents" or "Media" text */
+    .nc-root *:has-text("Contents"),
+    .nc-root *:has-text("Media") {
       display: none !important;
     }
 
@@ -514,19 +532,35 @@
         element.style.display = 'none';
       });
 
-      // Only hide specific tab elements
-      const tabElements = document.querySelectorAll('.nc-tabs, .nc-tab');
+      // Hide all tab-related elements
+      const tabElements = document.querySelectorAll('.nc-tabs, .nc-tab, .nc-tabList, .nc-tabList-container, .nc-tabList-wrapper, [role="tablist"], .nc-tabList-item, .nc-tabList-button');
       tabElements.forEach(element => {
         element.style.display = 'none';
+        element.style.visibility = 'hidden';
       });
 
-      // Hide any button containing "Contents" text
-      const allButtons = document.querySelectorAll('button, [role="button"], .nc-tab-button');
+      // Hide any button containing "Contents" or "Media" text
+      const allButtons = document.querySelectorAll('button, [role="button"], .nc-tab-button, .nc-tabList-button');
       allButtons.forEach(button => {
         const text = button.textContent || button.innerText || '';
-        if (text.includes('Contents')) {
+        if (text.includes('Contents') || text.includes('Media')) {
           button.style.display = 'none';
           button.style.visibility = 'hidden';
+        }
+      });
+
+      // Hide any element containing tab-related text
+      const allElements = document.querySelectorAll('*');
+      allElements.forEach(element => {
+        const text = element.textContent || element.innerText || '';
+        if (text.includes('Contents') || text.includes('Media')) {
+          // Only hide if it's a tab-related element
+          if (element.classList.contains('tab') || element.classList.contains('tabList') || 
+              element.getAttribute('role') === 'tab' || element.getAttribute('role') === 'tablist' ||
+              element.tagName === 'BUTTON') {
+            element.style.display = 'none';
+            element.style.visibility = 'hidden';
+          }
         }
       });
 
