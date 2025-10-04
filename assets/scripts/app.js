@@ -164,7 +164,7 @@ function renderCart() {
       row.style.alignItems = 'center';
       row.innerHTML = `
         <div style="display:flex; align-items:center; gap:12px">
-          <img src="${product.image || 'assets/images/product-fallback.jpg'}" alt="${product.name}" style="width:50px; height:50px; object-fit:cover; border-radius:6px; border:1px solid var(--color-border)">
+          <img src="${product.image || 'assets/images/product-fallback.jpg'}" alt="${product.name}" style="width:80px; height:80px; object-fit:cover; border-radius:8px; border:1px solid var(--color-border)">
           <div>
             <div style="font-weight:600">${product.name}</div>
             <div class="muted small">${formatCurrency(product.priceCents)}</div>

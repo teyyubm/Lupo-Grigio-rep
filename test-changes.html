@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Changes</title>
+    <style>
+        .test-card-media {
+            aspect-ratio: 2 / 1;
+            background: url('assets/images/banner.jpg') center/cover no-repeat;
+            border-radius: 8px;
+            min-height: 200px;
+            width: 300px;
+            margin: 20px;
+            border: 2px solid #c7a26a;
+        }
+        .test-cart-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #c7a26a;
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing Changes</h1>
+    
+    <h2>1. Product Card Image (should be 2:1 ratio, min 200px height)</h2>
+    <div class="test-card-media"></div>
+    
+    <h2>2. Cart Image (should be 80x80px)</h2>
+    <img src="assets/images/banner.jpg" class="test-cart-img" alt="Test">
+    
+    <h2>3. Cart Quantity Test</h2>
+    <p>Open browser console and test:</p>
+    <pre>
+// Test cart quantity decrease
+let testCart = {1: 2}; // Product ID 1 with quantity 2
+console.log('Before:', testCart);
+testCart[1] = testCart[1] - 1; // Decrease by 1
+console.log('After decrease:', testCart); // Should show {1: 1}
+testCart[1] = testCart[1] - 1; // Decrease by 1 again
+console.log('After second decrease:', testCart); // Should show {1: 0}
+// Product should NOT be deleted, just quantity 0
+    </pre>
+</body>
+</html>
