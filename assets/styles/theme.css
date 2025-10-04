@@ -1,11 +1,11 @@
 :root {
-  --color-bg: #0b0b0b;
-  --color-surface: #141414;
-  --color-elevated: #191919;
-  --color-text: #f2f2f2;
-  --color-muted: #a7a7a7;
+  --color-bg: #1a1a1a;
+  --color-surface: #2a2a2a;
+  --color-elevated: #333333;
+  --color-text: #e8e8e8;
+  --color-muted: #b8b8b8;
   --color-accent: #c7a26a; /* warm gold */
-  --color-border: #242424;
+  --color-border: #404040;
 
   /* Premium accent gradients */
   --accent-1: #c7a26a;
@@ -37,8 +37,8 @@ html, body { height: 100%; }
 body {
   margin: 0;
   background:
-    radial-gradient(1200px 600px at -10% -20%, rgba(199,162,106,.06), transparent 60%),
-    radial-gradient(1000px 500px at 110% 120%, rgba(255,255,255,.04), transparent 60%),
+    radial-gradient(1200px 600px at -10% -20%, rgba(199,162,106,.08), transparent 60%),
+    radial-gradient(1000px 500px at 110% 120%, rgba(255,255,255,.06), transparent 60%),
     var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
