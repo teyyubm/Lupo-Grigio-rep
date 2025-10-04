@@ -11,7 +11,12 @@
   --accent-1: #c7a26a;
   --accent-2: #d9b97f;
   --accent-3: #e7c98d;
+  --accent-4: #f4d4a3;
   --gradient-accent: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+  --gradient-accent-hover: linear-gradient(135deg, var(--accent-2), var(--accent-4));
+  --gradient-surface: linear-gradient(145deg, var(--color-surface), var(--color-elevated));
+  --gradient-card: linear-gradient(145deg, rgba(42,42,42,0.8), rgba(51,51,51,0.6));
+  --gradient-border: linear-gradient(90deg, transparent, var(--color-accent), transparent);
 
   --radius-sm: 8px;
   --radius-md: 14px;
@@ -37,8 +42,10 @@ html, body { height: 100%; }
 body {
   margin: 0;
   background:
-    radial-gradient(1200px 600px at -10% -20%, rgba(199,162,106,.08), transparent 60%),
-    radial-gradient(1000px 500px at 110% 120%, rgba(255,255,255,.06), transparent 60%),
+    radial-gradient(1400px 700px at -15% -25%, rgba(199,162,106,.12), transparent 65%),
+    radial-gradient(1200px 600px at 115% 125%, rgba(255,255,255,.08), transparent 65%),
+    radial-gradient(800px 400px at 50% 0%, rgba(231,201,141,.06), transparent 70%),
+    linear-gradient(180deg, rgba(26,26,26,0.95) 0%, rgba(42,42,42,0.1) 50%, rgba(26,26,26,0.95) 100%),
     var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
@@ -67,8 +74,19 @@ body {
   transition: transform .2s ease, background .2s ease, opacity .2s ease, box-shadow .2s ease;
 }
 .button.primary { background: var(--gradient-accent); color: #161616; border-color: transparent; box-shadow: 0 6px 14px rgba(199,162,106,.22); }
-.button:hover { transform: translateY(-1px); }
-.button.ghost { background: transparent; }
+.button:hover { 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+.button.ghost { 
+  background: transparent; 
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+}
+.button.ghost:hover {
+  background: var(--gradient-accent);
+  color: #161616;
+}
 .button.small { padding: 8px 12px; font-size: 14px; }
 .button.block { width: 100%; }
 .button:active { transform: translateY(1px); }
