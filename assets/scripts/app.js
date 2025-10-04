@@ -4,6 +4,8 @@ const state = {
   products: [],
   cart: /** @type {Record<string, number>} */ ({}),
   instagram: /** @type {{profile:string, posts:{id:string,image:string,url:string}[]}|null} */ (null),
+  visibleProductsCount: 9,
+  loadMoreIncrement: 3,
 };
 
 function loadCartFromStorage() {
@@ -71,7 +73,10 @@ function renderProducts() {
   if (!grid) return;
   grid.innerHTML = '';
 
-  state.products.forEach(product => {
+  // Get products to show (limited by visibleProductsCount)
+  const productsToShow = state.products.slice(0, state.visibleProductsCount);
+  
+  productsToShow.forEach(product => {
     const isSold = product.soldOut === true || (product.limited && product.remaining === 0);
     const card = document.createElement('article');
     card.className = 'card';
@@ -91,6 +96,20 @@ function renderProducts() {
     `;
     grid.appendChild(card);
   });
+  
+  // Add Load More button if there are more products
+  const remainingProducts = state.products.length - state.visibleProductsCount;
+  if (remainingProducts > 0) {
+    const loadMoreDiv = document.createElement('div');
+    loadMoreDiv.className = 'load-more-container';
+    loadMoreDiv.style.cssText = 'text-align: center; margin: 2rem 0; grid-column: 1 / -1;';
+    loadMoreDiv.innerHTML = `
+      <button class="load-more-btn" onclick="loadMoreProducts()" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600;">
+        📦 Load More (${remainingProducts} remaining)
+      </button>
+    `;
+    grid.appendChild(loadMoreDiv);
+  }
 
   grid.addEventListener('click', (e) => {
     const t = e.target;
