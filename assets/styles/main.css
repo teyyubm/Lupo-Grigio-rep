@@ -752,6 +752,58 @@
 .cart-items { padding: 12px; display: grid; gap: 10px; overflow: auto; }
 .cart-footer { padding: 16px; border-top: 1px solid var(--color-border); display: grid; gap: 10px; }
 .cart-actions { display: grid; gap: 8px; }
+
+/* Clear Cart Button Styling */
+#clearCartButton {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  border: none;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+#clearCartButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+#clearCartButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  background: linear-gradient(135deg, #ff5252, #d32f2f);
+}
+
+#clearCartButton:hover::before {
+  left: 100%;
+}
+
+#clearCartButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(255, 107, 107, 0.3);
+}
+
+#clearCartButton:disabled {
+  background: linear-gradient(135deg, #ccc, #999);
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+}
+
+#clearCartButton:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
 .icon-button { background: transparent; color: var(--color-text); border: 1px solid var(--color-border); padding: 6px 10px; border-radius: var(--radius-sm); cursor: pointer; }
 
 /* Cookie banner */
