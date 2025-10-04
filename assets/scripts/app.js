@@ -83,12 +83,19 @@ function renderMiniCartCount() {
 }
 
 function renderProducts() {
+  console.log('🎨 Rendering products...');
   const grid = document.getElementById('productGrid');
-  if (!grid) return;
+  if (!grid) {
+    console.error('❌ Product grid not found!');
+    return;
+  }
+  console.log('📊 Total products:', state.products.length);
+  console.log('👀 Visible products:', state.visibleProductsCount);
   grid.innerHTML = '';
 
   // Get products to show (limited by visibleProductsCount)
   const productsToShow = state.products.slice(0, state.visibleProductsCount);
+  console.log('🔄 Products to show:', productsToShow.length);
   
   productsToShow.forEach(product => {
     const isSold = product.soldOut === true || (product.limited && product.remaining === 0);
@@ -276,6 +283,7 @@ function setYear() {
 }
 
 async function init() {
+  console.log('🚀 Initializing app...');
   setYear();
   loadCartFromStorage();
   renderMiniCartCount();
@@ -294,13 +302,17 @@ async function init() {
   setupHeroParallax();
   setupBackToTop();
   try {
+    console.log('📦 Loading products...');
     await loadProducts();
+    console.log('✅ Products loaded:', state.products.length);
     renderProducts();
+    console.log('🎨 Products rendered');
     renderCart();
     await loadInstagram();
     renderInstagram();
+    console.log('🎉 App initialized successfully');
   } catch (err) {
-    console.error(err);
+    console.error('❌ Initialization error:', err);
   }
 }
 
@@ -443,15 +455,17 @@ function showToast(message) {
   const t = document.getElementById('toast');
   if (!t) return;
   
-  // If there are items in cart, show persistent cart button
+  // If there are items in cart, show only cart icon
   const cartCount = getCartCount();
   if (cartCount > 0) {
     t.innerHTML = `
-      <div style="display:flex; align-items:center; gap:8px">
-        <span>${cartCount} item${cartCount > 1 ? 's' : ''} in cart</span>
-        <button class="button small" onclick="document.getElementById('miniCartButton').click()">
-          View Cart
-        </button>
+      <div style="display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="document.getElementById('miniCartButton').click()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="9" cy="21" r="1"></circle>
+          <circle cx="20" cy="21" r="1"></circle>
+          <path d="m1 1 4 4 13 1 4 8H6l-2-4"></path>
+        </svg>
+        <span style="margin-left: 8px; font-weight: 600;">${cartCount}</span>
       </div>
     `;
     t.classList.add('visible');
