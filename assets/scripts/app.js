@@ -160,24 +160,22 @@ function renderCart() {
       if (!product) return;
       const row = document.createElement('div');
       row.className = 'cart-row';
-      row.style.display = 'grid';
-      row.style.gridTemplateColumns = '1fr auto auto';
-      row.style.gap = '10px';
+      row.style.display = 'flex';
+      row.style.flexDirection = 'column';
+      row.style.gap = '12px';
       row.style.alignItems = 'center';
       row.innerHTML = `
-        <div style="display:flex; align-items:center; gap:12px">
-          <img src="${product.image || 'assets/images/product-fallback.jpg'}" alt="${product.name}" style="width:120px; height:120px; object-fit:cover; border-radius:10px; border:1px solid var(--color-border)">
-          <div>
-            <div style="font-weight:600">${product.name}</div>
-            <div class="muted small">${formatCurrency(product.priceCents)}</div>
+        <img src="${product.image || 'assets/images/product-fallback.jpg'}" alt="${product.name}" style="width:120px; height:120px; object-fit:cover; border-radius:10px; border:1px solid var(--color-border)">
+        <div style="text-align:center">
+          <div style="font-weight:600; margin-bottom:4px">${product.name}</div>
+          <div class="muted small" style="margin-bottom:8px">${formatCurrency(product.priceCents)}</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:12px">
+            <button class="icon-button" data-dec="${product.id}">−</button>
+            <span style="display:inline-block; width:24px; text-align:center">${qty}</span>
+            <button class="icon-button" data-inc="${product.id}">+</button>
           </div>
+          <div style="text-align:center; font-weight:600; margin-top:8px">${formatCurrency(product.priceCents * qty)}</div>
         </div>
-        <div>
-          <button class="icon-button" data-dec="${product.id}">−</button>
-          <span style="display:inline-block; width:24px; text-align:center">${qty}</span>
-          <button class="icon-button" data-inc="${product.id}">+</button>
-        </div>
-        <div style="text-align:right">${formatCurrency(product.priceCents * qty)}</div>
       `;
       list.appendChild(row);
     });
