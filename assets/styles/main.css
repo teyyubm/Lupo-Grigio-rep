@@ -730,11 +730,11 @@
 /* Back to top */
 #backToTop { 
   position: fixed; 
-  right: 16px; 
-  bottom: 80px; 
+  right: 20px; 
+  top: 20px; 
   z-index: 140; 
   opacity: 0; 
-  transform: translateY(8px); 
+  transform: translateY(-8px); 
   transition: all .25s ease; 
 }
 #backToTop.visible { opacity: 1; transform: none; }
