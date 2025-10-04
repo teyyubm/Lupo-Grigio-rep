@@ -322,24 +322,25 @@ function setYear() {
 
 async function init() {
   console.log('🚀 Initializing app...');
-  setYear();
-  loadCartFromStorage();
-  renderMiniCartCount();
-  setupCartDrawer();
-  
-  // Show cart button if cart has items
-  const cartCount = getCartCount();
-  if (cartCount > 0) {
-    showToast('Cart loaded');
-  }
-  setupCookieBanner();
-  setupAnalytics();
-  setupHeaderScroll();
-  setupRevealOnScroll();
-  setupSmoothScrolling();
-  setupHeroParallax();
-  setupBackToTop();
   try {
+    setYear();
+    loadCartFromStorage();
+    renderMiniCartCount();
+    setupCartDrawer();
+    
+    // Show cart button if cart has items
+    const cartCount = getCartCount();
+    if (cartCount > 0) {
+      showToast('Cart loaded');
+    }
+    setupCookieBanner();
+    setupAnalytics();
+    setupHeaderScroll();
+    setupRevealOnScroll();
+    setupSmoothScrolling();
+    setupHeroParallax();
+    setupBackToTop();
+    
     console.log('📦 Loading products...');
     await loadProducts();
     console.log('✅ Products loaded:', state.products.length);
@@ -351,6 +352,20 @@ async function init() {
     console.log('🎉 App initialized successfully');
   } catch (err) {
     console.error('❌ Initialization error:', err);
+    console.error('❌ Error details:', err.stack);
+    
+    // Show error message to user
+    const grid = document.getElementById('productGrid');
+    if (grid) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--color-muted);">
+          <h3>Page Loading Error</h3>
+          <p>There was an error initializing the page.</p>
+          <p style="font-size: 0.8em; margin-top: 1rem;">Error: ${err.message}</p>
+          <button onclick="location.reload()" class="button small">Reload Page</button>
+        </div>
+      `;
+    }
   }
 }
 
