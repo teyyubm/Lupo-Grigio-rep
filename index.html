@@ -85,9 +85,107 @@
       </section>
 
       <section id="contact" class="contact" data-reveal>
+        <div class="contact-background">
+          <div class="contact-pattern"></div>
+        </div>
         <div class="container contact-inner">
-          <h2>Questions?</h2>
-          <p>Email <a href="mailto:atelier@lupogrigio.com">atelier@lupogrigio.com</a></p>
+          <div class="contact-header">
+            <h2>Bizimlə Əlaqə</h2>
+            <p class="contact-subtitle">Bakıda Premium Dəri Məhsulları</p>
+            <div class="contact-divider"></div>
+          </div>
+          
+          <div class="contact-content">
+            <div class="contact-info">
+              <div class="contact-card">
+                <div class="contact-icon">📍</div>
+                <div class="contact-details">
+                  <h3>Ünvan</h3>
+                  <p>Nizami küçəsi 123<br>Bakı, Azərbaycan</p>
+                </div>
+              </div>
+              
+              <div class="contact-card">
+                <div class="contact-icon">📞</div>
+                <div class="contact-details">
+                  <h3>Telefon</h3>
+                  <p>+994 12 345 67 89<br>+994 50 123 45 67</p>
+                </div>
+              </div>
+              
+              <div class="contact-card">
+                <div class="contact-icon">✉️</div>
+                <div class="contact-details">
+                  <h3>E-mail</h3>
+                  <p>info@lupogrigio.az<br>sifaris@lupogrigio.az</p>
+                </div>
+              </div>
+              
+              <div class="contact-card">
+                <div class="contact-icon">🕒</div>
+                <div class="contact-details">
+                  <h3>İş Saatları</h3>
+                  <p>Bazar ertəsi - Şənbə: 10:00 - 20:00<br>Bazar: 12:00 - 18:00</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="contact-form-section">
+              <div class="contact-form-header">
+                <h3>Sualınız var?</h3>
+                <p>Bizə yazın və tezliklə cavab verəcəyik</p>
+              </div>
+              
+              <form class="contact-form">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="contact-name">Ad Soyad</label>
+                    <input type="text" id="contact-name" name="name" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="contact-phone">Telefon</label>
+                    <input type="tel" id="contact-phone" name="phone" required>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label for="contact-email">E-mail</label>
+                  <input type="email" id="contact-email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                  <label for="contact-subject">Mövzu</label>
+                  <select id="contact-subject" name="subject" required>
+                    <option value="">Mövzunu seçin</option>
+                    <option value="general">Ümumi sual</option>
+                    <option value="order">Sifariş haqqında</option>
+                    <option value="custom">Fərdi istehsal</option>
+                    <option value="repair">Təmir xidməti</option>
+                    <option value="wholesale">Toplu satış</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label for="contact-message">Mesaj</label>
+                  <textarea id="contact-message" name="message" rows="5" placeholder="Mesajınızı buraya yazın..." required></textarea>
+                </div>
+                
+                <button type="submit" class="contact-submit-btn">
+                  <span class="btn-text">Göndər</span>
+                  <span class="btn-icon">→</span>
+                </button>
+              </form>
+            </div>
+          </div>
+          
+          <div class="contact-map-section">
+            <div class="map-placeholder">
+              <div class="map-icon">🗺️</div>
+              <h3>Bakıda Bizim Mağaza</h3>
+              <p>Nizami küçəsində yerləşən mağazamızı ziyarət edin</p>
+              <button class="map-btn">Xəritədə Göstər</button>
+            </div>
+          </div>
         </div>
       </section>
     </main>
