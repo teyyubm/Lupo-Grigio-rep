@@ -104,8 +104,23 @@
   box-shadow: var(--shadow-lg); 
   border-color: var(--color-accent);
 }
-.card:hover::before {
-  opacity: 1;
+.card.in-cart {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(199, 162, 106, 0.2);
+}
+
+.cart-indicator {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--gradient-accent);
+  color: #161616;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(199, 162, 106, 0.3);
 }
 .pill { font-size: 12px; padding: 4px 8px; border-radius: 999px; border:1px solid var(--color-border); background: var(--color-elevated); }
 .pill.sold { background: #2b1f1f; color: #e7b2b2; border-color: #3a2727; }

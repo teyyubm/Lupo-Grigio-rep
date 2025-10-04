@@ -92,11 +92,13 @@ function renderProducts() {
   
   productsToShow.forEach(product => {
     const isSold = product.soldOut === true || (product.limited && product.remaining === 0);
+    const isInCart = state.cart[product.id] && state.cart[product.id] > 0;
     const card = document.createElement('article');
-    card.className = 'card';
+    card.className = `card ${isInCart ? 'in-cart' : ''}`;
     card.innerHTML = `
       <div class="card-media">
         <img src="${product.image || "assets/images/product-fallback.jpg"}" alt="${product.name}" class="product-image">
+        ${isInCart ? '<div class="cart-indicator">In Cart</div>' : ''}
       </div>
       <div class="card-body">
         <div class="card-title">${product.name}</div>
@@ -135,6 +137,7 @@ function renderProducts() {
       saveCartToStorage();
       renderMiniCartCount();
       renderCart();
+      renderProducts(); // Refresh products to show cart indicator
       showToast('Added to cart');
       return;
     }
@@ -221,6 +224,7 @@ function setupCartDrawer() {
     saveCartToStorage();
     renderMiniCartCount();
     renderCart();
+    renderProducts(); // Refresh products to update cart indicators
   });
 }
 
