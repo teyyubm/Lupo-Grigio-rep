@@ -226,10 +226,12 @@ function setupCartDrawer() {
     renderCart();
     renderProducts(); // Refresh products to update cart indicators
     
-    // Show cart button notification
+    // Show cart button notification or hide if empty
     const cartCount = getCartCount();
     if (cartCount > 0) {
       showToast('Cart updated');
+    } else {
+      hideCartButton();
     }
   });
 }
@@ -419,7 +421,7 @@ function showToast(message) {
   const t = document.getElementById('toast');
   if (!t) return;
   
-  // If there are items in cart, show cart button instead of message
+  // If there are items in cart, show persistent cart button
   const cartCount = getCartCount();
   if (cartCount > 0) {
     t.innerHTML = `
@@ -430,13 +432,22 @@ function showToast(message) {
         </button>
       </div>
     `;
+    t.classList.add('visible');
+    // Don't set timeout - keep it visible while cart has items
+    clearTimeout(toastTimer);
   } else {
     t.textContent = message;
+    t.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('visible'), 3000);
   }
-  
-  t.classList.add('visible');
+}
+
+function hideCartButton() {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.classList.remove('visible');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('visible'), 3000);
 }
 
 // Instagram gallery
