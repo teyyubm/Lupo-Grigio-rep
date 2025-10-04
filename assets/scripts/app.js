@@ -32,6 +32,8 @@ async function loadProducts() {
     if (dbResponse.ok) {
       const data = await dbResponse.json();
       state.products = data.products || [];
+      // Reset pagination to show only 9 products initially
+      state.visibleProductsCount = 9;
       console.log('✅ Products loaded from database');
       return;
     }
@@ -45,11 +47,19 @@ async function loadProducts() {
     if (!res.ok) throw new Error('Failed to load products');
     const data = await res.json();
     state.products = data.products || data; // Handle both nested and direct array formats
+    // Reset pagination to show only 9 products initially
+    state.visibleProductsCount = 9;
     console.log('✅ Products loaded from JSON file');
   } catch (error) {
     console.error('Failed to load products:', error);
     state.products = [];
   }
+}
+
+// Load more products function
+function loadMoreProducts() {
+  state.visibleProductsCount += state.loadMoreIncrement;
+  renderProducts();
 }
 
 function getCartCount() {
