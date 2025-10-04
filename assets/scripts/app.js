@@ -140,7 +140,10 @@ function renderProducts() {
     const t = e.target;
     if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
       const id = String(t.getAttribute('data-add'));
-      state.cart[id] = (state.cart[id] || 0) + 1;
+      const currentQty = state.cart[id] || 0;
+      console.log(`🛒 Adding product ${id}, current qty: ${currentQty}`);
+      state.cart[id] = currentQty + 1;
+      console.log(`✅ New qty: ${state.cart[id]}`);
       saveCartToStorage();
       renderMiniCartCount();
       renderCart();
@@ -352,7 +355,12 @@ function setupAnalytics() {
   // Track add to cart via delegated listener (only for analytics, not actual cart)
   document.addEventListener('click', (e) => {
     const t = e.target;
-    if (t && t instanceof HTMLElement && t.matches('button[data-add]') && !t.closest('#productGrid')) {
+    // Only track analytics for add buttons NOT in the main product grid
+    if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
+      // Skip analytics for main product grid buttons to avoid interference
+      if (t.closest('#productGrid')) {
+        return;
+      }
       send('add_to_cart', { productId: t.getAttribute('data-add') });
     }
   });
