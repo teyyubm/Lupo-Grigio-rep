@@ -82,6 +82,28 @@ function renderMiniCartCount() {
   if (badge) badge.textContent = String(getCartCount());
 }
 
+// Handle clicks on product grid
+function handleGridClick(e) {
+  const t = e.target;
+  if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
+    const id = String(t.getAttribute('data-add'));
+    const currentQty = state.cart[id] || 0;
+    console.log(`🛒 Adding product ${id}, current qty: ${currentQty}`);
+    state.cart[id] = currentQty + 1;
+    console.log(`✅ New qty: ${state.cart[id]}`);
+    saveCartToStorage();
+    renderMiniCartCount();
+    renderCart();
+    renderProducts(); // Refresh products to show cart indicator
+    showToast('Added to cart');
+    return;
+  }
+  if (t && t instanceof HTMLElement && t.matches('button[data-qv]')) {
+    const id = String(t.getAttribute('data-qv'));
+    openQuickView(id);
+  }
+}
+
 function renderProducts() {
   console.log('🎨 Rendering products...');
   const grid = document.getElementById('productGrid');
@@ -136,26 +158,9 @@ function renderProducts() {
     grid.appendChild(loadMoreDiv);
   }
 
-  grid.addEventListener('click', (e) => {
-    const t = e.target;
-    if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
-      const id = String(t.getAttribute('data-add'));
-      const currentQty = state.cart[id] || 0;
-      console.log(`🛒 Adding product ${id}, current qty: ${currentQty}`);
-      state.cart[id] = currentQty + 1;
-      console.log(`✅ New qty: ${state.cart[id]}`);
-      saveCartToStorage();
-      renderMiniCartCount();
-      renderCart();
-      renderProducts(); // Refresh products to show cart indicator
-      showToast('Added to cart');
-      return;
-    }
-    if (t && t instanceof HTMLElement && t.matches('button[data-qv]')) {
-      const id = String(t.getAttribute('data-qv'));
-      openQuickView(id);
-    }
-  });
+  // Remove any existing event listeners to prevent duplicates
+  grid.removeEventListener('click', handleGridClick);
+  grid.addEventListener('click', handleGridClick);
 }
 
 function renderCart() {
