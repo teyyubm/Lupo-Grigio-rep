@@ -192,8 +192,9 @@ function setupCartDrawer() {
   const openBtn = document.getElementById('miniCartButton');
   const closeBtn = document.getElementById('closeCart');
   const checkoutBtn = document.getElementById('checkoutButton');
+  const clearBtn = document.getElementById('clearCartButton');
   const list = document.getElementById('cartItems');
-  if (!drawer || !openBtn || !closeBtn || !checkoutBtn || !list) return;
+  if (!drawer || !openBtn || !closeBtn || !checkoutBtn || !clearBtn || !list) return;
 
   const open = () => { drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); };
   const close = () => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); };
@@ -203,6 +204,21 @@ function setupCartDrawer() {
   checkoutBtn.addEventListener('click', (e) => {
     e.preventDefault();
     alert('Checkout placeholder. Integrate Stripe/Shopify to accept payments.');
+  });
+
+  // Clear cart functionality
+  clearBtn.addEventListener('click', () => {
+    if (Object.keys(state.cart).length === 0) return;
+    
+    if (confirm('Are you sure you want to clear your cart?')) {
+      state.cart = {};
+      saveCartToStorage();
+      renderMiniCartCount();
+      renderCart();
+      renderProducts(); // Refresh products to remove cart indicators
+      hideCartButton(); // Hide persistent cart button
+      showToast('Cart cleared');
+    }
   });
 
   // Add cart quantity controls event listener (only once)
