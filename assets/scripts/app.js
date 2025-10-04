@@ -184,7 +184,27 @@ function renderCart() {
   }
 
   totalEl.textContent = formatCurrency(getCartTotalCents());
+}
 
+function setupCartDrawer() {
+  const drawer = document.getElementById('cartDrawer');
+  const openBtn = document.getElementById('miniCartButton');
+  const closeBtn = document.getElementById('closeCart');
+  const checkoutBtn = document.getElementById('checkoutButton');
+  const list = document.getElementById('cartItems');
+  if (!drawer || !openBtn || !closeBtn || !checkoutBtn || !list) return;
+
+  const open = () => { drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); };
+  const close = () => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); };
+
+  openBtn.addEventListener('click', open);
+  closeBtn.addEventListener('click', close);
+  checkoutBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert('Checkout placeholder. Integrate Stripe/Shopify to accept payments.');
+  });
+
+  // Add cart quantity controls event listener (only once)
   list.addEventListener('click', (e) => {
     const t = e.target;
     if (!(t && t instanceof HTMLElement)) return;
@@ -203,24 +223,6 @@ function renderCart() {
     saveCartToStorage();
     renderMiniCartCount();
     renderCart();
-  });
-}
-
-function setupCartDrawer() {
-  const drawer = document.getElementById('cartDrawer');
-  const openBtn = document.getElementById('miniCartButton');
-  const closeBtn = document.getElementById('closeCart');
-  const checkoutBtn = document.getElementById('checkoutButton');
-  if (!drawer || !openBtn || !closeBtn || !checkoutBtn) return;
-
-  const open = () => { drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); };
-  const close = () => { drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); };
-
-  openBtn.addEventListener('click', open);
-  closeBtn.addEventListener('click', close);
-  checkoutBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-    alert('Checkout placeholder. Integrate Stripe/Shopify to accept payments.');
   });
 }
 
