@@ -1634,6 +1634,8 @@
         }
         const data = await response.json();
         products = data.products || [];
+        // Reset pagination to show only 9 products initially
+        visibleProductsCount = 9;
         renderProducts();
         updateStats();
       } catch (error) {
@@ -1651,6 +1653,8 @@
           console.error('Error loading products from JSON:', jsonError);
           products = [];
         }
+        // Reset pagination to show only 9 products initially
+        visibleProductsCount = 9;
         renderProducts();
         updateStats();
       }
