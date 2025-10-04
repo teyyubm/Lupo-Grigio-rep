@@ -79,11 +79,12 @@
   z-index: 1;
 }
 .card-media { 
-  aspect-ratio: 3 / 2; 
+  aspect-ratio: 2 / 1; 
   background: url('../images/banner.jpg') center/cover no-repeat; 
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   position: relative;
   overflow: hidden;
+  min-height: 200px;
 }
 .card-body { padding: 14px; display: grid; gap: 6px; position: relative; }
 .card-body::after { content:""; position:absolute; inset:auto 0 0 0; height: 1px; background: linear-gradient(90deg, rgba(199,162,106,.4), transparent); opacity:.5; }

@@ -66,11 +66,12 @@ function loadMoreProducts() {
 window.loadMoreProducts = loadMoreProducts;
 
 function getCartCount() {
-  return Object.values(state.cart).reduce((a, b) => a + b, 0);
+  return Object.values(state.cart).filter(qty => qty > 0).reduce((a, b) => a + b, 0);
 }
 
 function getCartTotalCents() {
   return Object.entries(state.cart).reduce((sum, [id, qty]) => {
+    if (qty <= 0) return sum;
     const product = state.products.find(p => String(p.id) === String(id));
     return sum + (product ? product.priceCents * qty : 0);
   }, 0);
@@ -148,7 +149,7 @@ function renderCart() {
   if (!list || !totalEl) return;
   list.innerHTML = '';
 
-  const entries = Object.entries(state.cart);
+  const entries = Object.entries(state.cart).filter(([id, qty]) => qty > 0);
   if (entries.length === 0) {
     list.innerHTML = '<p class="muted">Your cart is empty.</p>';
   } else {
@@ -190,8 +191,10 @@ function renderCart() {
     if (inc) {
       state.cart[inc] = (state.cart[inc] || 0) + 1;
     } else if (dec) {
-      const next = (state.cart[dec] || 0) - 1;
-      if (next <= 0) delete state.cart[dec]; else state.cart[dec] = next;
+      const currentQty = state.cart[dec] || 0;
+      if (currentQty > 0) {
+        state.cart[dec] = currentQty - 1;
+      }
     } else {
       return;
     }
