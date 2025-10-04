@@ -27,6 +27,7 @@ function formatCurrency(cents) {
 
 async function loadProducts() {
   try {
+    console.log('🔄 Attempting to load products from database...');
     // Try to load from database first
     const dbResponse = await fetch('/api/products', { cache: 'no-store' });
     if (dbResponse.ok) {
@@ -34,25 +35,41 @@ async function loadProducts() {
       state.products = data.products || [];
       // Reset pagination to show only 9 products initially
       state.visibleProductsCount = 9;
-      console.log('✅ Products loaded from database');
+      console.log('✅ Products loaded from database:', state.products.length);
       return;
+    } else {
+      console.warn('⚠️ Database response not OK:', dbResponse.status);
     }
   } catch (error) {
-    console.log('Database not available, falling back to JSON file');
+    console.log('❌ Database not available:', error.message);
   }
   
   // Fallback to JSON file
   try {
+    console.log('🔄 Falling back to JSON file...');
     const res = await fetch(PRODUCTS_JSON_URL, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Failed to load products');
+    if (!res.ok) {
+      throw new Error(`Failed to load products: ${res.status} ${res.statusText}`);
+    }
     const data = await res.json();
     state.products = data.products || data; // Handle both nested and direct array formats
     // Reset pagination to show only 9 products initially
     state.visibleProductsCount = 9;
-    console.log('✅ Products loaded from JSON file');
+    console.log('✅ Products loaded from JSON file:', state.products.length);
   } catch (error) {
-    console.error('Failed to load products:', error);
+    console.error('❌ Failed to load products from both sources:', error);
     state.products = [];
+    // Show error message to user
+    const grid = document.getElementById('productGrid');
+    if (grid) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--color-muted);">
+          <h3>Unable to Load Products</h3>
+          <p>There was an error loading our product collection.</p>
+          <button onclick="location.reload()" class="button small">Try Again</button>
+        </div>
+      `;
+    }
   }
 }
 
@@ -114,6 +131,19 @@ function renderProducts() {
   console.log('📊 Total products:', state.products.length);
   console.log('👀 Visible products:', state.visibleProductsCount);
   grid.innerHTML = '';
+
+  // Check if we have products to show
+  if (!state.products || state.products.length === 0) {
+    console.warn('⚠️ No products available, showing fallback message');
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--color-muted);">
+        <h3>Loading Products...</h3>
+        <p>Please wait while we load our collection.</p>
+        <button onclick="location.reload()" class="button small">Refresh Page</button>
+      </div>
+    `;
+    return;
+  }
 
   // Get products to show (limited by visibleProductsCount)
   const productsToShow = state.products.slice(0, state.visibleProductsCount);
