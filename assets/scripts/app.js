@@ -1,5 +1,8 @@
 const PRODUCTS_JSON_URL = 'assets/data/products.json';
 
+// Global variables
+let toastTimer;
+
 const state = {
   products: [],
   cart: /** @type {Record<string, number>} */ ({}),
@@ -508,7 +511,6 @@ function onModalClick(e) {
 }
 
 // Toast
-let toastTimer;
 function showToast(message) {
   const t = document.getElementById('toast');
   if (!t) return;
