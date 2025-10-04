@@ -264,6 +264,12 @@ async function init() {
   loadCartFromStorage();
   renderMiniCartCount();
   setupCartDrawer();
+  
+  // Show cart button if cart has items
+  const cartCount = getCartCount();
+  if (cartCount > 0) {
+    showToast('Cart loaded');
+  }
   setupCookieBanner();
   setupAnalytics();
   setupHeaderScroll();
@@ -318,7 +324,7 @@ function setupAnalytics() {
   // Track add to cart via delegated listener (only for analytics, not actual cart)
   document.addEventListener('click', (e) => {
     const t = e.target;
-    if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
+    if (t && t instanceof HTMLElement && t.matches('button[data-add]') && !t.closest('#productGrid')) {
       send('add_to_cart', { productId: t.getAttribute('data-add') });
     }
   });
