@@ -118,9 +118,7 @@ function renderProducts() {
     loadMoreDiv.style.cssText = 'text-align: center; margin: 2rem 0; grid-column: 1 / -1;';
     loadMoreDiv.innerHTML = `
       <button class="load-more-btn" onclick="loadMoreProducts()">
-        <span class="btn-icon">↗</span>
         <span class="btn-text">Load More</span>
-        <span class="btn-count">${remainingProducts} remaining</span>
       </button>
     `;
     grid.appendChild(loadMoreDiv);
@@ -164,9 +162,12 @@ function renderCart() {
       row.style.gap = '10px';
       row.style.alignItems = 'center';
       row.innerHTML = `
-        <div>
-          <div style="font-weight:600">${product.name}</div>
-          <div class="muted small">${formatCurrency(product.priceCents)}</div>
+        <div style="display:flex; align-items:center; gap:12px">
+          <img src="${product.image || 'assets/images/product-fallback.jpg'}" alt="${product.name}" style="width:50px; height:50px; object-fit:cover; border-radius:6px; border:1px solid var(--color-border)">
+          <div>
+            <div style="font-weight:600">${product.name}</div>
+            <div class="muted small">${formatCurrency(product.priceCents)}</div>
+          </div>
         </div>
         <div>
           <button class="icon-button" data-dec="${product.id}">−</button>
