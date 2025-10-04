@@ -78,7 +78,13 @@
   transition: opacity 0.3s ease;
   z-index: 1;
 }
-.card-media { aspect-ratio: 4 / 3; background: url('../images/banner.jpg') center/cover no-repeat; }
+.card-media { 
+  aspect-ratio: 3 / 2; 
+  background: url('../images/banner.jpg') center/cover no-repeat; 
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  position: relative;
+  overflow: hidden;
+}
 .card-body { padding: 14px; display: grid; gap: 6px; position: relative; }
 .card-body::after { content:""; position:absolute; inset:auto 0 0 0; height: 1px; background: linear-gradient(90deg, rgba(199,162,106,.4), transparent); opacity:.5; }
 .card-title { font-weight: 600; }
@@ -228,14 +234,15 @@
 }
 
 .contact-buttons {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 .contact-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   padding: 0.4rem 0.8rem;
   border-radius: var(--radius-sm);
@@ -245,7 +252,7 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  min-width: fit-content;
+  width: 100%;
 }
 
 .phone-btn {
@@ -483,6 +490,7 @@
   }
   
   .contact-buttons {
+    grid-template-columns: 1fr;
     gap: 0.4rem;
   }
   
