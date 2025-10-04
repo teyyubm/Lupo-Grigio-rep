@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cart Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; }
+        button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+        .cart-display { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Cart Functionality Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Add to Cart (should add 1, not 2)</h2>
+        <button onclick="testAddToCart()">Add Product 1 to Cart</button>
+        <div id="add-result" class="cart-display"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Decrease Quantity (should not delete product)</h2>
+        <button onclick="testDecreaseQuantity()">Decrease Product 1 Quantity</button>
+        <div id="decrease-result" class="cart-display"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Current Cart State</h2>
+        <div id="cart-state" class="cart-display"></div>
+        <button onclick="displayCartState()">Refresh Cart State</button>
+    </div>
+
+    <script>
+        // Simulate the cart state
+        let testCart = {};
+        
+        function testAddToCart() {
+            const productId = '1';
+            testCart[productId] = (testCart[productId] || 0) + 1;
+            document.getElementById('add-result').innerHTML = 
+                `Added product ${productId}. Quantity: ${testCart[productId]}`;
+            displayCartState();
+        }
+        
+        function testDecreaseQuantity() {
+            const productId = '1';
+            const currentQty = testCart[productId] || 0;
+            if (currentQty > 0) {
+                testCart[productId] = currentQty - 1;
+            }
+            document.getElementById('decrease-result').innerHTML = 
+                `Decreased product ${productId}. Quantity: ${testCart[productId]}`;
+            displayCartState();
+        }
+        
+        function displayCartState() {
+            const entries = Object.entries(testCart).filter(([id, qty]) => qty > 0);
+            document.getElementById('cart-state').innerHTML = 
+                `Cart: ${JSON.stringify(testCart)}<br>` +
+                `Visible items: ${JSON.stringify(entries)}`;
+        }
+        
+        // Initial display
+        displayCartState();
+    </script>
+</body>
+</html>

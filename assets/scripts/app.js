@@ -303,7 +303,7 @@ function setupAnalytics() {
   }
   // Page view
   send('page_view', {});
-  // Track add to cart via delegated listener
+  // Track add to cart via delegated listener (only for analytics, not actual cart)
   document.addEventListener('click', (e) => {
     const t = e.target;
     if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
