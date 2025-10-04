@@ -95,7 +95,9 @@ function renderProducts() {
     const card = document.createElement('article');
     card.className = 'card';
     card.innerHTML = `
-      <div class="card-media" style="background-image:url('${product.image || "assets/images/product-fallback.jpg"}')"></div>
+      <div class="card-media">
+        <img src="${product.image || "assets/images/product-fallback.jpg"}" alt="${product.name}" class="product-image">
+      </div>
       <div class="card-body">
         <div class="card-title">${product.name}</div>
         <div class="card-sub">${formatCurrency(product.priceCents)} · ${product.material}</div>
