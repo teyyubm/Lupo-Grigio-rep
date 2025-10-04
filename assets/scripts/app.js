@@ -62,6 +62,9 @@ function loadMoreProducts() {
   renderProducts();
 }
 
+// Make loadMoreProducts globally accessible
+window.loadMoreProducts = loadMoreProducts;
+
 function getCartCount() {
   return Object.values(state.cart).reduce((a, b) => a + b, 0);
 }
@@ -114,8 +117,10 @@ function renderProducts() {
     loadMoreDiv.className = 'load-more-container';
     loadMoreDiv.style.cssText = 'text-align: center; margin: 2rem 0; grid-column: 1 / -1;';
     loadMoreDiv.innerHTML = `
-      <button class="load-more-btn" onclick="loadMoreProducts()" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600;">
-        📦 Load More (${remainingProducts} remaining)
+      <button class="load-more-btn" onclick="loadMoreProducts()">
+        <span class="btn-icon">↗</span>
+        <span class="btn-text">Load More</span>
+        <span class="btn-count">${remainingProducts} remaining</span>
       </button>
     `;
     grid.appendChild(loadMoreDiv);
