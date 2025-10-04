@@ -223,28 +223,29 @@
 
 .contact-details p {
   color: var(--color-muted);
-  margin: 0 0 1rem 0;
-  line-height: 1.5;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
 }
 
 .contact-buttons {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
 .contact-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
   border-radius: var(--radius-sm);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 500;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  min-width: fit-content;
 }
 
 .phone-btn {
@@ -482,13 +483,12 @@
   }
   
   .contact-buttons {
-    flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
   }
   
   .contact-btn {
-    justify-content: center;
-    padding: 0.75rem 1rem;
+    padding: 0.5rem 0.7rem;
+    font-size: 0.75rem;
   }
 }
 
