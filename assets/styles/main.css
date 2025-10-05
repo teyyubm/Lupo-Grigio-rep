@@ -23,12 +23,99 @@
   justify-content: space-between;
   height: 68px;
 }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--color-text); text-decoration: none; }
-.brand-logo { width: 36px; height: 36px; border-radius: 999px; object-fit: cover; border:1px solid var(--color-border); box-shadow: var(--shadow-sm); }
+.brand { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 10px; 
+  color: var(--color-text); 
+  text-decoration: none; 
+  transition: all 0.3s ease;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+}
+
+.brand:hover {
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.brand-logo { 
+  width: 36px; 
+  height: 36px; 
+  border-radius: 999px; 
+  object-fit: cover; 
+  border:1px solid var(--color-border); 
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.brand:hover .brand-logo {
+  border-color: var(--color-accent);
+  box-shadow: 0 4px 12px rgba(199,162,106,0.3);
+}
+
 .brand-name { font-family: var(--font-serif); font-weight: 700; letter-spacing: .5px; }
 .nav { display: none; gap: 20px; }
-.nav a { color: var(--color-text); text-decoration: none; opacity: .9; }
-.mini-cart { display: inline-flex; align-items: center; gap: 8px; background: transparent; border:1px solid var(--color-border); color: var(--color-text); padding: 8px 10px; border-radius: var(--radius-sm); cursor:pointer; }
+.nav a { 
+  color: var(--color-text); 
+  text-decoration: none; 
+  opacity: .9; 
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(199,162,106,0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.nav a:hover {
+  opacity: 1;
+  color: var(--color-accent);
+  background: rgba(199,162,106,0.1);
+  transform: translateY(-1px);
+}
+
+.nav a:hover::before {
+  left: 100%;
+}
+
+.nav a:active {
+  transform: translateY(0);
+}
+
+.mini-cart { 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 8px; 
+  background: transparent; 
+  border:1px solid var(--color-border); 
+  color: var(--color-text); 
+  padding: 8px 10px; 
+  border-radius: var(--radius-sm); 
+  cursor:pointer; 
+  transition: all 0.3s ease;
+}
+
+.mini-cart:hover {
+  background: rgba(199,162,106,0.1);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.mini-cart:active {
+  transform: translateY(0);
+}
 
 @media (min-width: 768px) { .nav { display: flex; } }
 

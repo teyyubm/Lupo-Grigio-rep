@@ -272,20 +272,25 @@
         }
       });
     </script>
+    <!-- Admin Access Script -->
     <script>
-      if (window.netlifyIdentity) {
-        window.netlifyIdentity.on('init', user => {
-          const hash = window.location.hash || '';
-          const hasInvite = hash.includes('invite_token');
-          if (!user && hasInvite) {
-            window.netlifyIdentity.acceptInvite().then(() => { document.location.href = '/admin/'; }).catch(() => {});
-            return;
+      // Simple admin access check (replace with your preferred authentication)
+      function checkAdminAccess() {
+        const adminKey = localStorage.getItem('lg_admin_key');
+        const urlParams = new URLSearchParams(window.location.search);
+        const adminParam = urlParams.get('admin');
+        
+        if (adminParam === 'true' || adminKey === 'authenticated') {
+          // Show admin link or redirect to admin
+          const adminLink = document.querySelector('a[href="/admin/"]');
+          if (adminLink) {
+            adminLink.style.display = 'inline-block';
           }
-          if (!user) {
-            window.netlifyIdentity.on('login', () => { document.location.href = '/admin/'; });
-          }
-        });
+        }
       }
+      
+      // Check on page load
+      document.addEventListener('DOMContentLoaded', checkAdminAccess);
     </script>
     <script type="module" src="assets/scripts/config.js"></script>
     <script type="module" src="assets/scripts/app.js"></script>
