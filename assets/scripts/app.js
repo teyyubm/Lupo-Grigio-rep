@@ -251,7 +251,17 @@ function setupCartDrawer() {
   closeBtn.addEventListener('click', close);
   checkoutBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    alert('Checkout placeholder. Integrate Stripe/Shopify to accept payments.');
+    // Scroll to the coming soon banner
+    const banner = drawer.querySelector('.coming-soon-banner');
+    if (banner) {
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Add a subtle highlight effect
+      banner.style.transform = 'scale(1.02)';
+      banner.style.transition = 'transform 0.3s ease';
+      setTimeout(() => {
+        banner.style.transform = 'scale(1)';
+      }, 300);
+    }
   });
 
   // Clear cart functionality
@@ -387,34 +397,75 @@ function setupBackToTop() {
 
 init();
 
-// Lightweight analytics stub (respects cookie consent)
+// Google Analytics 4 integration (respects cookie consent)
 function setupAnalytics() {
   const consent = localStorage.getItem('lg_cookie_consent');
   const allowed = !consent || consent === 'accepted';
-  const endpoint = 'https://example-analytics.invalid/collect';
-  function send(eventName, payload) {
-    if (!allowed) return;
-    const body = {
-      event: eventName,
-      url: location.href,
-      ts: Date.now(),
-      ...payload,
-    };
-    // Fire-and-forget; replace with real endpoint/provider.
-    try { navigator.sendBeacon?.(endpoint, JSON.stringify(body)); } catch {}
+  
+  if (!allowed) {
+    // Disable Google Analytics if user declined cookies
+    if (typeof gtag !== 'undefined') {
+      gtag('consent', 'default', {
+        'analytics_storage': 'denied',
+        'ad_storage': 'denied'
+      });
+    }
+    return;
   }
-  // Page view
-  send('page_view', {});
-  // Track add to cart via delegated listener (only for analytics, not actual cart)
+
+  // Enable Google Analytics if user accepted cookies
+  if (typeof gtag !== 'undefined') {
+    gtag('consent', 'default', {
+      'analytics_storage': 'granted',
+      'ad_storage': 'granted'
+    });
+  }
+
+  // Track page view
+  if (typeof gtag !== 'undefined') {
+    gtag('event', 'page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    });
+  }
+
+  // Track add to cart events
   document.addEventListener('click', (e) => {
     const t = e.target;
-    // Only track analytics for add buttons NOT in the main product grid
     if (t && t instanceof HTMLElement && t.matches('button[data-add]')) {
-      // Skip analytics for main product grid buttons to avoid interference
-      if (t.closest('#productGrid')) {
-        return;
+      const productId = t.getAttribute('data-add');
+      const product = state.products.find(p => String(p.id) === String(productId));
+      
+      if (product && typeof gtag !== 'undefined') {
+        gtag('event', 'add_to_cart', {
+          currency: 'USD',
+          value: product.priceCents / 100,
+          items: [{
+            item_id: product.id,
+            item_name: product.name,
+            item_category: 'Leather Goods',
+            item_variant: product.material,
+            price: product.priceCents / 100,
+            quantity: 1
+          }]
+        });
       }
-      send('add_to_cart', { productId: t.getAttribute('data-add') });
+    }
+  });
+
+  // Track cart interactions
+  document.addEventListener('click', (e) => {
+    const t = e.target;
+    if (t && t instanceof HTMLElement) {
+      if (t.id === 'miniCartButton') {
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'view_cart', {
+            currency: 'USD',
+            value: getCartTotalCents() / 100
+          });
+        }
+      }
     }
   });
 }

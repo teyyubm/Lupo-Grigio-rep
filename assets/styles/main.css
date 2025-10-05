@@ -753,6 +753,42 @@
 .cart-footer { padding: 16px; border-top: 1px solid var(--color-border); display: grid; gap: 10px; }
 .cart-actions { display: grid; gap: 8px; }
 
+/* Coming Soon Banner */
+.coming-soon-banner {
+  margin-top: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, rgba(199,162,106,0.1), rgba(231,201,141,0.05));
+  border: 1px solid rgba(199,162,106,0.3);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.banner-content h4 {
+  margin: 0 0 8px 0;
+  color: var(--color-accent);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.banner-content p {
+  margin: 0 0 12px 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.banner-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.banner-actions .button {
+  font-size: 13px;
+  padding: 6px 12px;
+}
+
 /* Clear Cart Button Styling */
 #clearCartButton {
   background: linear-gradient(135deg, #ff6b6b, #ee5a52);
